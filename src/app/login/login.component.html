@@ -1,0 +1,41 @@
+<form id="loginpanel" action="">
+  <div class="inset">
+    <p>
+      <input
+        type="text"
+        name="username"
+        value="visitor"
+        id="username"
+        placeholder="username"
+      />
+    </p>
+    <p>
+      <input
+        type="password"
+        name="password"
+        value="password"
+        id="password"
+        placeholder="password"
+      />
+    </p>
+
+    <!-- 
+        [(ngModel)]="username"
+        [(ngModel)]="password" CSRF token is automatically included with Thymeleaf
+    <input
+      type="hidden"
+      th:name="${_csrf.parameterName}"
+      th:value="${_csrf.token}"
+    /> -->
+  </div>
+  <p class="p-container">
+    <input
+      type="submit"
+      name="Login"
+      id="go"
+      value="Login"
+      (click)="doLogin()"
+    />
+  </p>
+</form>
+<input type="submit" name="dsfsdf" id="go" value="sfsdf" (click)="doget()" />
