@@ -12,13 +12,11 @@ import { provideHttpClient, withFetch } from "@angular/common/http";
 import { ApplicationConfig } from "@angular/core";
 import {
   ModuleRegistry,
-  AllCommunityModule,
   ClientSideRowModelModule, // or AllEnterpriseModule
 } from "ag-grid-community";
 
 // Register the module
 ModuleRegistry.registerModules([
-  AllCommunityModule,
   ClientSideRowModelModule, // or AllEnterpriseModule
 ]);
 
