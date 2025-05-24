@@ -29,6 +29,8 @@ import { compileDeferResolverFunction } from "@angular/compiler";
 })
 export class GridComponent implements OnInit {
   // Row Data: The data to be displayed.
+  count = 1;
+
   themes = [{ label: "themeQuartz", theme: themeAlpine }];
   theme = themeAlpine;
 
@@ -46,8 +48,8 @@ export class GridComponent implements OnInit {
     suppressHeaderContextMenu: true,
   };
   colDefs = [
-    { headerName: "Type", field: "type", editable: false },
-    { headerName: "Name", field: "name", editable: false },
+    { headerName: "Type", field: "type" },
+    { headerName: "Name", field: "name" },
     { headerName: "Tags", field: "tags" },
     { headerName: "Description", field: "description" },
     { headerName: "Parent", field: "parent" },
@@ -57,9 +59,9 @@ export class GridComponent implements OnInit {
   ngOnInit() {}
   constructor(private service: ApiService) {}
   // Column Definitions: Defines the columns to be displayed.
-  gridApi: GridApi;
-  onGridReady(evt: any) {
-    this.gridApi = evt.gridApi;
+  private gridApi!: GridApi;
+  onGridReady(evt: GridReadyEvent) {
+    this.gridApi = evt.api;
     this.RetrieveData();
   }
 
@@ -107,5 +109,22 @@ export class GridComponent implements OnInit {
         console.error("Error loading data", err);
       },
     });
+  }
+
+  AddItems(addIndex: number | undefined) {
+    const newItems = [
+      {
+        type: "type" + this.count,
+        name: "type" + this.count,
+        tags: "string",
+        description: "string",
+        parent: "string",
+      },
+    ];
+    this.gridApi.applyTransaction({
+      add: newItems,
+      addIndex: addIndex,
+    });
+    this.count++;
   }
 }
