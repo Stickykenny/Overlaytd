@@ -19,10 +19,6 @@ export class ApiService {
     headers.set("access-control-allow-origin", "http://localhost:4200/");
 
     headers.set("withCredentials", "true");
-    /*return this.http.post<string>("http://localhost:8080/login", {
-      headers,
-    });*/
-
     const body = { username, password };
 
     return this.http.post<string>("http://localhost:8080/login", body, {
@@ -40,5 +36,28 @@ export class ApiService {
     return this.http.get<Astre[]>("http://localhost:8080/api/astres/getall", {
       headers,
     });
+  }
+
+  postAstres(astres: Astre[]) {
+    let username = "visitor";
+    let password = "password";
+    const headers = new HttpHeaders({
+      Authorization: "Bearer " + localStorage.getItem("jwt"),
+    });
+
+    // probleme is the jwt token received or processed on angular front
+    console.log(localStorage.getItem("jwt"));
+    console.log(headers);
+    headers.set("access-control-allow-origin", "http://localhost:4200/");
+
+    console.log(headers);
+    return this.http.post<Astre[]>(
+      "http://localhost:8080/api/astres/astres",
+      astres,
+      {
+        headers,
+        withCredentials: true,
+      }
+    );
   }
 }

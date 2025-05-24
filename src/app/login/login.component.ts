@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit {
     let response = this.service.login(this.username, this.password);
     response.subscribe({
       next: (data: string) => {
-        console.log("Token:", JSON.stringify(data));
+        localStorage.setItem("jwt", data);
       },
       error: (err) => {
         console.error("Login failed:", err);
