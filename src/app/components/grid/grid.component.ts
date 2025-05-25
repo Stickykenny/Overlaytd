@@ -11,15 +11,9 @@ import {
 import { Component, inject, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { AgGridAngular } from "ag-grid-angular";
-
-//import { ClientSideRowModelModule } from "ag-grid-community";
-
-//ModuleRegistry.registerModules([ClientSideRowModelModule]); // it's a messy problem with ag grid 33+ version
-
 import { Astre } from "../../models/Astre";
 import { ApiService } from "src/app/api.service";
 import { RowModel, RowModelTransfer } from "src/app/models/RowModel";
-import { compileDeferResolverFunction } from "@angular/compiler";
 
 @Component({
   selector: "app-grid",
@@ -56,9 +50,9 @@ export class GridComponent implements OnInit {
     { headerName: "Date added", field: "date_added", editable: false },
     { headerName: "Last Modified", field: "last_modified", editable: false },
   ];
+
   ngOnInit() {}
   constructor(private service: ApiService) {}
-  // Column Definitions: Defines the columns to be displayed.
   private gridApi!: GridApi;
   onGridReady(evt: GridReadyEvent) {
     this.gridApi = evt.api;
@@ -86,13 +80,18 @@ export class GridComponent implements OnInit {
       },
     });
   }
+
   async SendData() {
     console.log("SEND button!");
-    console.log(this.rowData);
 
     const astres: Astre[] = [];
+    const rowDatatmp: any[] = [];
 
-    this.rowData.forEach((item) => {
+    this.gridApi.forEachNode(function (node) {
+      rowDatatmp.push(node.data);
+    });
+
+    rowDatatmp.forEach((item) => {
       astres.push({
         astreID: { type: item.type, name: item.name },
         tags: item.tags,
@@ -103,6 +102,7 @@ export class GridComponent implements OnInit {
       });
     });
     console.log(astres);
+
     this.service.postAstres(astres).subscribe({
       next: (res) => {},
       error: (err) => {
@@ -111,20 +111,21 @@ export class GridComponent implements OnInit {
     });
   }
 
-  AddItems(addIndex: number | undefined) {
+  AddItems(type: string, tags: string, parent: string) {
+    console.log(type);
     const newItems = [
       {
-        type: "type" + this.count,
-        name: "type" + this.count,
-        tags: "string",
-        description: "string",
-        parent: "string",
+        type: type ? type : "type" + this.count,
+        name: "name" + this.count,
+        tags: tags,
+        description: "",
+        parent: parent,
       },
     ];
     this.gridApi.applyTransaction({
       add: newItems,
-      addIndex: addIndex,
-    });
+      addIndex: 0,
+    }); //  it is a list of Row Nodes that were added, not row data
     this.count++;
   }
 }
