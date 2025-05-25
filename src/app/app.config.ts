@@ -1,25 +1,14 @@
-/*!
- * @license
- * Copyright Google LLC All Rights Reserved.
- *
- * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.dev/license
- */
-
 // Angular 19
 
-import { provideHttpClient, withFetch } from "@angular/common/http";
+import { provideHttpClient, withInterceptors } from "@angular/common/http";
 import { ApplicationConfig } from "@angular/core";
-import {
-  ModuleRegistry,
-  ClientSideRowModelModule, // or AllEnterpriseModule
-} from "ag-grid-community";
-
-// Register the module
-ModuleRegistry.registerModules([
-  ClientSideRowModelModule, // or AllEnterpriseModule
-]);
+import { TokenInterceptor } from "./token.interceptors";
+import { provideRouter } from "@angular/router";
+import routeConfig from "./routes";
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideHttpClient()],
+  providers: [
+    provideRouter(routeConfig),
+    provideHttpClient(withInterceptors([TokenInterceptor])),
+  ],
 };
