@@ -18,14 +18,6 @@ export class LoginComponent implements OnInit {
 
   doLogin() {
     let response = this.service.login(this.username, this.password);
-    response.subscribe({
-      next: (data: string) => {
-        localStorage.setItem("jwt", data);
-      },
-      error: (err) => {
-        console.error("Login failed:", err);
-      },
-    });
   }
 
   doget() {

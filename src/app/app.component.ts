@@ -1,14 +1,30 @@
 import { Component } from "@angular/core";
 
 import { RouterModule } from "@angular/router";
-import { GridComponent } from "./components/grid/grid.component";
-import { LoginComponent } from "./login/login.component";
-import { MyHttpClient } from "./httpclient";
+import { CommonModule } from "@angular/common";
 @Component({
   selector: "app-root",
-  imports: [RouterModule, GridComponent, LoginComponent],
+  imports: [RouterModule, CommonModule],
   template: `
-    <main>
+    <div id="sidebar" class="sidebar">
+      <button
+        id="sidebarhelper"
+        class="sidebarhelper toggle-btn btn btn-light"
+        (click)="toggleSidebar()"
+      >
+        >
+      </button>
+      <p>
+        <br />
+        <a routerLink="/login">Login</a>
+      </p>
+
+      <p>
+        <br />
+        <a routerLink="/grid">Grid</a>
+      </p>
+    </div>
+    <main class="content">
       <a [routerLink]="['/']">
         <header class="brand-name">
           <img
@@ -19,12 +35,9 @@ import { MyHttpClient } from "./httpclient";
           />
         </header>
       </a>
-      sdsd
-      <app-login></app-login>
-
       <section class="content">
-        <app-grid></app-grid>
-        <!-- <router-outlet></router-outlet>-->
+        <router-outlet></router-outlet>
+        <!-- Dynamic load based on route -->
       </section>
     </main>
   `,
@@ -33,15 +46,22 @@ import { MyHttpClient } from "./httpclient";
 //replaced the <app-home></app-home> tag with the <router-outlet> directive
 export class AppComponent {
   title = "homes";
-  authenticated = false;
+  isLoggedIn = false;
 
-  constructor(private http: MyHttpClient) {}
+  constructor() {}
 
   ngOnInit(): void {
     //this.http.getCsrf();
   }
 
   onSignedIn(): void {
-    this.authenticated = true;
+    this.isLoggedIn = true;
+  }
+  toggleSidebar() {
+    const sidebar = document.getElementById("sidebar");
+    sidebar!.classList.toggle("uncollapsed");
+    const sidebarhelper = document.getElementById("sidebarhelper");
+
+    sidebarhelper!.classList.toggle("uncollapsed");
   }
 }

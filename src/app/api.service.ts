@@ -7,6 +7,7 @@ import { Astre } from "./models/Astre";
   providedIn: "root",
 })
 export class ApiService {
+  isLogged = false;
   constructor(private http: HttpClient) {}
 
   public login(username: string, password: string) {
@@ -17,21 +18,35 @@ export class ApiService {
       // btoa binary to ascii
     });
     headers.set("access-control-allow-origin", "http://localhost:4200/");
-
     headers.set("withCredentials", "true");
     const body = { username, password };
 
-    return this.http.post<string>("http://localhost:8080/login", body, {
+    var response = this.http.post<string>("http://localhost:8080/login", body, {
       headers,
       //withCredentials: true,// cross-site Access-Control requests should be made using credentials such as cookies, authentication headers or TLS client certificates
       responseType: "text" as "json",
     });
+
+    response.subscribe({
+      next: (data: string) => {
+        localStorage.setItem("jwt", data);
+        this.isLogged = true;
+      },
+      error: (err) => {
+        console.error("Login failed:", err);
+      },
+    });
   }
+
+  isLoggedIn() {
+    return this.isLogged;
+  }
+
   getAstres() {
     let username = "visitor";
     let password = "password";
     const headers = new HttpHeaders({
-      Authorization: "Basic " + btoa(username + ":" + password),
+      //Authorization: "Basic " + btoa(username + ":" + password),
     });
     return this.http.get<Astre[]>("http://localhost:8080/api/astres/getall", {
       headers,
@@ -40,7 +55,7 @@ export class ApiService {
 
   postAstres(astres: Astre[]) {
     const headers = new HttpHeaders({
-      Authorization: "Bearer " + localStorage.getItem("jwt"),
+      //Authorization: "Bearer " + localStorage.getItem("jwt"),
     });
     headers.set("access-control-allow-origin", "http://localhost:4200/");
     return this.http.post<Astre[]>(
