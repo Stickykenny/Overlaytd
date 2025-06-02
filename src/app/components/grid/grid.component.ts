@@ -32,7 +32,11 @@ export class GridComponent implements OnInit {
   rowData: RowModel[] = [];
   astre2Service: ApiService = inject(ApiService);
 
-  gridOptions: GridOptions;
+  gridOptions: GridOptions = {
+    autoSizeStrategy: {
+      type: "fitCellContents",
+    },
+  };
   defaultColDef: ColDef = {
     flex: 1,
     minWidth: 150,
@@ -45,10 +49,24 @@ export class GridComponent implements OnInit {
     { headerName: "Type", field: "type" },
     { headerName: "Name", field: "name" },
     { headerName: "Tags", field: "tags" },
-    { headerName: "Description", field: "description" },
+    {
+      headerName: "Description",
+      field: "description",
+      maxWidth: 500,
+    },
     { headerName: "Parent", field: "parent" },
-    { headerName: "Date added", field: "date_added", editable: false },
-    { headerName: "Last Modified", field: "last_modified", editable: false },
+    {
+      headerName: "Date added",
+      field: "date_added",
+      editable: false,
+      hide: true,
+    },
+    {
+      headerName: "Last Modified",
+      field: "last_modified",
+      editable: false,
+      hide: true,
+    },
   ];
 
   ngOnInit() {}
@@ -112,7 +130,6 @@ export class GridComponent implements OnInit {
   }
 
   AddItems(type: string, tags: string, parent: string) {
-    console.log(type);
     const newItems = [
       {
         type: type ? type : "type" + this.count,

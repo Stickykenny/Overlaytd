@@ -35,9 +35,6 @@ import { ApiService } from "./api.service";
           aria-hidden="true"
         />
       </header>
-      <!-- <a [routerLink]="['/']">
-  
-      </a>-->
       <section class="content">
         <router-outlet></router-outlet>
         <!-- Dynamic load based on route -->

@@ -1,7 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { ApiService } from "../api.service";
 import { CommonModule } from "@angular/common";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, NgForm } from "@angular/forms";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-login",
@@ -9,15 +10,16 @@ import { FormsModule } from "@angular/forms";
   templateUrl: "./login.component.html",
 })
 export class LoginComponent implements OnInit {
-  username: string;
-  password: string;
+  username: string = "visitor";
+  password: string = "password";
   message: any;
 
-  constructor(private service: ApiService) {}
+  constructor(private service: ApiService, private router: Router) {}
   ngOnInit(): void {}
 
-  doLogin() {
-    let response = this.service.login(this.username, this.password);
+  doLogin(form: NgForm) {
+    this.service.login(this.username, this.password);
+    this.router.navigate(["/grid"]);
   }
 
   doget() {

@@ -1,21 +1,21 @@
-<form id="loginpanel" action="">
+<form id="loginpanel" #loginForm="ngForm" (ngSubmit)="doLogin(loginForm)">
   <div class="inset">
     <p>
       <input
         type="text"
         name="username"
-        value="visitor"
         id="username"
         placeholder="username"
+        [(ngModel)]="username"
       />
     </p>
     <p>
       <input
         type="password"
         name="password"
-        value="password"
         id="password"
         placeholder="password"
+        [(ngModel)]="password"
       />
     </p>
 
@@ -29,13 +29,7 @@
     /> -->
   </div>
   <p class="p-container">
-    <input
-      type="submit"
-      name="Login"
-      id="go"
-      value="Login"
-      (click)="doLogin()"
-    />
+    <input type="submit" name="Login" value="Login" />
   </p>
 </form>
 <input type="submit" name="dsfsdf" id="go" value="sfsdf" (click)="doget()" />
