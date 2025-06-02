@@ -20,6 +20,7 @@ header {
   overflow-x: hidden;
   z-index: 1050;
   height: 100vh;
+  backdrop-filter: blur(5px);
 }
 
 .sidebar.uncollapsed {
@@ -41,7 +42,6 @@ header {
 .sidebar p {
   opacity: 0;
   text-align: center;
-  backdrop-filter: blur(5px);
   font-size: 30px;
   transition: all var(--sidebartransition);
 

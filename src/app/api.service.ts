@@ -4,6 +4,7 @@ import { Injectable } from "@angular/core";
 import { Astre } from "./models/Astre";
 import { BehaviorSubject, Observable } from "rxjs";
 import { jwtDecode, JwtPayload } from "jwt-decode";
+import { Router } from "@angular/router";
 
 @Injectable({
   providedIn: "root",
@@ -14,7 +15,7 @@ export class ApiService {
 
   // Observable for other components to subscribe to
   isLoggedIn$: Observable<boolean> = this.loggedInSubject.asObservable();
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private router: Router) {
     const token = localStorage.getItem("jwt");
     if (token != null) {
       var decoded = jwtDecode<JwtPayload>(token);
@@ -50,6 +51,12 @@ export class ApiService {
         console.error("Login failed:", err);
       },
     });
+  }
+
+  public logout() {
+    localStorage.removeItem("jwt");
+    this.loggedInSubject.next(false);
+    this.router.navigate(["/"]);
   }
 
   getAstres() {
