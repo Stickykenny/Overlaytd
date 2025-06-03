@@ -14,6 +14,7 @@ import { AgGridAngular } from "ag-grid-angular";
 import { Astre } from "../../models/Astre";
 import { ApiService } from "src/app/api.service";
 import { RowModel, RowModelTransfer } from "src/app/models/RowModel";
+import { ToastrService } from "ngx-toastr";
 
 @Component({
   selector: "app-grid",
@@ -70,7 +71,7 @@ export class GridComponent implements OnInit {
   ];
 
   ngOnInit() {}
-  constructor(private service: ApiService) {}
+  constructor(private service: ApiService, private toastr: ToastrService) {}
   private gridApi!: GridApi;
   onGridReady(evt: GridReadyEvent) {
     this.gridApi = evt.api;
@@ -90,11 +91,16 @@ export class GridComponent implements OnInit {
         simplified.forEach((astre) => {
           delete astre.astreID;
         });
+        this.toastr.success(
+          "Fetched a total of " + simplified.length + " rows",
+          "Get Astres Successful"
+        );
 
         this.rowData = simplified;
       },
       error: (err) => {
         console.error("Error loading data", err);
+        this.toastr.error(err, "Error loading data");
       },
     });
   }
@@ -122,9 +128,15 @@ export class GridComponent implements OnInit {
     console.log(astres);
 
     this.service.postAstres(astres).subscribe({
-      next: (res) => {},
+      next: (res) => {
+        this.toastr.success(
+          "A total of " + astres.length + " rows where sent",
+          "Successful Update of data"
+        );
+      },
       error: (err) => {
-        console.error("Error loading data", err);
+        console.error("Error sending data", err);
+        this.toastr.error(err, "Error sending data");
       },
     });
   }

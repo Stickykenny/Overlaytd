@@ -5,6 +5,7 @@ import { Astre } from "./models/Astre";
 import { BehaviorSubject, Observable } from "rxjs";
 import { jwtDecode, JwtPayload } from "jwt-decode";
 import { Router } from "@angular/router";
+import { ToastrService } from "ngx-toastr";
 
 @Injectable({
   providedIn: "root",
@@ -15,7 +16,11 @@ export class ApiService {
 
   // Observable for other components to subscribe to
   isLoggedIn$: Observable<boolean> = this.loggedInSubject.asObservable();
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private toastr: ToastrService
+  ) {
     const token = localStorage.getItem("jwt");
     if (token != null) {
       var decoded = jwtDecode<JwtPayload>(token);
@@ -49,14 +54,23 @@ export class ApiService {
       },
       error: (err) => {
         console.error("Login failed:", err);
+        return false;
       },
     });
+    return true;
   }
 
   public logout() {
     localStorage.removeItem("jwt");
     this.loggedInSubject.next(false);
-    this.router.navigate(["/"]);
+    this.router
+      .navigate(["/"])
+      .then(() =>
+        this.toastr.success(
+          "Please Login to access the app",
+          "Logout Successful"
+        )
+      );
   }
 
   getAstres() {

@@ -3,6 +3,7 @@ import { ApiService } from "../api.service";
 import { CommonModule } from "@angular/common";
 import { FormsModule, NgForm } from "@angular/forms";
 import { Router } from "@angular/router";
+import { ToastrService } from "ngx-toastr";
 
 @Component({
   selector: "app-login",
@@ -10,20 +11,22 @@ import { Router } from "@angular/router";
   templateUrl: "./login.component.html",
 })
 export class LoginComponent implements OnInit {
-  username: string = "visitor";
+  username: string = "visitor"; // Linked to [(ngModel)]
   password: string = "password";
-  message: any;
 
-  constructor(private service: ApiService, private router: Router) {}
+  constructor(
+    private service: ApiService,
+    private router: Router,
+    private toastr: ToastrService
+  ) {}
   ngOnInit(): void {}
 
   doLogin(form: NgForm) {
-    this.service.login(this.username, this.password);
-    this.router.navigate(["/grid"]);
-  }
-
-  doget() {
-    let response = this.service.getAstres();
-    response.subscribe((data: any) => console.log(data));
+    // NgForm to fetch value from ngModel
+    if (this.service.login(this.username, this.password)) {
+      this.router
+        .navigate(["/grid"])
+        .then(() => this.toastr.success("yep yep yep", "Login Successful"));
+    }
   }
 }
