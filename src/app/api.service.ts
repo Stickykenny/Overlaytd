@@ -12,6 +12,7 @@ import { ToastrService } from "ngx-toastr";
 })
 export class ApiService {
   isLogged = false;
+
   private loggedInSubject = new BehaviorSubject<boolean>(false);
 
   // Observable for other components to subscribe to
@@ -30,6 +31,12 @@ export class ApiService {
         }
       }
     }
+  }
+
+  getCsrfToken() {
+    return this.http
+      .get("http://localhost:8080/csrf/token", { withCredentials: true })
+      .subscribe((data: any) => localStorage.setItem("csrf", data.token));
   }
 
   public login(username: string, password: string) {

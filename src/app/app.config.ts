@@ -1,17 +1,27 @@
 // Angular 19
 
-import { provideHttpClient, withInterceptors } from "@angular/common/http";
+import {
+  HTTP_INTERCEPTORS,
+  provideHttpClient,
+  withInterceptors,
+  withInterceptorsFromDi,
+} from "@angular/common/http";
 import { ApplicationConfig } from "@angular/core";
 import { TokenInterceptor } from "./token.interceptors";
 import { provideRouter } from "@angular/router";
 import routeConfig from "./routes";
 import { provideToastr } from "ngx-toastr";
 import { provideAnimations } from "@angular/platform-browser/animations";
+//import { csrfInterceptor } from "./csrf.interceptor";
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routeConfig),
-    provideHttpClient(withInterceptors([TokenInterceptor])),
+    provideHttpClient(
+      withInterceptors([TokenInterceptor]), // First entry is the first run (left to right)
+      withInterceptorsFromDi() // Run Class-based interceptor after // This is older implementation and require the line below
+    ),
+    //{ provide: HTTP_INTERCEPTORS, useClass: csrfInterceptor, multi: true }, // Older implementation of interceptors
     provideToastr({
       positionClass: "toast-bottom-right",
       progressBar: true,
