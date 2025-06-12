@@ -48,14 +48,17 @@ export class AppComponent {
   title = "homes";
   isLoggedIn = false;
 
-  constructor(private auth: ApiService) {}
-
-  ngOnInit(): void {
-    //this.http.getCsrf();
+  constructor(private auth: ApiService) {
     this.auth.isLoggedIn$.subscribe((status) => {
       this.isLoggedIn = status;
     });
   }
+
+  ngOnInit(): void {
+    //this.http.getCsrf();
+  }
+
+  ngAfterViewInit() {}
 
   onSignedIn(): void {
     this.isLoggedIn = true;

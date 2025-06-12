@@ -14,6 +14,7 @@ export class ApiService {
   isLogged = false;
 
   private loggedInSubject = new BehaviorSubject<boolean>(false);
+  private loggedWithOauth = new BehaviorSubject<boolean>(false);
 
   // Observable for other components to subscribe to
   isLoggedIn$: Observable<boolean> = this.loggedInSubject.asObservable();
@@ -37,6 +38,16 @@ export class ApiService {
     return this.http
       .get("http://localhost:8080/csrf/token", { withCredentials: true })
       .subscribe((data: any) => localStorage.setItem("csrf", data.token));
+  }
+  isOauth() {
+    return this.loggedWithOauth.getValue();
+  }
+
+  public logOauth() {
+    this.loggedInSubject.next(true);
+    this.loggedWithOauth.next(true);
+    console.log(this.loggedInSubject);
+    return true;
   }
 
   public login(username: string, password: string) {

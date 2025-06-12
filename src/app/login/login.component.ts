@@ -2,8 +2,10 @@ import { Component, OnInit } from "@angular/core";
 import { ApiService } from "../api.service";
 import { CommonModule } from "@angular/common";
 import { FormsModule, NgForm } from "@angular/forms";
-import { Router } from "@angular/router";
+import { NavigationEnd, Router } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
+import { NavigateEvent } from "@angular/core/navigation_types.d-fAxd92YV";
 
 @Component({
   selector: "app-login",
@@ -17,9 +19,19 @@ export class LoginComponent implements OnInit {
   constructor(
     private service: ApiService,
     private router: Router,
-    private toastr: ToastrService
-  ) {}
+    private toastr: ToastrService,
+    private route: ActivatedRoute
+  ) {
+    router.events.subscribe((val) => {
+      //console.log(val instanceof NavigationEnd);
+    });
+  }
+
   ngOnInit(): void {}
+
+  loginWithGoogle() {
+    window.location.href = "http://localhost:8080/oauth2/authorization/google";
+  }
 
   doLogin(form: NgForm) {
     // NgForm to fetch value from ngModel

@@ -32,3 +32,20 @@
     <input type="submit" name="Login" value="Login" />
   </p>
 </form>
+
+<h2>Login with OAuth 2.0</h2>
+
+<table class="table table-striped">
+  <tbody>
+    <tr>
+      <td>
+        <a href="http://localhost:8080/oauth2/authorization/github">GitHub</a>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <button (click)="loginWithGoogle()">Login with Google</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
