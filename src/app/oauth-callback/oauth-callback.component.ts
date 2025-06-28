@@ -35,5 +35,6 @@ export class OauthCallbackComponent implements OnInit {
         localStorage.setItem("jwt", jwtToken);
       }
     });
+    this.router.navigate(["/grid"]);
   }
 }

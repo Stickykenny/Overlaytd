@@ -47,6 +47,25 @@
     />
     <br />
     <br />
+    <div class="QuickSearch">
+      <span>Quick Filter:</span>
+      <input
+        type="text"
+        id="filter-text-box"
+        placeholder="Filter..."
+        (input)="onFilterTextBoxChanged(selectedKey)"
+      />
+      <select
+        [(ngModel)]="selectedKey"
+        name="userField"
+        (change)="onFilterTextBoxChanged(selectedKey)"
+      >
+        <option [value]="">{{ "" }}</option>
+        <option *ngFor="let key of userKeys" [value]="key">
+          {{ key }}
+        </option>
+      </select>
+    </div>
     <div>
       <h1>{{ title }}!</h1>
       <ag-grid-angular

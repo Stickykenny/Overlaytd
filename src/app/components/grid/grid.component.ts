@@ -7,6 +7,7 @@ import {
   createGrid,
   GridReadyEvent,
   themeAlpine,
+  IRowNode,
 } from "ag-grid-community";
 import { Component, inject, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
@@ -15,11 +16,12 @@ import { Astre } from "../../models/Astre";
 import { ApiService } from "src/app/api.service";
 import { RowModel, RowModelTransfer } from "src/app/models/RowModel";
 import { ToastrService } from "ngx-toastr";
+import { FormsModule } from "@angular/forms";
 
 @Component({
   selector: "app-grid",
   standalone: true,
-  imports: [CommonModule, AgGridAngular], //CommonModule required for ngFor
+  imports: [CommonModule, AgGridAngular, FormsModule], //CommonModule required for ngFor
   templateUrl: "./grid.component.html",
 })
 export class GridComponent implements OnInit {
@@ -32,6 +34,22 @@ export class GridComponent implements OnInit {
   title = "Ag Grid";
   rowData: RowModel[] = [];
   astre2Service: ApiService = inject(ApiService);
+
+  searchTerm: string = "";
+  columnSearch = "";
+
+  newItems: RowModel = {
+    type: "type",
+    name: "name",
+    tags: "nidnf",
+    description: "",
+    parent: "dfsf",
+    last_modified: "dfsf",
+    date_added: "dfsf",
+  };
+
+  userKeys = Object.keys(this.newItems) as (keyof RowModel)[];
+  selectedKey = "";
 
   gridOptions: GridOptions = {
     autoSizeStrategy: {
@@ -47,26 +65,59 @@ export class GridComponent implements OnInit {
     suppressHeaderContextMenu: true,
   };
   colDefs = [
-    { headerName: "Type", field: "type" },
-    { headerName: "Name", field: "name" },
-    { headerName: "Tags", field: "tags" },
+    {
+      headerName: "Type",
+      field: "type",
+      getQuickFilterText: (params: any) => {
+        return params.value;
+      },
+    },
+    {
+      headerName: "Name",
+      field: "name",
+      getQuickFilterText: (params: any) => {
+        return params.value;
+      },
+    },
+    {
+      headerName: "Tags",
+      field: "tags",
+      getQuickFilterText: (params: any) => {
+        return params.value;
+      },
+    },
     {
       headerName: "Description",
       field: "description",
       maxWidth: 500,
+      getQuickFilterText: (params: any) => {
+        return params.value;
+      },
     },
-    { headerName: "Parent", field: "parent" },
+    {
+      headerName: "Parent",
+      field: "parent",
+      getQuickFilterText: (params: any) => {
+        return params.value;
+      },
+    },
     {
       headerName: "Date added",
       field: "date_added",
       editable: false,
       hide: true,
+      getQuickFilterText: (params: any) => {
+        return params.value;
+      },
     },
     {
       headerName: "Last Modified",
       field: "last_modified",
       editable: false,
       hide: true,
+      getQuickFilterText: (params: any) => {
+        return params.value;
+      },
     },
   ];
 
@@ -75,7 +126,31 @@ export class GridComponent implements OnInit {
   private gridApi!: GridApi;
   onGridReady(evt: GridReadyEvent) {
     this.gridApi = evt.api;
-    this.RetrieveData();
+  }
+
+  /**
+   * Quick Search in grid, can also filter put a specific column to search
+   */
+  onFilterTextBoxChanged(columnSearch: string) {
+    this.columnSearch = columnSearch;
+    this.searchTerm = (
+      document.getElementById("filter-text-box") as HTMLInputElement
+    ).value;
+
+    this.colDefs.forEach((colDef) => {
+      colDef.getQuickFilterText = (params: any) => {
+        return params.value;
+      };
+      if (columnSearch) {
+        if (colDef.field != columnSearch) {
+          colDef.getQuickFilterText = (params: any) => {
+            return "";
+          };
+        }
+      }
+    });
+    this.gridApi!.setGridOption("columnDefs", this.colDefs);
+    this.gridApi.setGridOption("quickFilterText", this.searchTerm);
   }
 
   async RetrieveData() {
@@ -130,7 +205,7 @@ export class GridComponent implements OnInit {
     this.service.postAstres(astres).subscribe({
       next: (res) => {
         this.toastr.success(
-          "A total of " + astres.length + " rows where sent",
+          "A total of " + astres.length + " rows were sent",
           "Successful Update of data"
         );
       },
@@ -142,13 +217,15 @@ export class GridComponent implements OnInit {
   }
 
   AddItems(type: string, tags: string, parent: string) {
-    const newItems = [
+    const newItems: RowModel[] = [
       {
         type: type ? type : "type" + this.count,
         name: "name" + this.count,
         tags: tags,
         description: "",
         parent: parent,
+        last_modified: "",
+        date_added: "",
       },
     ];
     this.gridApi.applyTransaction({
