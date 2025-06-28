@@ -110,4 +110,27 @@ export class ApiService {
       }
     );
   }
+  deleteAstre(type: string, name: string): boolean {
+    const headers = new HttpHeaders({});
+    headers.set("access-control-allow-origin", "http://localhost:4200/");
+    this.http
+      .delete<Astre[]>(
+        "http://localhost:8080/api/astres/" + type + "/" + name,
+        {
+          headers,
+          withCredentials: true,
+        }
+      )
+      .subscribe({
+        next: (response) => {
+          console.log("Entry deleted!", response);
+          return true;
+        },
+        error: (err) => {
+          console.error("Delete failed", err);
+          return false;
+        },
+      });
+    return true;
+  }
 }

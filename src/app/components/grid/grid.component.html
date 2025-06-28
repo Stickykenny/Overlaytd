@@ -8,7 +8,10 @@
     <main class="main">
       <!--onclick is the native javascript not angular-->
       <button (click)="RetrieveData()">GET DATA</button>
+      -
       <button (click)="SendData()">POST DATA</button>
+      - - -
+      <button (click)="deleteSelected()">DELETE DATA</button>
     </main>
 
     <br /><br />
@@ -75,6 +78,7 @@
         [rowData]="rowData"
         [columnDefs]="colDefs"
         [defaultColDef]="defaultColDef"
+        [rowSelection]="rowSelection"
         (gridReady)="onGridReady($event)"
       >
       </ag-grid-angular>

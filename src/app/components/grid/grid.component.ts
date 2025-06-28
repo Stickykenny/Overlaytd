@@ -7,6 +7,8 @@ import {
   createGrid,
   GridReadyEvent,
   themeAlpine,
+  RowSelectionOptions,
+  GetRowIdFunc,
   IRowNode,
 } from "ag-grid-community";
 import { Component, inject, OnInit } from "@angular/core";
@@ -56,6 +58,9 @@ export class GridComponent implements OnInit {
       type: "fitCellContents",
     },
   };
+  getRowId: GetRowIdFunc = (params: any) =>
+    params.data.type + "-" + params.data.name;
+
   defaultColDef: ColDef = {
     flex: 1,
     minWidth: 150,
@@ -63,6 +68,9 @@ export class GridComponent implements OnInit {
     filter: "agTextColumnFilter",
     suppressHeaderMenuButton: true,
     suppressHeaderContextMenu: true,
+  };
+  rowSelection: RowSelectionOptions | "single" | "multiple" = {
+    mode: "multiRow",
   };
   colDefs = [
     {
@@ -233,5 +241,24 @@ export class GridComponent implements OnInit {
       addIndex: 0,
     }); //  it is a list of Row Nodes that were added, not row data
     this.count++;
+  }
+
+  deleteSelected() {
+    const selectedData = this.gridApi.getSelectedNodes();
+    console.log(selectedData);
+    var count: number = 0;
+
+    selectedData.forEach((node) => {
+      if (this.service.deleteAstre(node.data.type, node.data.name)) {
+        this.gridApi.applyTransaction({
+          remove: [selectedData[count].data],
+        });
+        count++;
+      }
+    });
+    this.toastr.success(
+      "A total of " + count + " rows were removed",
+      "Successful deletion of data"
+    );
   }
 }
