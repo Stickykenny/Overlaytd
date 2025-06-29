@@ -191,6 +191,10 @@ export class GridComponent implements OnInit {
   async SendData() {
     console.log("SEND button!");
 
+    if (!this.verifyIntegrity()) {
+      return;
+    }
+
     const astres: Astre[] = [];
     const rowDatatmp: any[] = [];
 
@@ -260,5 +264,34 @@ export class GridComponent implements OnInit {
       "A total of " + count + " rows were removed",
       "Successful deletion of data"
     );
+  }
+
+  /**
+   *
+   * @returns If the rowNodes respect the data integrity
+   */
+  verifyIntegrity(): boolean {
+    const duplicates: Set<String> = new Set();
+    const map = new Map<string, boolean>();
+
+    this.gridApi.forEachNode(function (node: IRowNode) {
+      var id: string = node.data.type + "-" + node.data.name;
+      if (!map.has(id)) {
+        map.set(id, true);
+      } else {
+        duplicates.add(id);
+      }
+    });
+
+    if (duplicates.size == 0) {
+      this.toastr.success("A", "No duplicates found");
+      return true;
+    }
+    this.toastr.error(
+      "Found these as duplicates : " + Array.from(duplicates).join("|"),
+      "Duplicate found",
+      { disableTimeOut: true }
+    );
+    return false;
   }
 }
