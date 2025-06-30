@@ -35,10 +35,19 @@ export class LoginComponent implements OnInit {
 
   doLogin(form: NgForm) {
     // NgForm to fetch value from ngModel
-    if (this.service.login(this.username, this.password)) {
-      this.router
-        .navigate(["/grid"])
-        .then(() => this.toastr.success("yep yep yep", "Login Successful"));
-    }
+
+    this.service.login(this.username, this.password).subscribe({
+      next: (data: string) => {
+        localStorage.setItem("jwt", data);
+        this.service.logged();
+        this.router
+          .navigate(["/grid"])
+          .then(() => this.toastr.success("yep yep yep", "Login Successful"));
+      },
+      error: (err) => {
+        //console.error("Login failed:", err);
+        this.toastr.error("", "Login failed");
+      },
+    });
   }
 }

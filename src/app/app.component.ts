@@ -14,13 +14,22 @@ import { ApiService } from "./api.service";
     >
       >
     </button>
+
+    <button
+      id="collapsezone"
+      class="collapsezone"
+      (click)="toggleSidebar()"
+    ></button>
+
     <div id="sidebar" class="sidebar">
       <p>
         <br />
         <a routerLink="/login">Login</a>
+        <br />
+        <br />
+        <a routerLink="/grid">Grid</a>
       </p>
       <p *ngIf="isLoggedIn">
-        <a routerLink="/grid">Grid</a>
         <br />
         <br />
         <a (click)="logout()" routerLink="/">Logout</a>
@@ -70,7 +79,8 @@ export class AppComponent {
     const sidebar = document.getElementById("sidebar");
     sidebar!.classList.toggle("uncollapsed");
     const sidebarhelper = document.getElementById("sidebarhelper");
-
     sidebarhelper!.classList.toggle("uncollapsed");
+    const collapsezone = document.getElementById("collapsezone");
+    collapsezone!.classList.toggle("uncollapsed");
   }
 }

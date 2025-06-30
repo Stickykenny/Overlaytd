@@ -1,10 +1,7 @@
 import {
   ColDef,
-  ColGroupDef,
   GridApi,
   GridOptions,
-  ModuleRegistry,
-  createGrid,
   GridReadyEvent,
   themeAlpine,
   RowSelectionOptions,
@@ -19,6 +16,7 @@ import { ApiService } from "src/app/api.service";
 import { RowModel, RowModelTransfer } from "src/app/models/RowModel";
 import { ToastrService } from "ngx-toastr";
 import { FormsModule } from "@angular/forms";
+import * as Papa from "papaparse";
 
 @Component({
   selector: "app-grid",
@@ -28,12 +26,12 @@ import { FormsModule } from "@angular/forms";
 })
 export class GridComponent implements OnInit {
   // Row Data: The data to be displayed.
-  count = 1;
+  count: number = 1;
 
   themes = [{ label: "themeQuartz", theme: themeAlpine }];
   theme = themeAlpine;
 
-  title = "Ag Grid";
+  title: string = "Ag Grid";
   rowData: RowModel[] = [];
   astre2Service: ApiService = inject(ApiService);
 
@@ -49,7 +47,6 @@ export class GridComponent implements OnInit {
     last_modified: "dfsf",
     date_added: "dfsf",
   };
-
   userKeys = Object.keys(this.newItems) as (keyof RowModel)[];
   selectedKey = "";
 
@@ -58,8 +55,6 @@ export class GridComponent implements OnInit {
       type: "fitCellContents",
     },
   };
-  getRowId: GetRowIdFunc = (params: any) =>
-    params.data.type + "-" + params.data.name;
 
   defaultColDef: ColDef = {
     flex: 1,
@@ -130,8 +125,11 @@ export class GridComponent implements OnInit {
   ];
 
   ngOnInit() {}
+
   constructor(private service: ApiService, private toastr: ToastrService) {}
+
   private gridApi!: GridApi;
+
   onGridReady(evt: GridReadyEvent) {
     this.gridApi = evt.api;
   }
@@ -139,7 +137,7 @@ export class GridComponent implements OnInit {
   /**
    * Quick Search in grid, can also filter put a specific column to search
    */
-  onFilterTextBoxChanged(columnSearch: string) {
+  onFilterTextBoxChanged(columnSearch: string): void {
     this.columnSearch = columnSearch;
     this.searchTerm = (
       document.getElementById("filter-text-box") as HTMLInputElement
@@ -161,7 +159,7 @@ export class GridComponent implements OnInit {
     this.gridApi.setGridOption("quickFilterText", this.searchTerm);
   }
 
-  async RetrieveData() {
+  async retrieveData() {
     console.log("Fetching data");
     this.service.getAstres().subscribe({
       next: (res) => {
@@ -188,7 +186,7 @@ export class GridComponent implements OnInit {
     });
   }
 
-  async SendData() {
+  async sendData() {
     console.log("SEND button!");
 
     if (!this.verifyIntegrity()) {
@@ -228,7 +226,7 @@ export class GridComponent implements OnInit {
     });
   }
 
-  AddItems(type: string, tags: string, parent: string) {
+  addItems(type: string, tags: string, parent: string) {
     const newItems: RowModel[] = [
       {
         type: type ? type : "type" + this.count,
@@ -293,5 +291,56 @@ export class GridComponent implements OnInit {
       { disableTimeOut: true }
     );
     return false;
+  }
+
+  importData(event: any): void {
+    const file: File = event.target.files[0];
+    if (file) {
+      /*Papa.parse(file, {
+        header: false,
+        complete: function (results) {
+          console.log(results);
+        },
+      });*/
+
+      const reader: FileReader = new FileReader();
+      reader.readAsText(file);
+      reader.onload = (e: any) => {
+        const csvText = e.target.result;
+        Papa.parse(csvText, {
+          header: true,
+          skipEmptyLines: true,
+
+          complete: (result) => {
+            const simplified: any[] = result.data;
+            const trs: RowModelTransfer[] = simplified.map((line: any) => ({
+              type: line["Type"] || "",
+              name: line["Name"] || "",
+              tags: line["Tags"] || "",
+              description: line["Description"] || "",
+              parent: line["Parent"] || "",
+              date_added: line["Date added"] || "",
+              last_modified: line["Last Modified"] || "",
+            }));
+            this.rowData = trs;
+          },
+        });
+      };
+    }
+  }
+
+  exportData() {
+    var colDefsFields: string[] = [];
+    this.colDefs.forEach((col) => colDefsFields.push(col.field));
+    this.gridApi!.exportDataAsCsv({
+      allColumns: true,
+      skipColumnHeaders: false,
+      fileName:
+        "exportGridData_" +
+        new Date().toISOString().slice(0, 10).replace(/-/g, "") +
+        ".csv", //
+      columnKeys: colDefsFields,
+      suppressQuotes: false,
+    });
   }
 }

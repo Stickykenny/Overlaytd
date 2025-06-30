@@ -7,18 +7,22 @@
     <div style="width: 100%; height: 100%"></div>
     <main class="main">
       <!--onclick is the native javascript not angular-->
-      <button (click)="RetrieveData()">GET DATA</button>
+      <button (click)="retrieveData()">GET DATA</button>
       -
-      <button (click)="SendData()">POST DATA</button>
+      <button (click)="sendData()">POST DATA</button>
       - - -
-      <button (click)="deleteSelected()">DELETE DATA</button>
+      <button (click)="deleteSelected()">DELETE SELECTED DATA</button>
     </main>
 
     <br /><br />
     Defaults :
-    <button (click)="AddItems(type.value, tags.value, parent.value)">
+    <button (click)="addItems(type.value, tags.value, parent.value)">
       Add Items
     </button>
+    --
+    <button (click)="exportData()">Export data</button>
+    --
+    <input type="file" id="file" (change)="importData($event)" accept=".csv" />
     <br />
 
     Type >

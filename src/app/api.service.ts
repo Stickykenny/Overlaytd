@@ -43,8 +43,13 @@ export class ApiService {
     return this.loggedWithOauth.getValue();
   }
 
-  public logOauth() {
+  public logged() {
     this.loggedInSubject.next(true);
+    return true;
+  }
+
+  public logOauth() {
+    this.logged();
     this.loggedWithOauth.next(true);
     console.log(this.loggedInSubject);
     return true;
@@ -59,23 +64,11 @@ export class ApiService {
     headers.set("withCredentials", "true");
     const body = { username, password };
 
-    var response = this.http.post<string>("http://localhost:8080/login", body, {
+    return this.http.post<string>("http://localhost:8080/login", body, {
       headers,
       //withCredentials: true,// cross-site Access-Control requests should be made using credentials such as cookies, authentication headers or TLS client certificates
       responseType: "text" as "json",
     });
-
-    response.subscribe({
-      next: (data: string) => {
-        localStorage.setItem("jwt", data);
-        this.loggedInSubject.next(true);
-      },
-      error: (err) => {
-        console.error("Login failed:", err);
-        return false;
-      },
-    });
-    return true;
   }
 
   public logout() {

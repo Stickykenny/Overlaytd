@@ -14,7 +14,7 @@ header {
 
 .sidebar {
   position: fixed;
-  width: 60px;
+  width: 3vw;
   transition: width var(--sidebartransition);
   background-color: #5f7af049;
   overflow-x: hidden;
@@ -24,7 +24,7 @@ header {
 }
 
 .sidebar.uncollapsed {
-  width: 250px;
+  width: 13vw;
 }
 
 .sidebarhelper {
@@ -58,4 +58,28 @@ header {
 
 .content {
   padding-left: 65px;
+}
+
+.collapsezone {
+  opacity: 0;
+  position: fixed;
+  height: 100%;
+  width: 1vw;
+  left: 3vw;
+
+  z-index: 100;
+  transition: all var(--sidebartransition);
+  background-color: #00000000;
+  border-style: none;
+}
+
+.collapsezone.uncollapsed {
+  opacity: 1;
+  position: fixed;
+  height: 100%;
+  width: 86vw;
+  left: 13vw;
+
+  backdrop-filter: blur(3px);
+  transition: all var(--sidebartransition);
 }
