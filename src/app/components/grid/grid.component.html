@@ -22,7 +22,14 @@
     --
     <button (click)="exportData()">Export data</button>
     --
-    <input type="file" id="file" (change)="importData($event)" accept=".csv" />
+    <input
+      #fileInput
+      type="file"
+      id="file"
+      (click)="fileInput.value = ''"
+      (change)="importData($event)"
+      accept=".csv"
+    />
     <br />
 
     Type >

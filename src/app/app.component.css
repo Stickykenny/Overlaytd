@@ -30,6 +30,7 @@ header {
 .sidebarhelper {
   position: fixed;
   transition: all var(--sidebartransition);
+  z-index: 1050;
   margin-left: 65px;
 }
 
@@ -69,7 +70,7 @@ header {
 
   z-index: 100;
   transition: all var(--sidebartransition);
-  background-color: #00000000;
+  background-color: #0000001f;
   border-style: none;
 }
 

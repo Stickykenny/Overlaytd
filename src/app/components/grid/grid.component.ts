@@ -17,6 +17,8 @@ import { RowModel, RowModelTransfer } from "src/app/models/RowModel";
 import { ToastrService } from "ngx-toastr";
 import { FormsModule } from "@angular/forms";
 import * as Papa from "papaparse";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { ConfirmDialogComponent } from "src/app/confirm-dialog/confirm-dialog.component";
 
 @Component({
   selector: "app-grid",
@@ -73,7 +75,7 @@ export class GridComponent implements OnInit {
       field: "type",
       getQuickFilterText: (params: any) => {
         return params.value;
-      },
+      }, // Why not in the default settings if applied to all ? I need rewrite this option each one separately
     },
     {
       headerName: "Name",
@@ -126,7 +128,11 @@ export class GridComponent implements OnInit {
 
   ngOnInit() {}
 
-  constructor(private service: ApiService, private toastr: ToastrService) {}
+  constructor(
+    private service: ApiService,
+    private toastr: ToastrService,
+    private modalService: NgbModal
+  ) {}
 
   private gridApi!: GridApi;
 
@@ -172,12 +178,8 @@ export class GridComponent implements OnInit {
         simplified.forEach((astre) => {
           delete astre.astreID;
         });
-        this.toastr.success(
-          "Fetched a total of " + simplified.length + " rows",
-          "Get Astres Successful"
-        );
 
-        this.rowData = simplified;
+        this.importCheck(simplified);
       },
       error: (err) => {
         console.error("Error loading data", err);
@@ -282,7 +284,7 @@ export class GridComponent implements OnInit {
     });
 
     if (duplicates.size == 0) {
-      this.toastr.success("A", "No duplicates found");
+      this.toastr.success("", "No duplicates found");
       return true;
     }
     this.toastr.error(
@@ -293,16 +295,51 @@ export class GridComponent implements OnInit {
     return false;
   }
 
+  /**
+   * Before importing, ask if the data should overwrite/append/ or be cancelled
+   *
+   *
+   */
+  importCheck(newData: RowModelTransfer[]) {
+    if (this.rowData.length == 0) {
+      this.rowData = newData;
+    } else {
+      const modalRef = this.modalService.open(ConfirmDialogComponent, {
+        centered: true,
+      });
+      modalRef.componentInstance.message =
+        "There was already data present. Do you wish to overwrite them ? (YES : overwrite | NO : append)";
+
+      modalRef.result
+        .then((result) => {
+          console.log("User chose:", result);
+          if (result === "yes") {
+            this.rowData = newData;
+            this.toastr.success(
+              "Imported a total of " + newData.length + " rows",
+              "Import Successful"
+            );
+          } else if (result === "no") {
+            this.rowData = newData.concat(this.rowData);
+            this.toastr.success(
+              "Appended a total of " + newData.length + " rows",
+              "Import Successful"
+            );
+          } else {
+            this.toastr.info("", "Import Cancelled");
+          }
+        })
+        .catch(() => {
+          console.log("Modal dismissed");
+          this.toastr.info("", "Import Cancelled");
+        });
+    }
+  }
+
   importData(event: any): void {
     const file: File = event.target.files[0];
-    if (file) {
-      /*Papa.parse(file, {
-        header: false,
-        complete: function (results) {
-          console.log(results);
-        },
-      });*/
 
+    if (file) {
       const reader: FileReader = new FileReader();
       reader.readAsText(file);
       reader.onload = (e: any) => {
@@ -322,7 +359,8 @@ export class GridComponent implements OnInit {
               date_added: line["Date added"] || "",
               last_modified: line["Last Modified"] || "",
             }));
-            this.rowData = trs;
+
+            this.importCheck(trs);
           },
         });
       };
