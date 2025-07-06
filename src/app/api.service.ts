@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 
 import { Astre } from "./models/Astre";
@@ -6,12 +6,14 @@ import { BehaviorSubject, Observable } from "rxjs";
 import { jwtDecode, JwtPayload } from "jwt-decode";
 import { Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
+import { cp } from "fs";
 
 @Injectable({
   providedIn: "root",
 })
 export class ApiService {
   isLogged = false;
+  loginData = { username: "", password: "" };
 
   private loggedInSubject = new BehaviorSubject<boolean>(false);
   private loggedWithOauth = new BehaviorSubject<boolean>(false);
@@ -23,7 +25,7 @@ export class ApiService {
     private router: Router,
     private toastr: ToastrService
   ) {
-    const token = localStorage.getItem("jwt");
+    const token = localStorage.removeItem("jwt");
     if (token != null) {
       var decoded = jwtDecode<JwtPayload>(token);
       if (decoded.exp != null) {
@@ -55,21 +57,30 @@ export class ApiService {
     return true;
   }
 
-  public login(username: string, password: string) {
-    const headers = new HttpHeaders({
-      Authorization: "Basic " + btoa(username + ":" + password),
-      // btoa binary to ascii
-    });
-    headers.set("access-control-allow-origin", "http://localhost:4200/");
-    headers.set("withCredentials", "true");
-    const body = { username, password };
+  public login(usernameInput: string, passwordInput: string) {
+    return this.http.post(
+      "http://localhost:8080/login2",
+      {
+        username: usernameInput,
+        password: passwordInput,
+      },
+      {
+        headers: {
+          "access-control-allow-origin": "http://localhost:4200/",
+          withCredentials: "true",
+          "Content-Type": "application/json",
+          accept: "application/hal+json",
+        },
+        responseType: "text" as "json",
+      }
+    );
+  }
 
-    return this.http.post<string>("http://localhost:8080/login", body, {
+  /*this.http.post<string>("http://localhost:8080/login", body, {
       headers,
       //withCredentials: true,// cross-site Access-Control requests should be made using credentials such as cookies, authentication headers or TLS client certificates
       responseType: "text" as "json",
-    });
-  }
+    });*/
 
   public logout() {
     localStorage.removeItem("jwt");
