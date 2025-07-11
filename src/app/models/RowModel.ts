@@ -8,6 +8,7 @@ export interface RowModel {
   parent: string;
   date_added: string;
   last_modified: string;
+  was_modified?: boolean;
 }
 export interface RowModelTransfer {
   type: string;
@@ -18,4 +19,5 @@ export interface RowModelTransfer {
   parent: string;
   date_added: string;
   last_modified: string;
+  was_modified?: boolean;
 }

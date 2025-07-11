@@ -5,7 +5,6 @@ import {
   GridReadyEvent,
   themeAlpine,
   RowSelectionOptions,
-  GetRowIdFunc,
   IRowNode,
 } from "ag-grid-community";
 import { Component, inject, OnInit } from "@angular/core";
@@ -25,12 +24,18 @@ import { ConfirmDialogComponent } from "src/app/confirm-dialog/confirm-dialog.co
   standalone: true,
   imports: [CommonModule, AgGridAngular, FormsModule], //CommonModule required for ngFor
   templateUrl: "./grid.component.html",
+  styleUrl: "./grid.component.css",
 })
 export class GridComponent implements OnInit {
   // Row Data: The data to be displayed.
   count: number = 1;
-
-  themes = [{ label: "themeQuartz", theme: themeAlpine }];
+  separator: string = "¤";
+  themes = [
+    {
+      label: "themeQuartz",
+      theme: themeAlpine,
+    },
+  ];
   theme = themeAlpine;
 
   title: string = "Ag Grid";
@@ -52,12 +57,6 @@ export class GridComponent implements OnInit {
   userKeys = Object.keys(this.newItems) as (keyof RowModel)[];
   selectedKey = "";
 
-  gridOptions: GridOptions = {
-    autoSizeStrategy: {
-      type: "fitCellContents",
-    },
-  };
-
   defaultColDef: ColDef = {
     flex: 1,
     minWidth: 150,
@@ -65,6 +64,11 @@ export class GridComponent implements OnInit {
     filter: "agTextColumnFilter",
     suppressHeaderMenuButton: true,
     suppressHeaderContextMenu: true,
+    cellStyle: {
+      "align-items": "center",
+      display: "flex",
+      "justify-content": "center",
+    },
   };
   rowSelection: RowSelectionOptions | "single" | "multiple" = {
     mode: "multiRow",
@@ -94,8 +98,19 @@ export class GridComponent implements OnInit {
     {
       headerName: "Description",
       field: "description",
-      maxWidth: 500,
+      minWidth: 400,
       getQuickFilterText: (params: any) => {
+        return params.value;
+      },
+      wrapText: true,
+      autoHeight: true,
+      cellEditor: "agLargeTextCellEditor",
+      cellStyle: {
+        "padding-top": "1px",
+        "padding-bottom": "1px",
+      },
+      cellRenderer: (params: any) => {
+        // Fool AG grid to render cell value as html
         return params.value;
       },
     },
@@ -109,20 +124,17 @@ export class GridComponent implements OnInit {
     {
       headerName: "Date added",
       field: "date_added",
-      editable: false,
       hide: true,
-      getQuickFilterText: (params: any) => {
-        return params.value;
-      },
     },
     {
       headerName: "Last Modified",
       field: "last_modified",
-      editable: false,
       hide: true,
-      getQuickFilterText: (params: any) => {
-        return params.value;
-      },
+    },
+    {
+      headerName: "Was Modified ?",
+      field: "was_modified",
+      hide: true,
     },
   ];
 
@@ -136,10 +148,27 @@ export class GridComponent implements OnInit {
 
   private gridApi!: GridApi;
 
+  gridOptions: GridOptions = {
+    autoSizeStrategy: {
+      type: "fitCellContents",
+    },
+
+    getRowId(params) {
+      return params.data.name;
+    },
+    onCellValueChanged(event) {
+      let data = event.data;
+      // Can't update when the rowID is being changed
+      if (event.column.getColId() != "name") {
+        let rowNode = event.api.getRowNode(data.name)!;
+        rowNode!.setDataValue("was_modified", true);
+      }
+    },
+  };
+
   onGridReady(evt: GridReadyEvent) {
     this.gridApi = evt.api;
   }
-
   /**
    * Quick Search in grid, can also filter put a specific column to search
    */
@@ -169,10 +198,10 @@ export class GridComponent implements OnInit {
     console.log("Fetching data");
     this.service.getAstres().subscribe({
       next: (res) => {
-        // TODO move out this logics
         const simplified: RowModelTransfer[] = res.map((item) => ({
           ...item,
           ...item.astreID,
+          was_modified: false,
         }));
 
         simplified.forEach((astre) => {
@@ -196,23 +225,26 @@ export class GridComponent implements OnInit {
     }
 
     const astres: Astre[] = [];
-    const rowDatatmp: any[] = [];
+    const rowDatatmp: RowModelTransfer[] = [];
 
-    this.gridApi.forEachNode(function (node) {
+    this.gridApi.forEachNode(function (node: IRowNode) {
       rowDatatmp.push(node.data);
     });
 
-    rowDatatmp.forEach((item) => {
-      astres.push({
-        astreID: { type: item.type, name: item.name },
-        tags: item.tags,
-        description: item.description,
-        parent: item.parent,
-        date_added: item.date_added,
-        last_modified: item.last_modified,
-      });
+    rowDatatmp.forEach((item: RowModelTransfer) => {
+      if (item.was_modified == true) {
+        astres.push({
+          astreID: { type: item.type, name: item.name },
+          tags: item.tags,
+          description: item.description,
+          parent: item.parent,
+          date_added: item.date_added,
+          last_modified: item.last_modified,
+        });
+      }
     });
     console.log(astres);
+    console.log(astres.length);
 
     this.service.postAstres(astres).subscribe({
       next: (res) => {
@@ -238,6 +270,7 @@ export class GridComponent implements OnInit {
         parent: parent,
         last_modified: "",
         date_added: "",
+        was_modified: true,
       },
     ];
     this.gridApi.applyTransaction({
@@ -358,6 +391,7 @@ export class GridComponent implements OnInit {
               parent: line["Parent"] || "",
               date_added: line["Date added"] || "",
               last_modified: line["Last Modified"] || "",
+              was_modified: false,
             }));
 
             this.importCheck(trs);
