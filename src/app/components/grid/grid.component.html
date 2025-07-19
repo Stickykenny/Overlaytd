@@ -8,6 +8,7 @@
     <main class="main">
       <!--onclick is the native javascript not angular-->
       <button (click)="retrieveData()">GET DATA</button>
+      <!-- Event Binding -->
       -
       <button (click)="sendData()">POST DATA</button>
       - - -
@@ -74,6 +75,7 @@
         name="userField"
         (change)="onFilterTextBoxChanged(selectedKey)"
       >
+        <!-- Both way Binding with  [(ngModel)] -->
         <option [value]="">{{ "" }}</option>
         <option *ngFor="let key of userKeys" [value]="key">
           {{ key }}
@@ -82,6 +84,7 @@
     </div>
     <div>
       <h1>{{ title }}!</h1>
+      <!-- String binding -->
       <ag-grid-angular
         style="height: 80vh"
         class="ag-theme-quartz"
@@ -93,6 +96,7 @@
         [rowSelection]="rowSelection"
         (gridReady)="onGridReady($event)"
       >
+        <!--Property Binding -->
       </ag-grid-angular>
     </div>
   </body>
