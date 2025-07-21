@@ -19,13 +19,14 @@ export class ApiService {
   private loggedWithOauth = new BehaviorSubject<boolean>(false);
 
   // Observable for other components to subscribe to
-  isLoggedIn$: Observable<boolean> = this.loggedInSubject.asObservable();
+  readonly isLoggedIn$: Observable<boolean> =
+    this.loggedInSubject.asObservable();
   constructor(
     private http: HttpClient,
     private router: Router,
     private toastr: ToastrService
   ) {
-    const token = localStorage.removeItem("jwt");
+    /*const token = localStorage.removeItem("jwt");
     if (token != null) {
       var decoded = jwtDecode<JwtPayload>(token);
       if (decoded.exp != null) {
@@ -33,7 +34,7 @@ export class ApiService {
           this.loggedInSubject.next(true);
         }
       }
-    }
+    }*/
   }
 
   getCsrfToken() {
@@ -136,5 +137,13 @@ export class ApiService {
         },
       });
     return true;
+  }
+
+  getUserDetails() {
+    const headers = new HttpHeaders({});
+
+    return this.http.get<Astre[]>("http://localhost:8080/userDetails", {
+      headers,
+    });
   }
 }

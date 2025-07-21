@@ -3,14 +3,15 @@ import { LoginComponent } from "./login/login.component";
 import { GridComponent } from "./components/grid/grid.component";
 import { NgIf } from "@angular/common";
 import { OauthCallbackComponent } from "./oauth-callback/oauth-callback.component";
+import { HomeComponent } from "./components/home/home.component";
 //import { HomeComponent } from "./home/home.component";
 
 const routeConfig: Routes = [
-  /*{
-    path: "",
+  {
+    path: "home",
     component: HomeComponent,
     title: "Home page",
-  },*/
+  },
   /*{
     path: "details/:id",
     component: DetailsComponent,
