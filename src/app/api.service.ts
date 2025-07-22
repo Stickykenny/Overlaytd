@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 
-import { Astre } from "./models/Astre";
+import { Astre, AstreID } from "./models/Astre";
 import { BehaviorSubject, Observable } from "rxjs";
 import { jwtDecode, JwtPayload } from "jwt-decode";
 import { Router } from "@angular/router";
@@ -117,15 +117,14 @@ export class ApiService {
   }
   deleteAstre(type: string, name: string): boolean {
     const headers = new HttpHeaders({});
+    const astreID: AstreID = { type, name };
     headers.set("access-control-allow-origin", "http://localhost:4200/");
     this.http
-      .delete<Astre[]>(
-        "http://localhost:8080/api/astres/" + type + "/" + name,
-        {
-          headers,
-          withCredentials: true,
-        }
-      )
+      .delete<Astre[]>("http://localhost:8080/api/astres/astre", {
+        headers,
+        withCredentials: true,
+        body: astreID,
+      })
       .subscribe({
         next: (response) => {
           console.log("Entry deleted!", response);
