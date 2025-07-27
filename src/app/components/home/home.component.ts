@@ -7,10 +7,25 @@ import { ToastrService } from "ngx-toastr";
   selector: "app-home",
   imports: [CommonModule],
   template: `
+    <div class="content-warning">
+      <div class="title">
+        Below informations <br />
+        are not meant to be shared
+      </div>
+    </div>
     <p></p>
+    @defer (on viewport) { Now showing..
     <pre>{{ details | json }}</pre>
+    <!-- pre is mandatory here -->
+    } @placeholder {
+    <p>Details Informations here will be loading</p>
+    } @loading (minimum 7s) {
+    <p>Mandatory 7 sec wait before it's too late</p>
+    } @error {
+    <p>Failed to load details.</p>
+    }
   `,
-  styles: ``,
+  styleUrl: "home.component.css",
 })
 /**
  * This is not safe to show as it contains private information

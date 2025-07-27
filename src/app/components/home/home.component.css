@@ -1,0 +1,19 @@
+:host {
+  --horizontalShadowOffset: 0px;
+  --verticalShadowOffset: 3px;
+}
+
+.content-warning {
+  background-color: #716caa1a;
+  height: 100vh;
+  text-align: center;
+}
+
+.content-warning .title {
+  padding-top: 75vh;
+  color: #ff914d;
+  font-size: 32px;
+  font-weight: 500;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  text-shadow: var(--horizontalShadowOffset) var(--verticalShadowOffset) #569e4c;
+}

@@ -134,7 +134,8 @@ export class GridComponent implements OnInit {
     {
       headerName: "Was Modified ?",
       field: "was_modified",
-      hide: true,
+      maxWidth: 30,
+      hide: false,
     },
   ];
 
@@ -160,8 +161,10 @@ export class GridComponent implements OnInit {
       let data = event.data;
       // Can't update when the rowID is being changed
       if (event.column.getColId() != "name") {
-        let rowNode = event.api.getRowNode(data.name)!;
-        rowNode!.setDataValue("was_modified", true);
+        if (event.column.getColId() != "was_modified") {
+          let rowNode = event.api.getRowNode(data.name)!;
+          rowNode!.setDataValue("was_modified", true);
+        }
       }
     },
   };
@@ -243,11 +246,15 @@ export class GridComponent implements OnInit {
         });
       }
     });
-    console.log(astres);
-    console.log(astres.length);
-
     this.service.postAstres(astres).subscribe({
       next: (res) => {
+        this.gridApi.forEachNode((node: IRowNode) => {
+          if (node.data.was_modified == true) {
+            // Reset the was_modified attribute
+            let rowNode = this.gridApi.getRowNode(node.data.name)!;
+            node.setDataValue("was_modified", false);
+          }
+        });
         this.toastr.success(
           "A total of " + astres.length + " rows were sent",
           "Successful Update of data"
@@ -282,7 +289,6 @@ export class GridComponent implements OnInit {
 
   deleteSelected() {
     const selectedData = this.gridApi.getSelectedNodes();
-    console.log(selectedData);
     var count: number = 0;
 
     selectedData.forEach((node) => {
