@@ -7,7 +7,6 @@ export interface Astre {
   last_modified: string;
 }
 
-// Row Data Interface
 export interface AstreID {
   type: string;
   name: string;

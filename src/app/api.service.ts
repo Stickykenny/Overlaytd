@@ -115,27 +115,15 @@ export class ApiService {
       }
     );
   }
-  deleteAstre(type: string, name: string): boolean {
+  deleteAstre(type: string, name: string): Observable<Astre[]> {
     const headers = new HttpHeaders({});
     const astreID: AstreID = { type, name };
     headers.set("access-control-allow-origin", "http://localhost:4200/");
-    this.http
-      .delete<Astre[]>("http://localhost:8080/api/astres/astre", {
-        headers,
-        withCredentials: true,
-        body: astreID,
-      })
-      .subscribe({
-        next: (response) => {
-          console.log("Entry deleted!", response);
-          return true;
-        },
-        error: (err) => {
-          console.error("Delete failed", err);
-          return false;
-        },
-      });
-    return true;
+    return this.http.delete<Astre[]>("http://localhost:8080/api/astres/astre", {
+      headers,
+      withCredentials: true,
+      body: astreID,
+    });
   }
 
   getUserDetails() {

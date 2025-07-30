@@ -19,6 +19,11 @@ import * as Papa from "papaparse";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ConfirmDialogComponent } from "src/app/confirm-dialog/confirm-dialog.component";
 
+import { Store } from "@ngrx/store";
+import { loadAstres, addAstres, deleteAstres } from "../../store/astre.actions";
+import { selectAstres } from "src/app/store/astre.selectors";
+import { Observable } from "rxjs";
+
 @Component({
   selector: "app-grid",
   standalone: true,
@@ -27,6 +32,8 @@ import { ConfirmDialogComponent } from "src/app/confirm-dialog/confirm-dialog.co
   styleUrl: "./grid.component.css",
 })
 export class GridComponent implements OnInit {
+  public allAstres$: Observable<Astre[]> = this.store.select(selectAstres);
+
   // Row Data: The data to be displayed.
   count: number = 1;
   separator: string = "¤";
@@ -139,13 +146,17 @@ export class GridComponent implements OnInit {
     },
   ];
 
-  ngOnInit() {}
-
   constructor(
     private service: ApiService,
     private toastr: ToastrService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private store: Store
   ) {}
+
+  ngOnInit() {
+    this.store.dispatch(loadAstres());
+    this.retrieveData();
+  }
 
   private gridApi!: GridApi;
 
@@ -199,7 +210,8 @@ export class GridComponent implements OnInit {
 
   async retrieveData() {
     console.log("Fetching data");
-    this.service.getAstres().subscribe({
+
+    /*this.service.getAstres()*/ this.allAstres$.subscribe({
       next: (res) => {
         const simplified: RowModelTransfer[] = res.map((item) => ({
           ...item,
@@ -268,6 +280,7 @@ export class GridComponent implements OnInit {
   }
 
   addItems(type: string, tags: string, parent: string) {
+    this.allAstres$.subscribe((a) => console.log(a));
     const newItems: RowModel[] = [
       {
         type: type ? type : "type" + this.count,
@@ -290,19 +303,35 @@ export class GridComponent implements OnInit {
   deleteSelected() {
     const selectedData = this.gridApi.getSelectedNodes();
     var count: number = 0;
-
+    /*.subscribe({
+        next: (response) => {
+          console.log("Entry deleted!", response);
+          return true;
+        },
+        error: (err) => {
+          console.error("Delete failed", err);
+          return false;
+        },
+      });*/
     selectedData.forEach((node) => {
-      if (this.service.deleteAstre(node.data.type, node.data.name)) {
-        this.gridApi.applyTransaction({
-          remove: [selectedData[count].data],
-        });
-        count++;
-      }
+      this.service.deleteAstre(node.data.type, node.data.name).subscribe({
+        next: (response) => {
+          console.log("Entry deleted!", response);
+          this.gridApi.applyTransaction({
+            remove: [selectedData[count].data],
+          });
+          count++;
+        },
+        error: (err) => {
+          console.error("Delete failed", err);
+          return false;
+        },
+      });
+      this.toastr.success(
+        "A total of " + count + " rows were removed",
+        "Successful deletion of data"
+      );
     });
-    this.toastr.success(
-      "A total of " + count + " rows were removed",
-      "Successful deletion of data"
-    );
   }
 
   /**
@@ -408,6 +437,7 @@ export class GridComponent implements OnInit {
   }
 
   exportData() {
+    console.log(this.allAstres$);
     var colDefsFields: string[] = [];
     this.colDefs.forEach((col) => colDefsFields.push(col.field));
     this.gridApi!.exportDataAsCsv({

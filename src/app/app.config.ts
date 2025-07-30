@@ -6,12 +6,17 @@ import {
   withInterceptors,
   withInterceptorsFromDi,
 } from "@angular/common/http";
-import { ApplicationConfig } from "@angular/core";
+import { ApplicationConfig, importProvidersFrom } from "@angular/core";
 import { TokenInterceptor } from "./token.interceptors";
 import { provideRouter } from "@angular/router";
 import routeConfig from "./routes";
 import { provideToastr } from "ngx-toastr";
 import { provideAnimations } from "@angular/platform-browser/animations";
+import { StoreModule } from "@ngrx/store";
+import { astreFeatureKey, AstreReducer } from "./store/astre.reducer";
+import { AstreEffects } from "./store/astre.effects";
+import { EffectsModule } from "@ngrx/effects";
+import { StoreDevtoolsModule } from "@ngrx/store-devtools";
 //import { csrfInterceptor } from "./csrf.interceptor";
 
 export const appConfig: ApplicationConfig = {
@@ -28,5 +33,14 @@ export const appConfig: ApplicationConfig = {
       progressAnimation: "decreasing",
     }),
     provideAnimations(),
+
+    importProvidersFrom(
+      StoreModule.forFeature(astreFeatureKey, AstreReducer),
+      StoreModule.forRoot({
+        router: AstreReducer,
+      }),
+      StoreDevtoolsModule.instrument(),
+      EffectsModule.forRoot([AstreEffects])
+    ),
   ],
 };
