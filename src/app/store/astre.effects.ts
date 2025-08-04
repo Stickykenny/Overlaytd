@@ -5,6 +5,7 @@ import * as AstreActions from "./astre.actions";
 import { catchError, map, mergeMap, of, switchMap } from "rxjs";
 import { Store } from "@ngrx/store";
 import { AstreState } from "./astre.reducer";
+import { ToastrService } from "ngx-toastr";
 
 //
 
@@ -19,7 +20,6 @@ export class AstreEffects {
   loadAstres$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AstreActions.loadAstres),
-      // switch to new observable string
       switchMap(() =>
         this.api.getAstres().pipe(
           map((astres) => AstreActions.loadAstresSuccess({ astres })),
@@ -29,26 +29,25 @@ export class AstreEffects {
     )
   );
 
-  saveAstres$ = createEffect(() =>
+  addAstres$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AstreActions.addAstres),
-      // switch to new observable string
-      switchMap(() =>
-        this.api.getAstres().pipe(
-          map((astres) => AstreActions.loadAstresSuccess({ astres })),
-          catchError((error) => of(AstreActions.loadAstresFailure({ error })))
+      switchMap((action) =>
+        this.api.postAstres(action.newastres).pipe(
+          map(() => AstreActions.addAstresSuccess()),
+          catchError((error) => of(AstreActions.addAstresFailure()))
         )
       )
     )
   );
-  /*deleteAstres$ = createEffect(() =>
+  deleteAstres$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AstreActions.deleteAstres),
-      // switch to new observable string
       switchMap((action) =>
-        this.api.deleteAstre(action.astreID.type, action.astreID.name).pipe(
-        )
+        this.api
+          .deleteAstre(action.astreID.type, action.astreID.name)
+          .pipe(map(() => AstreActions.actionComplete()))
       )
     )
-  );*/
+  );
 }

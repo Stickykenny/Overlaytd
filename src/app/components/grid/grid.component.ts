@@ -20,9 +20,13 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ConfirmDialogComponent } from "src/app/confirm-dialog/confirm-dialog.component";
 
 import { Store } from "@ngrx/store";
-import { loadAstres, addAstres, deleteAstres } from "../../store/astre.actions";
-import { selectAstres } from "src/app/store/astre.selectors";
-import { Observable } from "rxjs";
+import * as AstreActions from "../../store/astre.actions";
+import {
+  selectAddAstreResult,
+  selectAstres,
+} from "src/app/store/astre.selectors";
+import { filter, Observable, take } from "rxjs";
+import { ActionStatus } from "src/app/store/action.state";
 
 @Component({
   selector: "app-grid",
@@ -33,6 +37,8 @@ import { Observable } from "rxjs";
 })
 export class GridComponent implements OnInit {
   public allAstres$: Observable<Astre[]> = this.store.select(selectAstres);
+  public addAstreResult$: Observable<ActionStatus> =
+    this.store.select(selectAddAstreResult);
 
   // Row Data: The data to be displayed.
   count: number = 1;
@@ -66,7 +72,7 @@ export class GridComponent implements OnInit {
 
   defaultColDef: ColDef = {
     flex: 1,
-    minWidth: 150,
+    //minWidth: 150,
     editable: true,
     filter: "agTextColumnFilter",
     suppressHeaderMenuButton: true,
@@ -105,7 +111,7 @@ export class GridComponent implements OnInit {
     {
       headerName: "Description",
       field: "description",
-      minWidth: 400,
+      //minWidth: 400,
       getQuickFilterText: (params: any) => {
         return params.value;
       },
@@ -141,28 +147,31 @@ export class GridComponent implements OnInit {
     {
       headerName: "Was Modified ?",
       field: "was_modified",
-      maxWidth: 30,
+      //width: 30,
       hide: false,
     },
   ];
 
   constructor(
-    private service: ApiService,
     private toastr: ToastrService,
     private modalService: NgbModal,
     private store: Store
   ) {}
 
   ngOnInit() {
-    this.store.dispatch(loadAstres());
-    this.retrieveData();
+    this.store.dispatch(AstreActions.loadAstres());
+
+    if (this.rowData.length == 0) {
+      this.retrieveData();
+    }
   }
 
   private gridApi!: GridApi;
 
   gridOptions: GridOptions = {
     autoSizeStrategy: {
-      type: "fitCellContents",
+      //type: "fitCellContents",
+      type: "fitGridWidth",
     },
 
     getRowId(params) {
@@ -174,7 +183,9 @@ export class GridComponent implements OnInit {
       if (event.column.getColId() != "name") {
         if (event.column.getColId() != "was_modified") {
           let rowNode = event.api.getRowNode(data.name)!;
-          rowNode!.setDataValue("was_modified", true);
+          if (rowNode) {
+            rowNode.setDataValue("was_modified", true);
+          }
         }
       }
     },
@@ -209,9 +220,7 @@ export class GridComponent implements OnInit {
   }
 
   async retrieveData() {
-    console.log("Fetching data");
-
-    /*this.service.getAstres()*/ this.allAstres$.subscribe({
+    /*this.service.getAstres()*/ this.allAstres$.pipe(take(1)).subscribe({
       next: (res) => {
         const simplified: RowModelTransfer[] = res.map((item) => ({
           ...item,
@@ -222,8 +231,7 @@ export class GridComponent implements OnInit {
         simplified.forEach((astre) => {
           delete astre.astreID;
         });
-
-        this.importCheck(simplified);
+        this.importCheck(simplified, true);
       },
       error: (err) => {
         console.error("Error loading data", err);
@@ -243,11 +251,8 @@ export class GridComponent implements OnInit {
     const rowDatatmp: RowModelTransfer[] = [];
 
     this.gridApi.forEachNode(function (node: IRowNode) {
-      rowDatatmp.push(node.data);
-    });
-
-    rowDatatmp.forEach((item: RowModelTransfer) => {
-      if (item.was_modified == true) {
+      if (node.data.was_modified == true || node.isSelected()) {
+        let item = node.data;
         astres.push({
           astreID: { type: item.type, name: item.name },
           tags: item.tags,
@@ -258,29 +263,45 @@ export class GridComponent implements OnInit {
         });
       }
     });
-    this.service.postAstres(astres).subscribe({
-      next: (res) => {
-        this.gridApi.forEachNode((node: IRowNode) => {
-          if (node.data.was_modified == true) {
-            // Reset the was_modified attribute
-            let rowNode = this.gridApi.getRowNode(node.data.name)!;
-            node.setDataValue("was_modified", false);
+
+    /*this.service
+      .postAstres(astres)*/
+    this.store.dispatch(AstreActions.addAstres({ newastres: astres }));
+
+    this.addAstreResult$
+      .pipe(
+        filter((status) => status !== ActionStatus.PENDING),
+        take(1)
+      )
+      .subscribe({
+        next: (actionStatus) => {
+          switch (actionStatus) {
+            case ActionStatus.SUCCESS:
+              this.gridApi.forEachNode((node: IRowNode) => {
+                if (node.data.was_modified == true) {
+                  // Reset the was_modified attribute
+                  this.gridApi.getRowNode(node.data.name)!;
+                  node.setDataValue("was_modified", false);
+                  node.setSelected(false);
+                }
+              });
+              this.toastr.success(
+                "A total of " + astres.length + " rows were sent",
+                "Successful Update of data"
+              );
+              break;
+            default:
+              this.toastr.error("Error sending data");
+              break;
           }
-        });
-        this.toastr.success(
-          "A total of " + astres.length + " rows were sent",
-          "Successful Update of data"
-        );
-      },
-      error: (err) => {
-        console.error("Error sending data", err);
-        this.toastr.error(err, "Error sending data");
-      },
-    });
+        },
+        error: (err) => {
+          this.toastr.error(err, "Observable Error sending data");
+        },
+      });
   }
 
   addItems(type: string, tags: string, parent: string) {
-    this.allAstres$.subscribe((a) => console.log(a));
     const newItems: RowModel[] = [
       {
         type: type ? type : "type" + this.count,
@@ -314,24 +335,37 @@ export class GridComponent implements OnInit {
         },
       });*/
     selectedData.forEach((node) => {
-      this.service.deleteAstre(node.data.type, node.data.name).subscribe({
+      /*this.service.deleteAstre(node.data.type, node.data.name).*/
+      this.store.dispatch(
+        AstreActions.deleteAstres({
+          astreID: {
+            type: node.data.type,
+            name: node.data.name,
+          },
+        })
+      );
+      console.log("Entry deleted!", node.data.type, " - ", node.data.name);
+      this.gridApi.applyTransaction({
+        remove: [selectedData[count].data],
+      });
+      count += 1;
+      /*subscribe({
         next: (response) => {
-          console.log("Entry deleted!", response);
+          console.log("Entry deleted!", node.data.type, " - ", node.data.name);
           this.gridApi.applyTransaction({
             remove: [selectedData[count].data],
           });
-          count++;
         },
         error: (err) => {
           console.error("Delete failed", err);
           return false;
         },
-      });
-      this.toastr.success(
-        "A total of " + count + " rows were removed",
-        "Successful deletion of data"
-      );
+      });*/
     });
+    this.toastr.success(
+      "A total of " + count + " rows were removed",
+      "Successful deletion of data"
+    );
   }
 
   /**
@@ -368,7 +402,7 @@ export class GridComponent implements OnInit {
    *
    *
    */
-  importCheck(newData: RowModelTransfer[]) {
+  importCheck(newData: RowModelTransfer[], force_overwrite?: boolean) {
     if (this.rowData.length == 0) {
       this.rowData = newData;
     } else {
@@ -381,7 +415,7 @@ export class GridComponent implements OnInit {
       modalRef.result
         .then((result) => {
           console.log("User chose:", result);
-          if (result === "yes") {
+          if (result === "yes" || force_overwrite) {
             this.rowData = newData;
             this.toastr.success(
               "Imported a total of " + newData.length + " rows",
@@ -428,7 +462,6 @@ export class GridComponent implements OnInit {
               last_modified: line["Last Modified"] || "",
               was_modified: false,
             }));
-
             this.importCheck(trs);
           },
         });
@@ -450,5 +483,9 @@ export class GridComponent implements OnInit {
       columnKeys: colDefsFields,
       suppressQuotes: false,
     });
+  }
+
+  test() {
+    this.allAstres$.subscribe((a) => console.log(a));
   }
 }

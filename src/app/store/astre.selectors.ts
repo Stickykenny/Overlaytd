@@ -9,7 +9,13 @@ export const selectAstres = createSelector(
   selectAstreState,
   (state) => state.astres
 );
-export const selectAstresLoading = createSelector(
+
+export const selectAddAstreResult = createSelector(
   selectAstreState,
-  (state) => state.loading
+  (state) => state.addStatus
+);
+
+export const selectLoadAstreResult = createSelector(
+  selectAstreState,
+  (state) => state.loadStatus
 );

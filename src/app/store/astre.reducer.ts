@@ -1,6 +1,7 @@
 import { createReducer, on } from "@ngrx/store";
 import * as AstreActions from "./astre.actions";
 import { Astre } from "../models/Astre";
+import { ActionStatus } from "./action.state";
 
 export const astreFeatureKey = "Astre"; // <-- make sure this matches
 
@@ -8,25 +9,51 @@ export interface AstreState {
   astres: Astre[];
   loading: boolean;
   error: string;
+
+  // Because an effect doesn't return anything, we will use a field to check state after effect/action
+  addStatus: ActionStatus;
+  loadStatus: ActionStatus;
 }
 
 export const initialState: AstreState = {
   astres: [],
   loading: false,
   error: "",
+  addStatus: ActionStatus.PENDING,
+  loadStatus: ActionStatus.PENDING,
 };
 
 export const AstreReducer = createReducer(
   initialState,
-  on(AstreActions.addAstres, (state, { astres }) => ({
+  on(AstreActions.addAstres, (state, { newastres }) => ({
     ...state, // spread operator to duplicate
-    astres, // add  addtional data
+    astres: [...state.astres, ...newastres], // add  addtional data
+  })),
+
+  on(AstreActions.addAstresSuccess, (state) => ({
+    ...state, // spread operator to duplicate
+    addStatus: ActionStatus.SUCCESS,
+  })),
+  on(AstreActions.addAstresFailure, (state) => ({
+    ...state, // spread operator to duplicate
+    addStatus: ActionStatus.FAILURE,
+  })),
+
+  on(AstreActions.addAstres, (state, { newastres }) => ({
+    ...state, // spread operator to duplicate
+    astres: [...state.astres, ...newastres], // add  addtional data
     loading: false,
   })),
 
   on(AstreActions.deleteAstres, (state, { astreID }) => ({
     ...state,
-    astres: state.astres.filter((astre) => astre.astreID !== astreID),
+    astres: state.astres.filter(
+      (astre) =>
+        !(
+          astre.astreID.name === astreID.name &&
+          astre.astreID.type === astreID.type
+        )
+    ),
     loading: false,
   })),
 
@@ -36,12 +63,12 @@ export const AstreReducer = createReducer(
     ...state,
     astres,
     error: "",
-    loading: false,
+    addStatus: ActionStatus.SUCCESS,
   })),
 
   on(AstreActions.loadAstresFailure, (state, { error }) => ({
     ...state,
     loading: false,
-    error,
+    addStatus: ActionStatus.FAILURE,
   }))
 );
