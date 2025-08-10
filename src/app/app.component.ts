@@ -3,6 +3,7 @@ import { Component } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { CommonModule } from "@angular/common";
 import { ApiService } from "./api.service";
+import { Observable } from "rxjs";
 @Component({
   selector: "app-root",
   imports: [RouterModule, CommonModule],
@@ -28,13 +29,18 @@ import { ApiService } from "./api.service";
         <br />
         <br />
         <a routerLink="/grid">Grid</a>
+        <br />
+        <br />
+        <a routerLink="/tree">Tree</a>
       </p>
-      <p *ngIf="isLoggedIn">
+      <p *ngIf="isLoggedIn$ | async">
+        <a routerLink="/home">Home</a>
         <br />
         <br />
         <a (click)="logout()" routerLink="/">Logout</a>
       </p>
     </div>
+
     <main class="content">
       <header class="brand-name">
         <img
@@ -55,24 +61,16 @@ import { ApiService } from "./api.service";
 //replaced the <app-home></app-home> tag with the <router-outlet> directive
 export class AppComponent {
   title = "homes";
-  isLoggedIn = false;
+  isLoggedIn$: Observable<boolean>;
 
   constructor(private auth: ApiService) {
-    this.auth.isLoggedIn$.subscribe((status) => {
-      this.isLoggedIn = status;
-    });
+    this.isLoggedIn$ = this.auth.isLoggedIn$;
   }
 
-  ngOnInit(): void {
-    //this.http.getCsrf();
-  }
+  ngOnInit(): void {}
 
-  ngAfterViewInit() {}
-
-  onSignedIn(): void {
-    this.isLoggedIn = true;
-  }
   logout(): void {
+    localStorage.removeItem("jwt");
     this.auth.logout();
   }
   toggleSidebar() {

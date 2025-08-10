@@ -25,26 +25,24 @@ export const initialState: AstreState = {
 
 export const AstreReducer = createReducer(
   initialState,
+
+  // ADD
   on(AstreActions.addAstres, (state, { newastres }) => ({
     ...state, // spread operator to duplicate
     astres: [...state.astres, ...newastres], // add  addtional data
   })),
 
   on(AstreActions.addAstresSuccess, (state) => ({
-    ...state, // spread operator to duplicate
+    ...state,
     addStatus: ActionStatus.SUCCESS,
   })),
+
   on(AstreActions.addAstresFailure, (state) => ({
-    ...state, // spread operator to duplicate
+    ...state,
     addStatus: ActionStatus.FAILURE,
   })),
 
-  on(AstreActions.addAstres, (state, { newastres }) => ({
-    ...state, // spread operator to duplicate
-    astres: [...state.astres, ...newastres], // add  addtional data
-    loading: false,
-  })),
-
+  // DELETE
   on(AstreActions.deleteAstres, (state, { astreID }) => ({
     ...state,
     astres: state.astres.filter(
@@ -57,6 +55,7 @@ export const AstreReducer = createReducer(
     loading: false,
   })),
 
+  // LOAD
   on(AstreActions.loadAstres, (state) => ({ ...state, loading: true })),
 
   on(AstreActions.loadAstresSuccess, (state, { astres }) => ({
