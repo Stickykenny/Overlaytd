@@ -2,14 +2,14 @@ import { Component, OnInit } from "@angular/core";
 import { ApiService } from "../api.service";
 import { CommonModule } from "@angular/common";
 import { FormsModule, NgForm } from "@angular/forms";
-import { NavigationEnd, Router } from "@angular/router";
 import { ActivatedRoute } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
-import { NavigateEvent } from "@angular/core/navigation_types.d-fAxd92YV";
+import { LoginHandlerService } from "./login.handler.service";
+import { SharedModule } from "../shared.module";
 
 @Component({
   selector: "app-login",
-  imports: [CommonModule, FormsModule], //CommonModule required for ngFor
+  imports: [SharedModule], //CommonModule required for ngFor
   templateUrl: "./login.component.html",
 })
 export class LoginComponent implements OnInit {
@@ -18,14 +18,10 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private service: ApiService,
-    private router: Router,
+    private loginHandler: LoginHandlerService,
     private toastr: ToastrService,
     private route: ActivatedRoute
-  ) {
-    router.events.subscribe((val) => {
-      //console.log(val instanceof NavigationEnd);
-    });
-  }
+  ) {}
 
   ngOnInit(): void {}
 
@@ -37,13 +33,17 @@ export class LoginComponent implements OnInit {
     // NgForm to fetch value from ngModel
     let a = this.service.login(this.username, this.password);
 
+    this.route.queryParamMap.subscribe((params) => {
+      const jwtToken = params.get("token");
+      if (jwtToken != null) {
+        console.log("valid token");
+        localStorage.setItem("jwt", jwtToken);
+      }
+    });
+
     a.subscribe({
-      next: (data: any) => {
-        localStorage.setItem("jwt", data);
-        this.service.logged();
-        this.router
-          .navigate(["/grid"])
-          .then(() => this.toastr.success("yep yep yep", "Login Successful"));
+      next: (jwtKey: any) => {
+        this.loginHandler.handle(jwtKey);
       },
       error: (err) => {
         console.error("Login failed:", err);
