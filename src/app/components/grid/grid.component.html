@@ -13,10 +13,10 @@
       <button (click)="sendData()">POST DATA</button>
       - - -
       <button (click)="deleteSelected()">DELETE SELECTED DATA</button> - - -
-      <button (click)="test()">TEST BUTTON</button>
+      <button (click)="test()">{{ test_name }}!</button>
+      <!-- String binding -->
     </main>
-
-    <br /><br />
+    <br />
     Defaults :
     <button (click)="addItems(type.value, tags.value, parent.value)">
       Add Items
@@ -84,8 +84,6 @@
       </select>
     </div>
     <div>
-      <h1>{{ title }}!</h1>
-      <!-- String binding -->
       <ag-grid-angular
         style="height: 80vh"
         class="ag-theme-quartz"

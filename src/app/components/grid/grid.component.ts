@@ -8,13 +8,11 @@ import {
   IRowNode,
 } from "ag-grid-community";
 import { Component, inject, OnInit } from "@angular/core";
-import { CommonModule } from "@angular/common";
 import { AgGridAngular } from "ag-grid-angular";
 import { Astre } from "../../models/Astre";
 import { ApiService } from "src/app/api.service";
 import { RowModel, RowModelTransfer } from "src/app/models/RowModel";
 import { ToastrService } from "ngx-toastr";
-import { FormsModule } from "@angular/forms";
 import * as Papa from "papaparse";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ConfirmDialogComponent } from "src/app/confirm-dialog/confirm-dialog.component";
@@ -27,11 +25,12 @@ import {
 } from "src/app/store/astre.selectors";
 import { filter, Observable, take } from "rxjs";
 import { ActionStatus } from "src/app/store/action.state";
+import { SharedModule } from "src/app/shared.module";
 
 @Component({
   selector: "app-grid",
   standalone: true,
-  imports: [CommonModule, AgGridAngular, FormsModule], //CommonModule required for ngFor
+  imports: [AgGridAngular, SharedModule], //CommonModule required for ngFor
   templateUrl: "./grid.component.html",
   styleUrl: "./grid.component.css",
 })
@@ -51,7 +50,7 @@ export class GridComponent implements OnInit {
   ];
   theme = themeAlpine;
 
-  title: string = "Ag Grid";
+  test_name: string = "TESTING BUTTON";
   rowData: RowModel[] = [];
   astre2Service: ApiService = inject(ApiService);
 
@@ -160,10 +159,8 @@ export class GridComponent implements OnInit {
 
   ngOnInit() {
     this.store.dispatch(AstreActions.loadAstres());
-
-    if (this.rowData.length == 0) {
-      this.retrieveData();
-    }
+    this.allAstres$ = this.store.select(selectAstres);
+    this.retrieveData();
   }
 
   private gridApi!: GridApi;
@@ -220,7 +217,7 @@ export class GridComponent implements OnInit {
   }
 
   async retrieveData() {
-    /*this.service.getAstres()*/ this.allAstres$.pipe(take(1)).subscribe({
+    var subscribeAllAstres = this.allAstres$.subscribe({
       next: (res) => {
         const simplified: RowModelTransfer[] = res.map((item) => ({
           ...item,
@@ -231,13 +228,14 @@ export class GridComponent implements OnInit {
         simplified.forEach((astre) => {
           delete astre.astreID;
         });
-        this.importCheck(simplified, true);
+        this.importCheck(simplified);
       },
       error: (err) => {
         console.error("Error loading data", err);
         this.toastr.error(err, "Error loading data");
       },
     });
+    subscribeAllAstres.unsubscribe();
   }
 
   async sendData() {
@@ -248,7 +246,6 @@ export class GridComponent implements OnInit {
     }
 
     const astres: Astre[] = [];
-    const rowDatatmp: RowModelTransfer[] = [];
 
     this.gridApi.forEachNode(function (node: IRowNode) {
       if (node.data.was_modified == true || node.isSelected()) {
@@ -266,6 +263,7 @@ export class GridComponent implements OnInit {
 
     /*this.service
       .postAstres(astres)*/
+    console.log(astres);
     this.store.dispatch(AstreActions.addAstres({ newastres: astres }));
 
     this.addAstreResult$
@@ -402,7 +400,7 @@ export class GridComponent implements OnInit {
    *
    *
    */
-  importCheck(newData: RowModelTransfer[], force_overwrite?: boolean) {
+  importCheck(newData: RowModelTransfer[]) {
     if (this.rowData.length == 0) {
       this.rowData = newData;
     } else {
@@ -414,8 +412,7 @@ export class GridComponent implements OnInit {
 
       modalRef.result
         .then((result) => {
-          console.log("User chose:", result);
-          if (result === "yes" || force_overwrite) {
+          if (result === "yes") {
             this.rowData = newData;
             this.toastr.success(
               "Imported a total of " + newData.length + " rows",
@@ -438,15 +435,17 @@ export class GridComponent implements OnInit {
     }
   }
 
-  importData(event: any): void {
+  async importData(event: any): Promise<void> {
     const file: File = event.target.files[0];
 
     if (file) {
+      const papa = await import("papaparse"); // Lazy import
       const reader: FileReader = new FileReader();
       reader.readAsText(file);
       reader.onload = (e: any) => {
         const csvText = e.target.result;
-        Papa.parse(csvText, {
+        // <-- Lazy import
+        papa.parse(csvText, {
           header: true,
           skipEmptyLines: true,
 
@@ -486,6 +485,6 @@ export class GridComponent implements OnInit {
   }
 
   test() {
-    this.allAstres$.subscribe((a) => console.log(a));
+    this.allAstres$.pipe(take(1)).subscribe((a) => console.log(a));
   }
 }
