@@ -98,9 +98,10 @@ export class ApiService {
 
   getAstres() {
     const headers = new HttpHeaders({});
-    return this.http.get<Astre[]>("http://localhost:8080/api/astres/getall", {
-      headers,
-    });
+    return this.http.get<Astre[]>(
+      "http://localhost:8080/api/astres/getall",
+      {}
+    );
   }
 
   postAstres(astres: Astre[]) {
@@ -108,11 +109,7 @@ export class ApiService {
     headers.set("access-control-allow-origin", "http://localhost:4200/");
     return this.http.post<Astre[]>(
       "http://localhost:8080/api/astres/astres",
-      astres,
-      {
-        headers,
-        withCredentials: true,
-      }
+      astres
     );
   }
   deleteAstre(type: string, name: string): Observable<Astre[]> {
@@ -121,7 +118,6 @@ export class ApiService {
     headers.set("access-control-allow-origin", "http://localhost:4200/");
     return this.http.delete<Astre[]>("http://localhost:8080/api/astres/astre", {
       headers,
-      withCredentials: true,
       body: astreID,
     });
   }

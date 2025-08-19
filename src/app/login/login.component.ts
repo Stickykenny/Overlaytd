@@ -6,6 +6,7 @@ import { ActivatedRoute } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
 import { LoginHandlerService } from "./login.handler.service";
 import { SharedModule } from "../shared.module";
+import { take } from "rxjs";
 
 @Component({
   selector: "app-login",
@@ -19,8 +20,7 @@ export class LoginComponent implements OnInit {
   constructor(
     private service: ApiService,
     private loginHandler: LoginHandlerService,
-    private toastr: ToastrService,
-    private route: ActivatedRoute
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {}
@@ -32,18 +32,9 @@ export class LoginComponent implements OnInit {
   doLogin(form: NgForm) {
     // NgForm to fetch value from ngModel
     let a = this.service.login(this.username, this.password);
-
-    this.route.queryParamMap.subscribe((params) => {
-      const jwtToken = params.get("token");
-      if (jwtToken != null) {
-        console.log("valid token");
-        localStorage.setItem("jwt", jwtToken);
-      }
-    });
-
-    a.subscribe({
-      next: (jwtKey: any) => {
-        this.loginHandler.handle(jwtKey);
+    a.pipe(take(1)).subscribe({
+      next: (response: any) => {
+        this.loginHandler.handle();
       },
       error: (err) => {
         console.error("Login failed:", err);

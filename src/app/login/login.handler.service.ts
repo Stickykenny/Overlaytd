@@ -18,8 +18,7 @@ export class LoginHandlerService {
     private store: Store,
     private actions$: Actions
   ) {}
-  handle(jwtKey: string) {
-    localStorage.setItem("jwt", jwtKey);
+  handle() {
     this.service.logged();
 
     this.actions$.pipe(ofType(loadAstresSuccess), take(1)).subscribe(() => {

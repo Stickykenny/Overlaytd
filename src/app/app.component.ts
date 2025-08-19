@@ -4,6 +4,7 @@ import { RouterModule } from "@angular/router";
 import { CommonModule } from "@angular/common";
 import { ApiService } from "./api.service";
 import { Observable } from "rxjs";
+import { ToastrService } from "ngx-toastr";
 @Component({
   selector: "app-root",
   imports: [RouterModule, CommonModule],
@@ -48,6 +49,7 @@ import { Observable } from "rxjs";
           src="/assets/logo.svg"
           alt="logo"
           aria-hidden="true"
+          (click)="rdm()"
         />
       </header>
       <section class="content">
@@ -63,11 +65,13 @@ export class AppComponent {
   title = "homes";
   isLoggedIn$: Observable<boolean>;
 
-  constructor(private auth: ApiService) {
+  constructor(private auth: ApiService, private toastr: ToastrService) {
     this.isLoggedIn$ = this.auth.isLoggedIn$;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    localStorage.removeItem("jwt");
+  }
 
   logout(): void {
     localStorage.removeItem("jwt");
@@ -80,5 +84,9 @@ export class AppComponent {
     sidebarhelper!.classList.toggle("uncollapsed");
     const collapsezone = document.getElementById("collapsezone");
     collapsezone!.classList.toggle("uncollapsed");
+  }
+
+  rdm() {
+    this.toastr.info("Clicked on home");
   }
 }
