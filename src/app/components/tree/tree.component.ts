@@ -111,24 +111,25 @@ export class TreeComponent implements AfterViewInit {
     const rootPoint = tree(root as any);
 
     // === Select SVG and zoom  ===
-    const svg = d3.select(this.svgRef.nativeElement).call(
-      d3
-        .zoom<SVGSVGElement, unknown>()
-        .scaleExtent([0.02, 10]) // min zoom, max zoom
-        .on("zoom", (event) => {
-          g.attr("transform", event.transform);
-        })
-    );
+    const svg = d3.select(this.svgRef.nativeElement);
+    const g = svg.append("g");
 
-    const outerG = svg
-      .append("g")
-      .attr(
-        "transform",
-        `translate(${this.bounds.width / 2},${this.bounds.height / 2})`
-      );
+    const zoom = d3
+      .zoom<SVGSVGElement, unknown>()
+      .scaleExtent([0.02, 10])
+      .on("zoom", (event) => {
+        g.attr("transform", event.transform);
+      });
 
-    // 2️⃣ Inner <g> gets zoom/pan
-    const g = outerG.append("g");
+    // Attach zoom
+    svg.call(zoom);
+
+    // Apply initial transform to center the content
+    const initialTransform = d3.zoomIdentity
+      .translate(this.bounds.width / 2, this.bounds.height / 2) // move to screen center
+      .scale(1);
+
+    svg.call(zoom.transform, initialTransform);
 
     // === Links  ===
     const linkGen = d3
