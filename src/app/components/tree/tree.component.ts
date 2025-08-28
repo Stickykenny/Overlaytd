@@ -13,6 +13,11 @@ import { Astre } from "src/app/models/Astre";
 import { loadAstres } from "src/app/store/astre.actions";
 import { selectAstres } from "src/app/store/astre.selectors";
 
+import { Tags } from "src/app/models/Tags";
+
+const TOOLTIP_FONT_SIZE = 24;
+const TOOLTIP_COMMENT_FONT_SIZE = 14;
+
 @Component({
   selector: "app-tree",
   template: `
@@ -50,6 +55,64 @@ export class TreeComponent implements AfterViewInit {
     if (changes["astres"] && this.astres?.length) {
       this.initTree();
     }
+  }
+
+  tooltip = d3
+    .select("body")
+    .append("div")
+    .attr("class", "tooltip")
+    .style("position", "absolute")
+    .style("background", "rgba(255, 255, 255, 0.9)")
+    .style("backdrop-filter", "blur(5px)")
+    .style("padding", "6px 10px")
+    .style("border-radius", "4px")
+    .style("pointer-events", "none") // Mouse pass-through
+    .style("opacity", 0)
+    .style("font-family", "sans-serif")
+    .style("font-size", TOOLTIP_FONT_SIZE + "px")
+    .style("color", "#000000");
+
+  renderTooltip(astre: Astre, event: any) {
+    var astreTags = "";
+    var additionalComments = "";
+    if (astre.tags.length == 0) {
+      astreTags = "<span style='color:LightGrey;'>No Tags Found</span>";
+    } else {
+      astreTags = astre.tags; // === Custom Tooltip comments based on tags ===
+      var tagsList = astreTags.split(",");
+      for (var tagName of tagsList) {
+        console.log(tagName);
+        switch (tagName.toLowerCase()) {
+          case Tags.HighlightedList.toLowerCase(): {
+            console.log("in highlight");
+            additionalComments +=
+              "</br><span style='font-style:italic;'>This Node only has the most impactful entries (non-exhaustive)</span>";
+            break;
+          }
+          case Tags.ExternalList.toLowerCase(): {
+            console.log("in external");
+            additionalComments +=
+              "</br><span style='font-style:italic;'>This Node possess an external list that isn't hosted on this site (Please refer to the description)</span>";
+            break;
+          }
+          default: {
+            break;
+          }
+        }
+      }
+    }
+
+    // ==================
+
+    this.tooltip
+      .html(
+        `<b>${astre.astreID.name}</b> </br>
+            <span style='font-size:${TOOLTIP_COMMENT_FONT_SIZE}px'>[${astreTags}] in ${astre.parent} </span> </br>
+            ${astre.description} </br>
+            <span style='font-size:${TOOLTIP_COMMENT_FONT_SIZE}px'>${additionalComments} </span>`
+      )
+      .style("left", event.pageX + 10 + "px")
+      .style("top", event.pageY - 30 + "px");
   }
 
   separation(a: Astre, b: Astre) {
@@ -144,11 +207,7 @@ export class TreeComponent implements AfterViewInit {
       .attr("fill", "none") // mandatory in this style of links
       .attr("d", (d) => linkGen(d))
       .attr("stroke", (d) =>
-        d3
-          .hsl(0, 1, 0.75, 1)
-          .darker(d.target.depth * 2)
-          .clamp()
-          .formatHex()
+        d3.hsl(0, 1, 0.9, 1).darker(d.target.depth).clamp().formatHex()
       )
       .attr("stroke-width", 1);
 
@@ -173,20 +232,6 @@ export class TreeComponent implements AfterViewInit {
       .attr("font-weight", 300)
       .attr("fill", "#000000ff");
 
-    const tooltip = d3
-      .select("body")
-      .append("div")
-      .attr("class", "tooltip")
-      .style("position", "absolute")
-      .style("background", "rgba(255, 255, 255, 0.9)")
-      .style("padding", "6px 10px")
-      .style("border-radius", "4px")
-      .style("pointer-events", "none") // Mouse pass-through
-      .style("opacity", 0)
-      .style("font-family", "sans-serif")
-      .style("font-size", "12px")
-      .style("color", "#000000");
-
     nodeG
       .on("mouseover", (event, pointNode: d3.HierarchyPointNode<Astre>) => {
         var t = event.currentTarget;
@@ -198,21 +243,14 @@ export class TreeComponent implements AfterViewInit {
           .attr("font-weight", 700);
 
         // Show tooltip
-        tooltip.transition().duration(200).style("opacity", 0.9);
+        this.tooltip.transition().duration(200).style("opacity", 0.9);
         var currentAstre: Astre = pointNode.data as Astre;
-        tooltip
-          .html(
-            `${currentAstre.astreID.name} ></br>
-            [${currentAstre.tags}] from
-            ${currentAstre.parent} > </br>
-            ${currentAstre.description}  `
-          )
-          .style("left", event.pageX + 10 + "px")
-          .style("top", event.pageY - 30 + "px");
+        this.renderTooltip(currentAstre, event);
       })
-      .on("mouseout", function (d, i) {
-        tooltip.transition().duration(200).style("opacity", 0);
-        const g = d3.select(this);
+      .on("mouseout", (event, pointNode: d3.HierarchyPointNode<Astre>) => {
+        this.tooltip.transition().duration(200).style("opacity", 0);
+        var target = event.currentTarget;
+        const g = d3.select(target);
         g.select("text")
           .transition()
           .ease(d3.easeExpOut)
