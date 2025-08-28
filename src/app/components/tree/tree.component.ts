@@ -102,13 +102,13 @@ export class TreeComponent implements AfterViewInit {
 
     const radius = 10 * validAstres.length;
     const tree = d3
-      .tree<d3.HierarchyNode<Astre>>()
+      .tree<Astre>()
       .size([2 * Math.PI, radius])
       .separation(
         (a, b) =>
           (a.parent === b.parent ? 1 : 1.5) / Math.min(a.depth, b.depth + 1)
       );
-    const rootPoint = tree(root as any);
+    const rootPoint = tree(root as d3.HierarchyNode<Astre>);
 
     // === Select SVG and zoom  ===
     const svg = d3.select(this.svgRef.nativeElement);
@@ -136,17 +136,20 @@ export class TreeComponent implements AfterViewInit {
       .linkRadial<unknown, d3.HierarchyPointNode<Astre>>()
       .angle((d) => d.x)
       .radius((d) => d.y);
-
     g.selectAll(".link")
       .data(rootPoint.links()) // gives array of {source, target}
-      .enter()
+      .enter() // enter the array
       .append("path")
       .attr("class", "link")
+      .attr("fill", "none") // mandatory in this style of links
       .attr("d", (d) => linkGen(d))
-      .attr("fill", "none")
-      /*.attr("stroke", "#000000ff")*/
-      .attr("stroke", (d) => (d.target.depth === 1 ? "red" : "gray"))
-      .attr("stroke-opacity", (d) => (d.target.depth === 1 ? 1 : 0.3))
+      .attr("stroke", (d) =>
+        d3
+          .hsl(0, 1, 0.75, 1)
+          .darker(d.target.depth * 2)
+          .clamp()
+          .formatHex()
+      )
       .attr("stroke-width", 1);
 
     // Draw nodes
@@ -161,24 +164,61 @@ export class TreeComponent implements AfterViewInit {
         return `translate(${x},${y})`;
       });
 
-    var div = d3
-      .select("body")
-      .append("div")
-      .attr("class", "tooltip-donut")
-      .style("opacity", 0);
-    nodeG
-      .append("circle")
-      .attr("r", 5)
-      // TODO NOT WORKING YET
-      .on("mouseover", function (d, i) {
-        d3.select(this).transition().attr("opacity", ".85");
-        //Makes the new div appear on hover:
-        div.transition().style("opacity", 1);
-      });
-
+    nodeG.append("circle").attr("r", 3).attr("opacity", "1");
     nodeG
       .append("text")
       .attr("dy", -10)
-      .text((d: any) => d.id);
+      .text((d: any) => d.id)
+      .attr("opacity", "0.2")
+      .attr("font-weight", 300)
+      .attr("fill", "#000000ff");
+
+    const tooltip = d3
+      .select("body")
+      .append("div")
+      .attr("class", "tooltip")
+      .style("position", "absolute")
+      .style("background", "rgba(255, 255, 255, 0.9)")
+      .style("padding", "6px 10px")
+      .style("border-radius", "4px")
+      .style("pointer-events", "none") // Mouse pass-through
+      .style("opacity", 0)
+      .style("font-family", "sans-serif")
+      .style("font-size", "12px")
+      .style("color", "#000000");
+
+    nodeG
+      .on("mouseover", (event, pointNode: d3.HierarchyPointNode<Astre>) => {
+        var t = event.currentTarget;
+        const g = d3.select(t);
+        g.select("text")
+          .transition()
+          .ease(d3.easeExpOut)
+          .attr("opacity", "1")
+          .attr("font-weight", 700);
+
+        // Show tooltip
+        tooltip.transition().duration(200).style("opacity", 0.9);
+        var currentAstre: Astre = pointNode.data as Astre;
+        tooltip
+          .html(
+            `${currentAstre.astreID.name} ></br>
+            [${currentAstre.tags}] from
+            ${currentAstre.parent} > </br>
+            ${currentAstre.description}  `
+          )
+          .style("left", event.pageX + 10 + "px")
+          .style("top", event.pageY - 30 + "px");
+      })
+      .on("mouseout", function (d, i) {
+        tooltip.transition().duration(200).style("opacity", 0);
+        const g = d3.select(this);
+        g.select("text")
+          .transition()
+          .ease(d3.easeExpOut)
+          .attr("opacity", "0.2")
+          .attr("fill", "#000000ff")
+          .attr("font-weight", 300);
+      });
   }
 }
