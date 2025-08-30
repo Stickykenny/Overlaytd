@@ -12,12 +12,24 @@ import { provideRouter } from "@angular/router";
 import routeConfig from "./routes";
 import { provideToastr } from "ngx-toastr";
 import { provideAnimations } from "@angular/platform-browser/animations";
-import { StoreModule } from "@ngrx/store";
+import { StoreModule, ActionReducer, MetaReducer } from "@ngrx/store";
 import { astreFeatureKey, AstreReducer } from "./store/astre.reducer";
 import { AstreEffects } from "./store/astre.effects";
 import { EffectsModule } from "@ngrx/effects";
 import { StoreDevtoolsModule } from "@ngrx/store-devtools";
 //import { csrfInterceptor } from "./csrf.interceptor";
+import { localStorageSync } from "ngrx-store-localstorage";
+
+export function localStorageSyncReducer(
+  reducer: ActionReducer<any>
+): ActionReducer<any> {
+  return localStorageSync({
+    keys: [astreFeatureKey],
+    rehydrate: true, // Make it sync on page refresh
+    checkStorageAvailability: true,
+  })(reducer);
+}
+const metaReducers: Array<MetaReducer<any, any>> = [localStorageSyncReducer];
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -36,9 +48,10 @@ export const appConfig: ApplicationConfig = {
 
     importProvidersFrom(
       StoreModule.forFeature(astreFeatureKey, AstreReducer),
-      StoreModule.forRoot({
-        router: AstreReducer,
-      }),
+      StoreModule.forRoot(
+        {}, //{ [astreFeatureKey]: AstreReducer }, // Example if using AstreReducer in Root
+        { metaReducers }
+      ),
       StoreDevtoolsModule.instrument(),
       EffectsModule.forRoot([AstreEffects])
     ),
