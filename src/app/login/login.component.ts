@@ -25,6 +25,9 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {}
 
+  loginWithGithub() {
+    window.location.href = "http://localhost:8080/oauth2/authorization/github";
+  }
   loginWithGoogle() {
     window.location.href = "http://localhost:8080/oauth2/authorization/google";
   }

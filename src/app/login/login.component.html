@@ -29,7 +29,10 @@
     /> -->
   </div>
   <p class="p-container">
-    <input type="submit" name="Login" value="Login" />
+    <button type="submit" class="btn btn-light">
+      <i class="pi pi-sign-in" style="font-size: 1rem; color:  #2da150"></i>    
+      Login with Credentials
+    </button>
   </p>
 </form>
 
@@ -39,12 +42,18 @@
   <tbody>
     <tr>
       <td>
-        <a href="http://localhost:8080/oauth2/authorization/github">GitHub</a>
+        <button type="button" class="btn btn-light" (click)="loginWithGithub()">
+        <i class="pi pi-github" style="font-size: 1rem; color:  #000000"></i>     
+          Login with Github
+        </button>
       </td>
     </tr>
     <tr>
       <td>
-        <button (click)="loginWithGoogle()">Login with Google</button>
+        <button type="button" class="btn btn-light" (click)="loginWithGoogle()">
+        <i class="pi pi-google" style="font-size: 1rem; color:  #4285F4"></i>      
+             Login with Google
+        </button>
       </td>
     </tr>
   </tbody>
