@@ -6,7 +6,13 @@ User Interface for [Relaytd](https://github.com/Stickykenny/Relaytd)
 
 ##### Radial Tree View
 
-<img src="./.github/preview/radial_tree_preview_1.png" alt="Tree page preview" title="Tree page preview (yes this is censored)" width="700"/>
+
+
+
+
+| Radial tree layout                                                                                                                                            | Node on mouse-over                                                                                                                         |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| <img src="./.github/preview/radial_tree_preview_1.png" alt="Tree page preview" title="Tree page preview (yes this is censored)" /> | <img src="./.github/preview/radial_tree_hover_preview_1.png" alt="Tree page preview" title="Tree page preview (yes this is censored)" width="900"/> |
 
 
 | Login page                                                                                                                                            | Navbar Animation                                                                                                                          |
@@ -17,3 +23,7 @@ User Interface for [Relaytd](https://github.com/Stickykenny/Relaytd)
 
 <img src="./.github/preview/overlaytd_grid_preview_1.jpg" alt="Grid page preview" title="Grid page preview" width="700"/>
 
+##### Shenanigans (unwanted features that appeared in development)
+
+Raindow path with infinite loop
+<img src="./.github/preview/rainbow_path_loop.gif" alt="Rainbow path loop stuck preview" title="Rainbow path loop stuck preview" width="700"/>
