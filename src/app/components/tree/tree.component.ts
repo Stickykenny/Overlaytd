@@ -15,8 +15,7 @@ import { selectAstres } from "src/app/store/astre.selectors";
 
 import { Tags } from "src/app/models/Tags";
 
-const TOOLTIP_FONT_SIZE = 24;
-const TOOLTIP_COMMENT_FONT_SIZE = 14;
+import { linkConfig, rainbowLoop, tooltipConfig } from "./tree.config";
 
 @Component({
   selector: "app-tree",
@@ -69,28 +68,25 @@ export class TreeComponent implements AfterViewInit {
     .style("pointer-events", "none") // Mouse pass-through
     .style("opacity", 0)
     .style("font-family", "sans-serif")
-    .style("font-size", TOOLTIP_FONT_SIZE + "px")
+    .style("font-size", tooltipConfig.font.size + "px")
     .style("color", "#000000");
 
   renderTooltip(astre: Astre, event: any) {
     var astreTags = "";
     var additionalComments = "";
-    if (astre.tags.length == 0) {
+    if (astre.tags == null || astre.tags.length == 0) {
       astreTags = "<span style='color:LightGrey;'>No Tags Found</span>";
     } else {
       astreTags = astre.tags; // === Custom Tooltip comments based on tags ===
       var tagsList = astreTags.split(",");
       for (var tagName of tagsList) {
-        console.log(tagName);
         switch (tagName.toLowerCase()) {
           case Tags.HighlightedList.toLowerCase(): {
-            console.log("in highlight");
             additionalComments +=
               "</br><span style='font-style:italic;'>This Node only has the most impactful entries (non-exhaustive)</span>";
             break;
           }
           case Tags.ExternalList.toLowerCase(): {
-            console.log("in external");
             additionalComments +=
               "</br><span style='font-style:italic;'>This Node possess an external list that isn't hosted on this site (Please refer to the description)</span>";
             break;
@@ -107,9 +103,9 @@ export class TreeComponent implements AfterViewInit {
     this.tooltip
       .html(
         `<b>${astre.astreID.name}</b> </br>
-            <span style='font-size:${TOOLTIP_COMMENT_FONT_SIZE}px'>[${astreTags}] in ${astre.parent} </span> </br>
+            <span style='font-size:${tooltipConfig.comment.font.size}px'>[${astreTags}] in ${astre.parent} </span> </br>
             ${astre.description} </br>
-            <span style='font-size:${TOOLTIP_COMMENT_FONT_SIZE}px'>${additionalComments} </span>`
+            <span style='font-size:${tooltipConfig.comment.font.size}px'>${additionalComments} </span>`
       )
       .style("left", event.pageX + 10 + "px")
       .style("top", event.pageY - 30 + "px");
@@ -118,6 +114,7 @@ export class TreeComponent implements AfterViewInit {
   separation(a: Astre, b: Astre) {
     return a.parent == b.parent ? 1 : 2;
   }
+
   initTree(): void {
     console.log("init tree");
     console.log(this.astres.length);
@@ -199,7 +196,8 @@ export class TreeComponent implements AfterViewInit {
       .linkRadial<unknown, d3.HierarchyPointNode<Astre>>()
       .angle((d) => d.x)
       .radius((d) => d.y);
-    g.selectAll(".link")
+    const links = g
+      .selectAll(".link")
       .data(rootPoint.links()) // gives array of {source, target}
       .enter() // enter the array
       .append("path")
@@ -209,7 +207,7 @@ export class TreeComponent implements AfterViewInit {
       .attr("stroke", (d) =>
         d3.hsl(0, 1, 0.9, 1).darker(d.target.depth).clamp().formatHex()
       )
-      .attr("stroke-width", 1);
+      .attr("stroke-width", linkConfig.stroke.width);
 
     // Draw nodes
     const nodeG = g
@@ -224,6 +222,7 @@ export class TreeComponent implements AfterViewInit {
       });
 
     nodeG.append("circle").attr("r", 3).attr("opacity", "1");
+    nodeG.append("circle").attr("r", 12).attr("opacity", "0"); // Fake increased hitbox
     nodeG
       .append("text")
       .attr("dy", -10)
@@ -233,23 +232,56 @@ export class TreeComponent implements AfterViewInit {
       .attr("fill", "#000000ff");
 
     nodeG
-      .on("mouseover", (event, pointNode: d3.HierarchyPointNode<Astre>) => {
-        var t = event.currentTarget;
-        const g = d3.select(t);
-        g.select("text")
-          .transition()
-          .ease(d3.easeExpOut)
-          .attr("opacity", "1")
-          .attr("font-weight", 700);
+      .on(
+        "mouseover",
+        (event: MouseEvent, pointNode: d3.HierarchyPointNode<Astre>) => {
+          var t = event.currentTarget as SVGElement;
+          linkConfig.stroke.rainbowLoop = true;
+          let currentNode = pointNode;
+          while (currentNode.parent != null) {
+            links
+              .filter((s) => s.target == currentNode)
+              .attr("stroke-width", linkConfig.stroke.widthHover)
+              .transition()
+              .on("end", function (d) {
+                const sel = d3.select<SVGPathElement, d3.HierarchyLink<Astre>>(
+                  this
+                );
+                rainbowLoop(sel, "stroke", d.target.depth);
+              });
+            currentNode = currentNode.parent;
+          }
 
-        // Show tooltip
-        this.tooltip.transition().duration(200).style("opacity", 0.9);
-        var currentAstre: Astre = pointNode.data as Astre;
-        this.renderTooltip(currentAstre, event);
-      })
+          const g = d3.select(t);
+          g.select("text")
+            .transition()
+            .ease(d3.easeExpOut)
+            .attr("opacity", "1")
+            .attr("font-weight", 700);
+
+          // Show tooltip
+          this.tooltip.transition().duration(200).style("opacity", 0.9);
+          var currentAstre: Astre = pointNode.data as Astre;
+          this.renderTooltip(currentAstre, event);
+        }
+      )
       .on("mouseout", (event, pointNode: d3.HierarchyPointNode<Astre>) => {
         this.tooltip.transition().duration(200).style("opacity", 0);
         var target = event.currentTarget;
+
+        linkConfig.stroke.rainbowLoop = false;
+        let currentNode = pointNode;
+        while (currentNode.parent != null) {
+          links
+            .filter((s) => s.target == currentNode)
+            .transition()
+            .attr("stroke-width", linkConfig.stroke.width)
+            .attr("stroke", (d) =>
+              d3.hsl(0, 1, 0.9, 1).darker(d.target.depth).clamp().formatHex()
+            );
+          currentNode = currentNode.parent;
+        }
+
         const g = d3.select(target);
         g.select("text")
           .transition()
