@@ -74,8 +74,7 @@ export class GridComponent implements OnInit {
     //minWidth: 150,
     editable: true,
     filter: "agTextColumnFilter",
-    suppressHeaderMenuButton: true,
-    suppressHeaderContextMenu: true,
+    suppressMovable: true,
     cellStyle: {
       "align-items": "center",
       display: "flex",
@@ -263,7 +262,6 @@ export class GridComponent implements OnInit {
 
     /*this.service
       .postAstres(astres)*/
-    console.log(astres);
     this.store.dispatch(AstreActions.addAstres({ newastres: astres }));
 
     this.addAstreResult$
@@ -486,5 +484,8 @@ export class GridComponent implements OnInit {
 
   test() {
     this.allAstres$.pipe(take(1)).subscribe((a) => console.log(a));
+    var cnt = 0;
+    this.astre2Service.getAstres().forEach((a) => (cnt += 1));
+    console.log(cnt);
   }
 }

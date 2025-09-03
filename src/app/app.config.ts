@@ -43,6 +43,7 @@ export const appConfig: ApplicationConfig = {
       positionClass: "toast-bottom-right",
       progressBar: true,
       progressAnimation: "decreasing",
+      enableHtml: true,
     }),
     provideAnimations(),
 
