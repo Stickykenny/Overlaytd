@@ -34,6 +34,7 @@ export class TreeComponent implements AfterViewInit {
   childColumn = "";
   parentColumn = "";
   bounds: any;
+
   constructor(private store: Store, private toastr: ToastrService) {}
 
   ngOnInit() {
@@ -71,9 +72,29 @@ export class TreeComponent implements AfterViewInit {
     .style("font-size", tooltipConfig.font.size + "px")
     .style("color", "#000000");
 
-  renderTooltip(astre: Astre, event: any) {
+  /**
+   * Render a tooltip given the data provided by pointNode
+   *
+   * @param pointNode The node with the data to display
+   * @param event The event produced
+   * @param anchor The node used as a reference for coordinates
+   *
+   */
+  renderTooltip(
+    pointNode: d3.HierarchyPointNode<Astre>,
+    event: MouseEvent,
+    anchor: d3.HierarchyPointNode<Astre>
+  ) {
+    var astre: Astre = pointNode.data as Astre;
     var astreTags = "";
     var additionalComments = "";
+
+    const [x, y] = d3.pointRadial(anchor.x, anchor.y); // Relative coordinate to RootNode
+
+    const node = this.tooltip.node() as HTMLElement; // cast
+    var isLeft = x < 0;
+    var isUp = y < 0;
+
     if (astre.tags == null || astre.tags.length == 0) {
       astreTags = "<span style='color:LightGrey;'>No Tags Found</span>";
     } else {
@@ -100,15 +121,28 @@ export class TreeComponent implements AfterViewInit {
 
     // ==================
 
-    this.tooltip
+    const tooltipNode = this.tooltip
       .html(
         `<b>${astre.astreID.name}</b> </br>
             <span style='font-size:${tooltipConfig.comment.font.size}px'>[${astreTags}] in ${astre.parent} </span> </br>
             ${astre.description} </br>
             <span style='font-size:${tooltipConfig.comment.font.size}px'>${additionalComments} </span>`
       )
-      .style("left", event.pageX + 10 + "px")
-      .style("top", event.pageY - 30 + "px");
+      .node();
+    if (!node) return; // nothing to do if tooltip not rendered
+    const tooltipBox = tooltipNode!.getBoundingClientRect();
+    var widthOffset = tooltipBox.width + 20;
+    var heightOffset = tooltipBox.height;
+    this.tooltip
+      .style(
+        "left",
+        isLeft ? event.pageX - widthOffset + `px` : event.pageX + `px`
+      )
+      .style(
+        "top",
+        isUp ? event.pageY - heightOffset + "px" : event.pageY + "px"
+      )
+      .style("text-align", isLeft ? "end" : "start");
   }
 
   separation(a: Astre, b: Astre) {
@@ -169,7 +203,6 @@ export class TreeComponent implements AfterViewInit {
           (a.parent === b.parent ? 1 : 1.5) / Math.min(a.depth, b.depth + 1)
       );
     const rootPoint = tree(root as d3.HierarchyNode<Astre>);
-
     // === Select SVG and zoom  ===
     const svg = d3.select(this.svgRef.nativeElement);
     const g = svg.append("g");
@@ -222,7 +255,11 @@ export class TreeComponent implements AfterViewInit {
       });
 
     nodeG.append("circle").attr("r", 3).attr("opacity", "1");
-    nodeG.append("circle").attr("r", 12).attr("opacity", "0"); // Fake increased hitbox
+    nodeG
+      .append("circle-hitbox")
+      .attr("r", 12)
+      .text((d: any) => d.id)
+      .attr("opacity", "0"); // Fake increased hitbox
     nodeG
       .append("text")
       .attr("dy", -10)
@@ -241,6 +278,7 @@ export class TreeComponent implements AfterViewInit {
           while (currentNode.parent != null) {
             links
               .filter((s) => s.target == currentNode)
+              .transition()
               .attr("stroke-width", linkConfig.stroke.widthHover)
               .transition()
               .on("end", function (d) {
@@ -259,10 +297,13 @@ export class TreeComponent implements AfterViewInit {
             .attr("opacity", "1")
             .attr("font-weight", 700);
 
+          const anchor = nodeG
+            .select("circle-hitbox")
+            .filter((node) => node.data.astreID == pointNode.data.astreID)
+            .data()[0];
           // Show tooltip
           this.tooltip.transition().duration(200).style("opacity", 0.9);
-          var currentAstre: Astre = pointNode.data as Astre;
-          this.renderTooltip(currentAstre, event);
+          this.renderTooltip(pointNode, event, anchor);
         }
       )
       .on("mouseout", (event, pointNode: d3.HierarchyPointNode<Astre>) => {
@@ -273,7 +314,7 @@ export class TreeComponent implements AfterViewInit {
         let currentNode = pointNode;
         while (currentNode.parent != null) {
           links
-            .filter((s) => s.target == currentNode)
+            //.filter((s) => s.target == currentNode)// Bad for optimisation to not filter, but helps against race-condition/double-trigger
             .transition()
             .attr("stroke-width", linkConfig.stroke.width)
             .attr("stroke", (d) =>
