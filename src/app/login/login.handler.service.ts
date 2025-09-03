@@ -23,7 +23,7 @@ export class LoginHandlerService {
 
     this.actions$.pipe(ofType(loadAstresSuccess), take(1)).subscribe(() => {
       this.router
-        .navigate(["/grid"])
+        .navigate(["/tree"])
         .then(() => this.toastr.success("yep yep yep", "Login Successful"));
     });
 

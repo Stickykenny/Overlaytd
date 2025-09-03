@@ -38,7 +38,7 @@ export class OauthCallbackComponent implements OnInit {
           take(1) // auto-unsubscribe
         )
         .subscribe(() => {
-          this.router.navigate(["/grid"]);
+          this.router.navigate(["/tree"]);
         });
     });
   }
