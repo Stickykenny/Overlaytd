@@ -254,12 +254,12 @@ export class TreeComponent implements AfterViewInit {
         return `translate(${x},${y})`;
       });
 
-    nodeG.append("circle").attr("r", 3).attr("opacity", "1");
     nodeG
-      .append("circle-hitbox")
-      .attr("r", 12)
+      .append("circle")
+      .attr("r", 15)
       .text((d: any) => d.id)
-      .attr("opacity", "0"); // Fake increased hitbox
+      .attr("opacity", 0); // Fake increased hitbox
+    nodeG.append("circle").attr("r", 3).attr("opacity", 0.5);
     nodeG
       .append("text")
       .attr("dy", -10)
@@ -298,7 +298,7 @@ export class TreeComponent implements AfterViewInit {
             .attr("font-weight", 700);
 
           const anchor = nodeG
-            .select("circle-hitbox")
+            .select("circle")
             .filter((node) => node.data.astreID == pointNode.data.astreID)
             .data()[0];
           // Show tooltip
