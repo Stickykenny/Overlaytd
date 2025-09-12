@@ -55,7 +55,6 @@ export function rainbowLoop(elem: any, attributeName: string, depth: number) {
         .on("end", () => {
           i = (i + 1) % colors.length;
           if (i == colors.length - 1) {
-            console.log("light+saturation changed");
             linkConfig.stroke.saturation =
               Math.random() * (saturationVarianceMax - saturationVarianceMin) +
               saturationVarianceMin;
