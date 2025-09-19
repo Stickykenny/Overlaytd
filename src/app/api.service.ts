@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 
 import { Astre, AstreID } from "./models/Astre";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, Observable, take } from "rxjs";
 import { jwtDecode, JwtPayload } from "jwt-decode";
 import { Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
@@ -84,19 +84,33 @@ export class ApiService {
     });*/
 
   public logout() {
-    localStorage.removeItem("jwt");
     this.loggedInSubject.next(false);
-    this.router
-      .navigate(["/"])
-      .then(() =>
-        this.toastr.success(
-          "Please Login to access the app",
-          "Logout Successful"
-        )
-      );
+
+    console.log("in logout service");
+    this.http
+      .post("http://localhost:8080/logout", {}, { withCredentials: true })
+      .pipe(take(1))
+      .subscribe({
+        next: (result) => {
+          this.router
+            .navigate(["/login"])
+            .then(() =>
+              this.toastr.success(
+                "Please Login to access the app",
+                "Logout Successful"
+              )
+            );
+        },
+        error: (err) => {
+          console.log(err);
+          this.toastr.error(err, "Observable Error logging out");
+        },
+      });
+    console.log("Getting after post logout");
   }
 
   getAstres() {
+    console.log("Getting Astres");
     const headers = new HttpHeaders({});
     return this.http.get<Astre[]>(
       "http://localhost:8080/api/astres/getall",
@@ -112,9 +126,13 @@ export class ApiService {
       astres
     );
   }
-  deleteAstre(type: string, name: string): Observable<Astre[]> {
+  deleteAstre(
+    type: string,
+    subtype: string,
+    name: string
+  ): Observable<Astre[]> {
     const headers = new HttpHeaders({});
-    const astreID: AstreID = { type, name };
+    const astreID: AstreID = { type, subtype, name };
     headers.set("access-control-allow-origin", "http://localhost:4200/");
     return this.http.delete<Astre[]>("http://localhost:8080/api/astres/astre", {
       headers,

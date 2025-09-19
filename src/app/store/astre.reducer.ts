@@ -55,6 +55,7 @@ export const AstreReducer = createReducer(
     loading: false,
   })),
 
+  on(AstreActions.clearAstres, (state) => initialState),
   // LOAD
   on(AstreActions.loadAstres, (state) => ({ ...state, loading: true })),
 

@@ -26,6 +26,7 @@ import {
 import { filter, Observable, take } from "rxjs";
 import { ActionStatus } from "src/app/store/action.state";
 import { SharedModule } from "src/app/shared.module";
+import { astreFeatureKey } from "src/app/store/astre.reducer";
 
 @Component({
   selector: "app-grid",
@@ -59,10 +60,14 @@ export class GridComponent implements OnInit {
 
   newItems: RowModel = {
     type: "type",
+    subtype: "subtype",
     name: "name",
+    subname: "",
     tags: "nidnf",
+    link: "",
     description: "",
     parent: "dfsf",
+    id: "",
     last_modified: "dfsf",
     date_added: "dfsf",
   };
@@ -73,6 +78,8 @@ export class GridComponent implements OnInit {
     flex: 1,
     //minWidth: 150,
     editable: true,
+    wrapText: true,
+    autoHeight: true,
     filter: "agTextColumnFilter",
     suppressMovable: true,
     cellStyle: {
@@ -93,8 +100,22 @@ export class GridComponent implements OnInit {
       }, // Why not in the default settings if applied to all ? I need rewrite this option each one separately
     },
     {
+      headerName: "Subtype",
+      field: "subtype",
+      getQuickFilterText: (params: any) => {
+        return params.value;
+      },
+    },
+    {
       headerName: "Name",
       field: "name",
+      getQuickFilterText: (params: any) => {
+        return params.value;
+      },
+    },
+    {
+      headerName: "Subname",
+      field: "subname",
       getQuickFilterText: (params: any) => {
         return params.value;
       },
@@ -107,14 +128,20 @@ export class GridComponent implements OnInit {
       },
     },
     {
+      headerName: "Link",
+      field: "link",
+      cellEditor: "agLargeTextCellEditor",
+      getQuickFilterText: (params: any) => {
+        return params.value;
+      },
+    },
+    {
       headerName: "Description",
       field: "description",
       //minWidth: 400,
       getQuickFilterText: (params: any) => {
         return params.value;
       },
-      wrapText: true,
-      autoHeight: true,
       cellEditor: "agLargeTextCellEditor",
       cellStyle: {
         "padding-top": "1px",
@@ -128,6 +155,13 @@ export class GridComponent implements OnInit {
     {
       headerName: "Parent",
       field: "parent",
+      getQuickFilterText: (params: any) => {
+        return params.value;
+      },
+    },
+    {
+      headerName: "Id",
+      field: "id",
       getQuickFilterText: (params: any) => {
         return params.value;
       },
@@ -250,10 +284,13 @@ export class GridComponent implements OnInit {
       if (node.data.was_modified == true || node.isSelected()) {
         let item = node.data;
         astres.push({
-          astreID: { type: item.type, name: item.name },
+          astreID: { type: item.type, subtype: item.subtype, name: item.name },
+          subname: item.subname,
           tags: item.tags,
+          link: item.link,
           description: item.description,
           parent: item.parent,
+          id: item.id,
           date_added: item.date_added,
           last_modified: item.last_modified,
         });
@@ -301,10 +338,14 @@ export class GridComponent implements OnInit {
     const newItems: RowModel[] = [
       {
         type: type ? type : "type" + this.count,
+        subtype: "name" + this.count,
         name: "name" + this.count,
+        subname: "",
         tags: tags,
+        link: "",
         description: "",
         parent: parent,
+        id: "",
         last_modified: "",
         date_added: "",
         was_modified: true,
@@ -316,7 +357,12 @@ export class GridComponent implements OnInit {
     }); //  it is a list of Row Nodes that were added, not row data
     this.count++;
   }
-
+  clearAll() {
+    this.rowData = [];
+    //localStorage.removeItem(astreFeatureKey);
+    //this.store.dispatch(AstreActions.clearAstres());
+    console.log("cleared");
+  }
   deleteSelected() {
     const selectedData = this.gridApi.getSelectedNodes();
     var count: number = 0;
@@ -336,6 +382,7 @@ export class GridComponent implements OnInit {
         AstreActions.deleteAstres({
           astreID: {
             type: node.data.type,
+            subtype: node.data.subtype,
             name: node.data.name,
           },
         })
@@ -451,10 +498,14 @@ export class GridComponent implements OnInit {
             const simplified: any[] = result.data;
             const trs: RowModelTransfer[] = simplified.map((line: any) => ({
               type: line["Type"] || "",
+              subtype: line["Subtype"] || "",
               name: line["Name"] || "",
+              subname: line["Subname"] || "",
               tags: line["Tags"] || "",
+              link: line["Links"] || "",
               description: line["Description"] || "",
               parent: line["Parent"] || "",
+              id: line["Id"] || "",
               date_added: line["Date added"] || "",
               last_modified: line["Last Modified"] || "",
               was_modified: false,
@@ -470,7 +521,38 @@ export class GridComponent implements OnInit {
     console.log(this.allAstres$);
     var colDefsFields: string[] = [];
     this.colDefs.forEach((col) => colDefsFields.push(col.field));
-    this.gridApi!.exportDataAsCsv({
+    const astres: Astre[] = [];
+
+    this.gridApi.forEachNode(function (node: IRowNode) {
+      let item = node.data;
+      astres.push({
+        astreID: { type: item.type, subtype: item.subtype, name: item.name },
+        subname: item.subname,
+        tags: item.tags,
+        link: item.link,
+        description: item.description,
+        parent: item.parent,
+        id: item.id,
+        date_added: item.date_added,
+        last_modified: item.last_modified,
+      });
+    });
+    const jsonStr = JSON.stringify(astres, null, 2); // pretty print with spaces
+    const blob = new Blob([jsonStr], { type: "application/json" });
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    (a.download =
+      "exportGridData_" +
+      new Date().toISOString().slice(0, 10).replace(/-/g, "") +
+      ".json"),
+      a.click();
+
+    window.URL.revokeObjectURL(url);
+    return false;
+
+    /*this.gridApi!.exportDataAsCsv({
       allColumns: true,
       skipColumnHeaders: false,
       fileName:
@@ -480,6 +562,7 @@ export class GridComponent implements OnInit {
       columnKeys: colDefsFields,
       suppressQuotes: false,
     });
+   */
   }
 
   test() {

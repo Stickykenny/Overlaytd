@@ -26,5 +26,7 @@ export const deleteAstres = createAction(
   props<{ astreID: AstreID }>()
 );
 
+export const clearAstres = createAction("[Astre] Clear Astre");
+
 // FILLER
 export const actionComplete = createAction("[Astre] Action completed");

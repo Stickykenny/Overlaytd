@@ -45,9 +45,16 @@ export class AstreEffects {
       ofType(AstreActions.deleteAstres),
       switchMap((action) =>
         this.api
-          .deleteAstre(action.astreID.type, action.astreID.name)
+          .deleteAstre(
+            action.astreID.type,
+            action.astreID.subtype,
+            action.astreID.name
+          )
           .pipe(map(() => AstreActions.actionComplete()))
       )
     )
+  );
+  clearAstres$ = createEffect(() =>
+    this.actions$.pipe(ofType(AstreActions.clearAstres))
   );
 }
