@@ -13,6 +13,20 @@
   --shadow-color: #e8e8e8;
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
 
+.toast-container .ngx-toastr {
+  max-height: 50vh;
+  word-wrap: break-word;
+}
+
+.ag-cell {
+  text-align: center;
+}

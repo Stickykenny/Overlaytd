@@ -5,28 +5,40 @@
   </head>
   <body>
     <div style="width: 100%; height: 100%"></div>
-    <main class="main">
+    <main class="main" style="height: 30%">
       <!--onclick is the native javascript not angular-->
-      <button (click)="retrieveData()">GET DATA</button>
+      <button (click)="retrieveData()" class="btn btn-outline-primary">
+        GET DATA
+      </button>
       <!-- Event Binding -->
       -
-      <button (click)="sendData()">POST DATA</button>
+      <button (click)="sendData()" class="btn btn-outline-success">
+        POST DATA
+      </button>
       - - -
-      <button (click)="deleteSelected()">DELETE SELECTED DATA</button> - - -
+      <button (click)="deleteSelected()" class="btn btn-outline-danger">
+        DELETE SELECTED DATA
+      </button>
+      - - -
       <button (click)="test()">{{ test_name }}!</button>
       <!-- String binding -->
     </main>
     <br />
     Defaults :
-    <button (click)="clearAll()">
+    <button (click)="clearAll()" class="btn btn-outline-warning">
       Clear All
     </button>
     --
-    <button (click)="addItems(type.value, tags.value, parent.value)">
+    <button
+      (click)="addItems(type.value, tags.value, parent.value)"
+      class="btn btn-outline-info"
+    >
       Add Items
     </button>
     --
-    <button (click)="exportData()">Export data</button>
+    <button (click)="exportData()" class="btn btn-outline-info">
+      Export data
+    </button>
     --
     <input
       #fileInput
@@ -68,13 +80,14 @@
     <br />
     <br />
     <div class="QuickSearch">
-      <span>Quick Filter:</span>
+      <span>Quick Filter : </span>
       <input
         type="text"
         id="filter-text-box"
         placeholder="Filter..."
         (input)="onFilterTextBoxChanged(selectedKey)"
       />
+      =>
       <select
         [(ngModel)]="selectedKey"
         name="astre_userField"
@@ -89,7 +102,7 @@
     </div>
     <div>
       <ag-grid-angular
-        style="height: 80vh"
+        style="height: 65vh"
         class="ag-theme-quartz"
         [theme]="theme"
         [gridOptions]="gridOptions"

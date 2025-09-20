@@ -95,6 +95,7 @@ export class GridComponent implements OnInit {
     {
       headerName: "Type",
       field: "type",
+      maxWidth: 100,
       getQuickFilterText: (params: any) => {
         return params.value;
       }, // Why not in the default settings if applied to all ? I need rewrite this option each one separately
@@ -102,6 +103,7 @@ export class GridComponent implements OnInit {
     {
       headerName: "Subtype",
       field: "subtype",
+      maxWidth: 100,
       getQuickFilterText: (params: any) => {
         return params.value;
       },
@@ -130,6 +132,8 @@ export class GridComponent implements OnInit {
     {
       headerName: "Link",
       field: "link",
+      wrapText: false,
+      autoHeight: false,
       cellEditor: "agLargeTextCellEditor",
       getQuickFilterText: (params: any) => {
         return params.value;
@@ -162,6 +166,10 @@ export class GridComponent implements OnInit {
     {
       headerName: "Id",
       field: "id",
+      wrapText: false,
+      autoHeight: false,
+      cellEditor: "agLargeTextCellEditor",
+      maxWidth: 10, // Make it know data is here without revealing all of it
       getQuickFilterText: (params: any) => {
         return params.value;
       },
