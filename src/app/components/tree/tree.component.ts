@@ -21,7 +21,7 @@ import { linkConfig, rainbowLoop, tooltipConfig } from "./tree.config";
   selector: "app-tree",
   template: `
     <div class="tree-wrapper">
-      <svg #svgContainer style="width:90vw; height:90vh;"></svg>
+      <svg #svgContainer style="width:90vw; height:85vh;"></svg>
     </div>
   `,
 })
@@ -35,6 +35,13 @@ export class TreeComponent implements AfterViewInit {
   parentColumn = "";
   bounds: any;
   tooltipPinned: boolean = false;
+  tooltipWrapper: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>;
+  tooltipCloseButton: d3.Selection<
+    HTMLButtonElement,
+    unknown,
+    HTMLElement,
+    any
+  >;
 
   constructor(private store: Store, private toastr: ToastrService) {}
 
@@ -58,13 +65,21 @@ export class TreeComponent implements AfterViewInit {
     }
   }
 
+  /**
+   * Will Hide tooltip by setting opacity to 0
+   * Also set pin flag to false
+   */
   clearTooltip() {
-    d3.select(".tooltip").style("opacity", 0);
     this.tooltipPinned = false;
+    this.tooltipWrapper.style("opacity", "0");
+    this.tooltipCloseButton.style("opacity", "0");
+    this.tooltipWrapper.transition().duration(200).style("opacity", 0);
+    this.tooltipWrapper.style("pointer-events", "none");
   }
   /**
    * Render a tooltip given the data provided by pointNode
    *
+   * @param tooltip The tooltip that will be rendered
    * @param pointNode The node with the data to display
    * @param event The event produced
    * @param anchor The node used as a reference for coordinates
@@ -137,13 +152,28 @@ export class TreeComponent implements AfterViewInit {
     if (event instanceof PointerEvent) {
       // Clicked instance
       // !! Creating additional DOM on each 'hover' event causes performance issue, so the close button DOM element only appear on clicked
-      tooltip
-        .append("button")
-        .attr("class", "tooltip-btn")
-        .style("display", "block")
-        .style("margin-bottom", "6px")
-        .text("Close ✖")
-        .on("click", () => this.clearTooltip());
+
+      this.tooltipWrapper.style("pointer-events", "auto");
+      var tooltipCloseButtonNode = this.tooltipCloseButton.node();
+      if (!tooltipCloseButtonNode) return; // nothing to do if tooltip not rendered
+      var margin = 35;
+      this.tooltipCloseButton
+        .style("opacity", 1)
+        .style(
+          "left",
+          isLeft
+            ? event.pageX -
+                tooltipCloseButtonNode.getBoundingClientRect().width -
+                35 +
+                `px`
+            : event.pageX + 5 + `px`
+        )
+        .style(
+          "top",
+          isUp
+            ? event.pageY - heightOffset - margin + "px"
+            : event.pageY - margin + "px"
+        );
     }
   }
 
@@ -245,23 +275,39 @@ export class TreeComponent implements AfterViewInit {
 
     //
 
-    var tooltip = d3
+    this.tooltipWrapper = d3
       .select("app-tree")
       //.append("foreignObject") // SVG doesn't allow div, but 'foreignObject' does
       .append("div")
-      .attr("class", "tooltip")
+      .attr("class", "tooltip-wrapper")
+      .style("opacity", 0);
+    var tooltip = this.tooltipWrapper
+      .append("div")
+      .attr("class", "tooltip-content shadow p-3 mb-5 bg-white rounded")
       .style("position", "absolute")
       .style("background", "rgba(255, 255, 255, 0.9)")
       .style("backdrop-filter", "blur(5px)")
       .style("padding", "6px 10px")
       .style("border-radius", "4px")
-      .style("opacity", 0)
+      .style("opacity", 1)
       .style("font-family", "sans-serif")
       .style("font-size", tooltipConfig.font.size + "px")
+      .style("backdrop-filter", "blur(3px)")
       .style("color", "#000000")
       .style("max-width", "40vw")
       .style("max-height", "30vh")
       .style("overflow-y", "auto"); // Enable vertical scroll
+
+    this.tooltipCloseButton = this.tooltipWrapper
+      .append("button")
+      .attr("class", "tooltip-btn btn btn-danger")
+      .style("display", "block")
+      .style("position", "absolute")
+      .style("opacity", 0)
+      .style("left", `0px`)
+      .style("top", "0px")
+      .text("✖")
+      .on("click", () => this.clearTooltip());
 
     // === Links  ===
     const linkGen = d3
@@ -331,7 +377,7 @@ export class TreeComponent implements AfterViewInit {
         "mouseover",
         (event: MouseEvent, pointNode: d3.HierarchyPointNode<Astre>) => {
           var t = event.currentTarget as SVGElement;
-          tooltip.transition().duration(200).style("opacity", 0.9);
+          this.tooltipWrapper.transition().duration(200).style("opacity", 0.9);
           linkConfig.stroke.rainbowLoop = true;
           let currentNode = pointNode;
           while (currentNode.parent != null) {
@@ -367,14 +413,18 @@ export class TreeComponent implements AfterViewInit {
               )
               .data()[0];
             // Show tooltip
-            tooltip.transition().duration(200).style("opacity", 0.9);
+            this.tooltipWrapper
+              .transition()
+              .duration(200)
+              .style("opacity", 0.9);
             this.renderTooltip(tooltip, pointNode, event, anchor);
           }
         }
       )
       .on("mouseout", (event: any, pointNode: d3.HierarchyPointNode<Astre>) => {
         if (!this.tooltipPinned) {
-          tooltip.transition().duration(200).style("opacity", 0);
+          this.tooltipWrapper.transition().duration(200).style("opacity", 0);
+          tooltip.style("pointer-events", "none");
         }
         var target: Element = event.currentTarget;
 
