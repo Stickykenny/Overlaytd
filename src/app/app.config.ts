@@ -19,6 +19,7 @@ import { EffectsModule } from "@ngrx/effects";
 import { StoreDevtoolsModule } from "@ngrx/store-devtools";
 //import { csrfInterceptor } from "./csrf.interceptor";
 import { localStorageSync } from "ngrx-store-localstorage";
+import { StaticInterceptor } from "./static.interceptors";
 
 export function localStorageSyncReducer(
   reducer: ActionReducer<any>
@@ -35,7 +36,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routeConfig),
     provideHttpClient(
-      withInterceptors([TokenInterceptor]), // First entry is the first run (left to right)
+      withInterceptors([StaticInterceptor, TokenInterceptor]), // First entry is the first run (left to right)
       withInterceptorsFromDi() // Run Class-based interceptor after // This is older implementation and require the line below
     ),
     //{ provide: HTTP_INTERCEPTORS, useClass: csrfInterceptor, multi: true }, // Older implementation of interceptors
@@ -44,14 +45,16 @@ export const appConfig: ApplicationConfig = {
       progressBar: true,
       progressAnimation: "decreasing",
       enableHtml: true,
+      timeOut: 10000,
+      extendedTimeOut: 3500,
     }),
     provideAnimations(),
 
     importProvidersFrom(
       StoreModule.forFeature(astreFeatureKey, AstreReducer),
       StoreModule.forRoot(
-        {}, //{ [astreFeatureKey]: AstreReducer }, // Example if using AstreReducer in Root
-        { metaReducers }
+        {} //{ [astreFeatureKey]: AstreReducer }, // Example if using AstreReducer in Root
+        //{ metaReducers }
       ),
       StoreDevtoolsModule.instrument(),
       EffectsModule.forRoot([AstreEffects])
