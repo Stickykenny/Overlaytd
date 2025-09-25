@@ -13,7 +13,6 @@ import { Astre } from "../../models/Astre";
 import { ApiService } from "src/app/api.service";
 import { RowModel, RowModelTransfer } from "src/app/models/RowModel";
 import { ToastrService } from "ngx-toastr";
-import * as Papa from "papaparse";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ConfirmDialogComponent } from "src/app/confirm-dialog/confirm-dialog.component";
 
@@ -332,7 +331,7 @@ export class GridComponent implements OnInit {
               );
               break;
             default:
-              this.toastr.error("Error sending data");
+              this.toastr.error("Error sending data to Server");
               break;
           }
         },
@@ -490,8 +489,36 @@ export class GridComponent implements OnInit {
 
   async importData(event: any): Promise<void> {
     const file: File = event.target.files[0];
+    if (!file) {
+      this.toastr.info("Invalid File");
+    }
 
-    if (file) {
+    if (file.name.endsWith(".json")) {
+      const reader: FileReader = new FileReader();
+      reader.readAsText(file);
+      reader.onload = (e: any) => {
+        const text = e.target.result;
+        let obj = JSON.parse(text);
+        console.log(obj);
+        const simplified: any[] = text;
+        const trs: RowModelTransfer[] = obj.map((line: any) => ({
+          type: line["astreID"]["type"] || "",
+          subtype: line["astreID"]["subtype"] || "",
+          name: line["astreID"]["name"] || "",
+          subname: line["subname"] || "",
+          tags: line["tags"] || "",
+          link: line["links"] || "",
+          description: line["description"] || "",
+          parent: line["parent"] || "",
+          id: line["id"] || "",
+          date_added: line["date added"] || "",
+          last_modified: line["last Modified"] || "",
+          was_modified: false,
+        }));
+        this.importCheck(trs);
+      };
+    } else {
+      // OLDER IMPLEMENTATION, keep for back compatibility
       const papa = await import("papaparse"); // Lazy import
       const reader: FileReader = new FileReader();
       reader.readAsText(file);
