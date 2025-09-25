@@ -5,9 +5,12 @@ import { CommonModule } from "@angular/common";
 import { ApiService } from "./api.service";
 import { Observable } from "rxjs";
 import { ToastrService } from "ngx-toastr";
+import { Astre } from "./models/Astre";
+import { HttpClient } from "@angular/common/http";
+import { MediaDockComponent } from "./components/media-dock/media-dock.component";
 @Component({
   selector: "app-root",
-  imports: [RouterModule, CommonModule],
+  imports: [RouterModule, CommonModule, MediaDockComponent],
   template: `
     <button
       id="sidebarhelper"
@@ -34,24 +37,25 @@ import { ToastrService } from "ngx-toastr";
         <br />
         <a routerLink="/tree">Tree</a>
       </p>
-      <p *ngIf="isLoggedIn$ | async">
+      <p *ngIf="isLoggedIn$">
         <a routerLink="/home">Home</a>
         <br />
         <br />
-        <a (click)="logout()" routerLink="/">Logout</a>
+        <a (click)="logout()">Logout</a>
       </p>
     </div>
 
     <main class="content">
       <header class="brand-name">
-        <img
-          class="brand-logo"
-          src="/assets/logo.svg"
-          alt="logo"
+        <pre>   <i
+          class="bi bi-house-door-fill cns-gradient"
+          style="font-size: 2rem;"
           aria-hidden="true"
           (click)="rdm()"
-        />
+          ><span class ="cns-gradient cns-gradient-text-strech">  CNS</span></i
+        ></pre>
       </header>
+      <app-media-dock></app-media-dock>
       <section class="content">
         <router-outlet></router-outlet>
         <!-- Dynamic load based on route -->
@@ -65,16 +69,18 @@ export class AppComponent {
   title = "homes";
   isLoggedIn$: Observable<boolean>;
 
-  constructor(private auth: ApiService, private toastr: ToastrService) {
+  constructor(
+    private auth: ApiService,
+    private toastr: ToastrService,
+    private http: HttpClient
+  ) {
     this.isLoggedIn$ = this.auth.isLoggedIn$;
   }
 
-  ngOnInit(): void {
-    localStorage.removeItem("jwt");
-  }
+  ngOnInit(): void {}
 
   logout(): void {
-    localStorage.removeItem("jwt");
+    localStorage.clear();
     this.auth.logout();
   }
   toggleSidebar() {
@@ -88,5 +94,20 @@ export class AppComponent {
 
   rdm() {
     this.toastr.info("Clicked on home");
+
+    /*console.log("Logging Local Storage");
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key) {
+        const value = localStorage.getItem(key);
+        console.log("key =" + key + " | value = " + value);
+      }
+    }
+    var c = 0;
+    this.http
+      .get<Astre[]>("http://localhost:8080/api/astres/welcome", {})
+      .subscribe()
+      .unsubscribe();
+    console.log(c);*/
   }
 }
