@@ -5,7 +5,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "watch": "ng build --watch --configuration development"
+    "watch": "ng build --watch --configuration development",
+    "github-build": "ng build --configuration prod --base-href 'https://Stickykenny.github.io/Stickykenny.github.io/'"
   },
   "private": true,
   "dependencies": {
@@ -27,6 +28,7 @@
     "@types/d3": "^7.4.3",
     "ag-grid-angular": "^32.0.0",
     "bootstrap": "^5.3.6",
+    "bootstrap-icons": "^1.13.1",
     "d3": "^7.9.0",
     "jwt-decode": "^4.0.0",
     "ngrx-store-localstorage": "^19.0.2",
