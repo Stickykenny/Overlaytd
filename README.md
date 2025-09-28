@@ -1,5 +1,8 @@
 # Overlaytd
 
+# This is an archive of old implementation 2025-09-28
+# This branch is a backup of a version where I stored Data into NgRx-Store, it is overkill
+
 User Interface for [Relaytd](https://github.com/Stickykenny/Relaytd)
 
 ## Preview
