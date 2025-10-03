@@ -10,12 +10,12 @@ import * as d3 from "d3";
 import { ToastrService } from "ngx-toastr";
 import { Observable, take } from "rxjs";
 import { Astre } from "src/app/models/Astre";
-import { loadAstres } from "src/app/store/astre.actions";
 import { selectAstres } from "src/app/store/astre.selectors";
 
 import { Tags } from "src/app/models/Tags";
 
 import { linkConfig, rainbowLoop, tooltipConfig } from "./tree.config";
+import { offlineDb } from "src/app/db/offlineDb";
 
 @Component({
   selector: "app-tree",
@@ -45,17 +45,16 @@ export class TreeComponent implements AfterViewInit {
 
   constructor(private store: Store, private toastr: ToastrService) {}
 
-  ngOnInit() {
-    this.store.dispatch(loadAstres());
-    this.allAstres$ = this.store.select(selectAstres);
-    this.allAstres$.pipe(take(1)).forEach((a) => (this.astres = a));
-    this.astres = this.astres.filter((a) => a.astreID.type == "topic");
-  }
+  ngOnInit() {}
   ngAfterViewInit(): void {
     const svgElement = this.svgRef.nativeElement as SVGSVGElement;
     // get actual pixel dimensions from browser layout
     this.bounds = svgElement.getBoundingClientRect();
-    this.initTree();
+    offlineDb.getItems().then((astres) => {
+      this.astres = astres;
+      this.astres = this.astres.filter((a) => a.astreID.type == "topic");
+      this.initTree();
+    });
   }
   ngOnChanges(changes: SimpleChanges) {
     this.allAstres$.pipe(take(1)).forEach((a) => (this.astres = a));
@@ -241,7 +240,8 @@ export class TreeComponent implements AfterViewInit {
       .id((d: Astre) => d.astreID.name)
       .parentId((d: Astre) => d.parent)(validAstres);
 
-    const radius = 10 * validAstres.length;
+    let radius = 10 * validAstres.length;
+    radius = radius < 200 ? 200 : radius;
     const tree = d3
       .tree<Astre>()
       .size([2 * Math.PI, radius])

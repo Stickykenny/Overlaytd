@@ -9,7 +9,7 @@ import {
 } from "ag-grid-community";
 import { Component, inject, OnInit } from "@angular/core";
 import { AgGridAngular } from "ag-grid-angular";
-import { Astre } from "../../models/Astre";
+import { Astre, AstreID } from "../../models/Astre";
 import { ApiService } from "src/app/api.service";
 import { RowModel, RowModelTransfer } from "src/app/models/RowModel";
 import { ToastrService } from "ngx-toastr";
@@ -17,15 +17,15 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ConfirmDialogComponent } from "src/app/confirm-dialog/confirm-dialog.component";
 
 import { Store } from "@ngrx/store";
-import * as AstreActions from "../../store/astre.actions";
+//import * as AstreActions from "../../store/astre.actions";
 import {
   selectAddAstreResult,
   selectAstres,
 } from "src/app/store/astre.selectors";
-import { filter, Observable, take } from "rxjs";
+import { Observable, take } from "rxjs";
 import { ActionStatus } from "src/app/store/action.state";
 import { SharedModule } from "src/app/shared.module";
-import { astreFeatureKey } from "src/app/store/astre.reducer";
+import { offlineDb } from "src/app/db/offlineDb";
 
 @Component({
   selector: "app-grid",
@@ -198,8 +198,6 @@ export class GridComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.store.dispatch(AstreActions.loadAstres());
-    this.allAstres$ = this.store.select(selectAstres);
     this.retrieveData();
   }
 
@@ -257,25 +255,41 @@ export class GridComponent implements OnInit {
   }
 
   async retrieveData() {
-    var subscribeAllAstres = this.allAstres$.subscribe({
-      next: (res) => {
-        const simplified: RowModelTransfer[] = res.map((item) => ({
-          ...item,
-          ...item.astreID,
-          was_modified: false,
-        }));
-
-        simplified.forEach((astre) => {
-          delete astre.astreID;
+    if (this.rowData.length == 0) {
+      this.astre2Service
+        .getAstres()
+        .pipe(take(1))
+        .subscribe({
+          next: (astres) => {
+            offlineDb.populateDb(astres);
+            this.rowData = this.fromAstresToRows(astres);
+          },
+          error: (err) => {
+            var offlineAstres: RowModelTransfer[] = [];
+            offlineDb.getItems().then((astres) => {
+              offlineAstres = this.fromAstresToRows(astres);
+              if (offlineAstres.length > 0) {
+                this.toastr.info(
+                  "Using local offline database's save",
+                  "Error Fetching from server"
+                );
+                this.rowData = offlineAstres;
+              } else {
+                this.toastr.error("Error Fetching from server");
+              }
+            });
+          },
         });
-        this.importCheck(simplified);
-      },
-      error: (err) => {
-        console.error("Error loading data", err);
-        this.toastr.error(err, "Error loading data");
-      },
-    });
-    subscribeAllAstres.unsubscribe();
+    }
+    offlineDb
+      .getItems()
+      .then((astreArray) => {
+        console.log(astreArray);
+      })
+      .catch((e) => {
+        alert(e);
+        throw e;
+      });
   }
 
   async sendData() {
@@ -289,7 +303,7 @@ export class GridComponent implements OnInit {
 
     this.gridApi.forEachNode(function (node: IRowNode) {
       if (node.data.was_modified == true || node.isSelected()) {
-        let item = node.data;
+        let item: RowModelTransfer = node.data;
         astres.push({
           astreID: { type: item.type, subtype: item.subtype, name: item.name },
           subname: item.subname,
@@ -304,39 +318,28 @@ export class GridComponent implements OnInit {
       }
     });
 
-    /*this.service
-      .postAstres(astres)*/
-    this.store.dispatch(AstreActions.addAstres({ newastres: astres }));
+    offlineDb.addItems(astres);
 
-    this.addAstreResult$
-      .pipe(
-        filter((status) => status !== ActionStatus.PENDING),
-        take(1)
-      )
+    this.astre2Service
+      .postAstres(astres)
+      .pipe(take(1))
       .subscribe({
-        next: (actionStatus) => {
-          switch (actionStatus) {
-            case ActionStatus.SUCCESS:
-              this.gridApi.forEachNode((node: IRowNode) => {
-                if (node.data.was_modified == true) {
-                  // Reset the was_modified attribute
-                  this.gridApi.getRowNode(node.data.name)!;
-                  node.setDataValue("was_modified", false);
-                  node.setSelected(false);
-                }
-              });
-              this.toastr.success(
-                "A total of " + astres.length + " rows were sent",
-                "Successful Update of data"
-              );
-              break;
-            default:
-              this.toastr.error("Error sending data to Server");
-              break;
-          }
+        next: (response) => {
+          this.gridApi.forEachNode((node: IRowNode) => {
+            if (node.data.was_modified == true) {
+              // Reset the was_modified attribute
+              this.gridApi.getRowNode(node.data.name)!;
+              node.setDataValue("was_modified", false);
+              node.setSelected(false);
+            }
+          });
+          this.toastr.success(
+            "A total of " + astres.length + " rows were sent",
+            "Successful Update of data"
+          );
         },
         error: (err) => {
-          this.toastr.error(err, "Observable Error sending data");
+          this.toastr.error("Error sending data to Server");
         },
       });
   }
@@ -384,33 +387,28 @@ export class GridComponent implements OnInit {
         },
       });*/
     selectedData.forEach((node) => {
-      /*this.service.deleteAstre(node.data.type, node.data.name).*/
-      this.store.dispatch(
-        AstreActions.deleteAstres({
-          astreID: {
-            type: node.data.type,
-            subtype: node.data.subtype,
-            name: node.data.name,
+      var astreID: AstreID = {
+        type: node.data.type,
+        subtype: node.data.subtype,
+        name: node.data.name,
+      };
+      offlineDb.deleteItem(astreID);
+      this.astre2Service
+        .deleteAstre(node.data.type, node.data.subtype, node.data.name)
+        .pipe(take(1))
+        .subscribe({
+          next: () => {},
+          error: (err) => {
+            console.error("Delete failed on server", err);
+            return false;
           },
         })
-      );
-      console.log("Entry deleted!", node.data.type, " - ", node.data.name);
+        .unsubscribe(),
+        console.log("Entry deleted!", node.data.type, " - ", node.data.name);
       this.gridApi.applyTransaction({
         remove: [selectedData[count].data],
       });
       count += 1;
-      /*subscribe({
-        next: (response) => {
-          console.log("Entry deleted!", node.data.type, " - ", node.data.name);
-          this.gridApi.applyTransaction({
-            remove: [selectedData[count].data],
-          });
-        },
-        error: (err) => {
-          console.error("Delete failed", err);
-          return false;
-        },
-      });*/
     });
     this.toastr.success(
       "A total of " + count + " rows were removed",
@@ -455,6 +453,7 @@ export class GridComponent implements OnInit {
   importCheck(newData: RowModelTransfer[]) {
     if (this.rowData.length == 0) {
       this.rowData = newData;
+      return "yes";
     } else {
       const modalRef = this.modalService.open(ConfirmDialogComponent, {
         centered: true,
@@ -477,14 +476,17 @@ export class GridComponent implements OnInit {
               "Import Successful"
             );
           } else {
+            // cancel
             this.toastr.info("", "Import Cancelled");
           }
+          return result;
         })
         .catch(() => {
           console.log("Modal dismissed");
           this.toastr.info("", "Import Cancelled");
         });
     }
+    return "cancel";
   }
 
   async importData(event: any): Promise<void> {
@@ -553,7 +555,6 @@ export class GridComponent implements OnInit {
   }
 
   exportData() {
-    console.log(this.allAstres$);
     var colDefsFields: string[] = [];
     this.colDefs.forEach((col) => colDefsFields.push(col.field));
     const astres: Astre[] = [];
@@ -600,10 +601,21 @@ export class GridComponent implements OnInit {
    */
   }
 
+  // UTILITIES
+
+  fromAstresToRows(astres: Astre[]): RowModelTransfer[] {
+    return astres.map((item) => ({
+      ...item,
+      ...item.astreID,
+      was_modified: false,
+    }));
+  }
+
   test() {
-    this.allAstres$.pipe(take(1)).subscribe((a) => console.log(a));
+    /*this.allAstres$.pipe(take(1)).subscribe((a) => console.log(a));
     var cnt = 0;
     this.astre2Service.getAstres().forEach((a) => (cnt += 1));
     console.log(cnt);
+*/
   }
 }

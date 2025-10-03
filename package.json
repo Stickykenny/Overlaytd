@@ -30,6 +30,7 @@
     "bootstrap": "^5.3.6",
     "bootstrap-icons": "^1.13.1",
     "d3": "^7.9.0",
+    "dexie": "^4.2.0",
     "jwt-decode": "^4.0.0",
     "ngrx-store-localstorage": "^19.0.2",
     "ngx-toastr": "^19.0.0",
