@@ -28,7 +28,7 @@ import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
         </ng-template>
 
         <ng-template #elseBlock>
-          <pre>Media Docker       </pre>
+          <pre>       Media Docker       </pre>
           <button
             type="button"
             class="btn position-absolute top-0 end-0"

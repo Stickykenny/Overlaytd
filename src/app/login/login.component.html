@@ -1,25 +1,26 @@
-<form id="loginpanel" #loginForm="ngForm" (ngSubmit)="doLogin(loginForm)">
-  <div class="inset">
-    <p>
-      <input
-        type="text"
-        name="username"
-        id="username"
-        placeholder="username"
-        [(ngModel)]="username"
-      />
-    </p>
-    <p>
-      <input
-        type="password"
-        name="password"
-        id="password"
-        placeholder="password"
-        [(ngModel)]="password"
-      />
-    </p>
+<div class="text-center">
+  <form id="loginpanel" #loginForm="ngForm" (ngSubmit)="doLogin(loginForm)">
+    <div class="inset">
+      <p>
+        <input
+          type="text"
+          name="username"
+          id="username"
+          placeholder="username"
+          [(ngModel)]="username"
+        />
+      </p>
+      <p>
+        <input
+          type="password"
+          name="password"
+          id="password"
+          placeholder="password"
+          [(ngModel)]="password"
+        />
+      </p>
 
-    <!-- 
+      <!-- 
         [(ngModel)]="username"
         [(ngModel)]="password" CSRF token is automatically included with Thymeleaf
     <input
@@ -27,34 +28,44 @@
       th:name="${_csrf.parameterName}"
       th:value="${_csrf.token}"
     /> -->
-  </div>
-  <p class="p-container">
-    <button type="submit" class="btn btn-light">
-      <i class="pi pi-sign-in" style="font-size: 1rem; color:  #2da150"></i>    
-      Login with Credentials
-    </button>
-  </p>
-</form>
+    </div>
+    <p class="p-container">
+      <button type="submit" class="btn btn-light">
+        <i class="pi pi-sign-in" style="font-size: 1rem; color: #2da150"></i>
+        Login with Credentials
+      </button>
+    </p>
+  </form>
+  ------------------------------------------------------------------
 
-<h2>Login with OAuth 2.0</h2>
+  <h2>Login with OAuth 2.0</h2>
 
-<table class="table table-striped">
-  <tbody>
-    <tr>
-      <td>
-        <button type="button" class="btn btn-light" (click)="loginWithGithub()">
-        <i class="pi pi-github" style="font-size: 1rem; color:  #000000"></i>     
-          Login with Github
-        </button>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <button type="button" class="btn btn-light" (click)="loginWithGoogle()">
-        <i class="pi pi-google" style="font-size: 1rem; color:  #4285F4"></i>      
-             Login with Google
-        </button>
-      </td>
-    </tr>
-  </tbody>
-</table>
+  <table class="table table-striped">
+    <tbody>
+      <tr>
+        <td>
+          <button
+            type="button"
+            class="btn btn-light"
+            (click)="loginWithGithub()"
+          >
+            <i class="pi pi-github" style="font-size: 1rem; color: #000000"></i>
+            Login with Github
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <button
+            type="button"
+            class="btn btn-light"
+            (click)="loginWithGoogle()"
+          >
+            <i class="pi pi-google" style="font-size: 1rem; color: #4285f4"></i>
+            Login with Google
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
