@@ -9,16 +9,16 @@
         <div class="col">
           <!--onclick is the native javascript not angular-->
           <button (click)="retrieveData()" class="btn btn-outline-primary">
-            GET DATA
+            GET Data
           </button>
           <!-- Event Binding -->
           -
           <button (click)="sendData()" class="btn btn-outline-success">
-            POST DATA
+            SAVE Data
           </button>
           - - -
           <button (click)="deleteSelected()" class="btn btn-outline-danger">
-            DELETE SELECTED DATA
+            DELETE Selected Data
           </button>
           - - -
           <button (click)="test()">{{ test_name }}!</button>
@@ -62,6 +62,7 @@
             value="topic"
             id="type"
             placeholder="type"
+            autocomplete="off"
           />
           Tags :-
           <input
@@ -71,6 +72,7 @@
             value=""
             id="tags"
             placeholder="tags"
+            autocomplete="off"
           />
           Parent :-
           <input
@@ -80,6 +82,7 @@
             value=""
             id="parent"
             placeholder="parent"
+            autocomplete="off"
           />
         </div>
       </div>
@@ -93,6 +96,7 @@
           id="filter-text-box"
           placeholder="Filter..."
           (input)="onFilterTextBoxChanged(selectedKey)"
+          autocomplete="off"
         />
         =>
         <select
