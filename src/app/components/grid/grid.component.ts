@@ -50,7 +50,7 @@ export class GridComponent implements OnInit {
   ];
   theme = themeAlpine;
 
-  test_name: string = "TESTING BUTTON";
+  test_function_name: string = "Reset to example";
   rowData: RowModel[] = [];
   astre2Service: ApiService = inject(ApiService);
 
@@ -89,6 +89,7 @@ export class GridComponent implements OnInit {
   };
   rowSelection: RowSelectionOptions | "single" | "multiple" = {
     mode: "multiRow",
+    selectAll: "filtered",
   };
   colDefs = [
     {
@@ -500,24 +501,8 @@ export class GridComponent implements OnInit {
       reader.readAsText(file);
       reader.onload = (e: any) => {
         const text = e.target.result;
-        let obj = JSON.parse(text);
-        console.log(obj);
-        const simplified: any[] = text;
-        const trs: RowModelTransfer[] = obj.map((line: any) => ({
-          type: line["astreID"]["type"] || "",
-          subtype: line["astreID"]["subtype"] || "",
-          name: line["astreID"]["name"] || "",
-          subname: line["subname"] || "",
-          tags: line["tags"] || "",
-          link: line["links"] || "",
-          description: line["description"] || "",
-          parent: line["parent"] || "",
-          id: line["id"] || "",
-          date_added: line["date added"] || "",
-          last_modified: line["last Modified"] || "",
-          was_modified: false,
-        }));
-        this.importCheck(trs);
+        let obj: Astre[] = JSON.parse(text);
+        this.importCheck(this.fromAstresToRows(obj));
       };
     } else {
       // OLDER IMPLEMENTATION, keep for back compatibility
@@ -617,5 +602,13 @@ export class GridComponent implements OnInit {
     this.astre2Service.getAstres().forEach((a) => (cnt += 1));
     console.log(cnt);
 */
+  }
+  loadExample() {
+    this.astre2Service.getLocalAstres().subscribe({
+      next: (text: Astre[]) => {
+        this.rowData = this.fromAstresToRows(text);
+      },
+      error: (err) => console.error("Failed to load file:", err),
+    });
   }
 }

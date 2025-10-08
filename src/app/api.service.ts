@@ -109,13 +109,17 @@ export class ApiService {
     console.log("Getting after post logout");
   }
 
-  getAstres() {
+  getAstres(): Observable<Astre[]> {
     console.log("Getting Astres");
     const headers = new HttpHeaders({});
     return this.http.get<Astre[]>(
       "http://localhost:8080/api/astres/getall",
       {}
     );
+  }
+
+  getLocalAstres() {
+    return this.http.get<Astre[]>("assets/exampleData.json");
   }
 
   postAstres(astres: Astre[]) {

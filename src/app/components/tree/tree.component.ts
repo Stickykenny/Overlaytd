@@ -57,7 +57,6 @@ export class TreeComponent implements AfterViewInit {
     });
   }
   ngOnChanges(changes: SimpleChanges) {
-    this.allAstres$.pipe(take(1)).forEach((a) => (this.astres = a));
     this.initTree();
     if (changes["astres"] && this.astres?.length) {
       this.initTree();
@@ -240,7 +239,7 @@ export class TreeComponent implements AfterViewInit {
       .id((d: Astre) => d.astreID.name)
       .parentId((d: Astre) => d.parent)(validAstres);
 
-    let radius = 10 * validAstres.length;
+    let radius = 10 * validAstres.length + Math.log(50 * validAstres.length);
     radius = radius < 200 ? 200 : radius;
     const tree = d3
       .tree<Astre>()
