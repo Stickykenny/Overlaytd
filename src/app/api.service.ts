@@ -1,12 +1,11 @@
-import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 
 import { Astre, AstreID } from "./models/Astre";
 import { BehaviorSubject, Observable, take } from "rxjs";
-import { jwtDecode, JwtPayload } from "jwt-decode";
 import { Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
-import { cp } from "fs";
+import { environment } from "src/environments/environment";
 
 @Injectable({
   providedIn: "root",
@@ -119,7 +118,7 @@ export class ApiService {
   }
 
   getLocalAstres() {
-    return this.http.get<Astre[]>("assets/exampleData.json");
+    return this.http.get<Astre[]>(environment.exampleDataPath);
   }
 
   postAstres(astres: Astre[]) {
