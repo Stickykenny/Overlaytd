@@ -14,6 +14,7 @@ import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
     <div class="position-relative" style="z-index: 9999;" cdkDrag>
       <div
         class="position-absolute top-0 end-0 text-center bg-info bg-gradient p-2 rounded-3"
+        style="max-width:500px"
       >
         <div *ngIf="isExpanded; then thenBlock; else elseBlock"></div>
         <ng-template #thenBlock>
@@ -37,6 +38,8 @@ import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
             <i class="bi bi-arrows-collapse"></i>
           </button>
         </ng-template>
+        This Web-application is not affiliated with any of the videos on this
+        Youtube embed
         <div id="media-content">
           <br />
           <iframe
@@ -62,7 +65,12 @@ export class MediaDockComponent implements OnInit {
     private modalService: NgbModal,
     private sanitizer: DomSanitizer
   ) {
-    this.YtPlaylistId = environment.mediaDockerPlaylistDefault + "&autoplay=1";
+    let maxVid = 7;
+    let rdmVidStart = "&index=" + Math.floor(Math.random() * maxVid);
+    this.YtPlaylistId =
+      environment.mediaDockerPlaylistDefault +
+      "&autoplay=1&shufflePlaylist=1" +
+      rdmVidStart;
     this.iframeYtSource = this.sanitizer.bypassSecurityTrustResourceUrl(
       this.YtPlaylistId
     );
