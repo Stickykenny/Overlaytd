@@ -26,6 +26,7 @@ import { Observable, take } from "rxjs";
 import { ActionStatus } from "src/app/store/action.state";
 import { SharedModule } from "src/app/shared.module";
 import { offlineDb } from "src/app/db/offlineDb";
+import { fromAstresToRows } from "src/app/utils/helper";
 
 @Component({
   selector: "app-grid",
@@ -52,7 +53,7 @@ export class GridComponent implements OnInit {
 
   test_function_name: string = "Reset to example";
   rowData: RowModel[] = [];
-  astre2Service: ApiService = inject(ApiService);
+  astre2Service: ApiService = inject(ApiService); // Angular 14+, can only be run before or in constructor phase
 
   searchTerm: string = "";
   columnSearch = "";
@@ -193,6 +194,7 @@ export class GridComponent implements OnInit {
   ];
 
   constructor(
+    // API service is injected using inject() (Angular 14+), to be safe use constructor injection for external service
     private toastr: ToastrService,
     private modalService: NgbModal,
     private store: Store
@@ -263,12 +265,12 @@ export class GridComponent implements OnInit {
         .subscribe({
           next: (astres) => {
             offlineDb.populateDb(astres);
-            this.rowData = this.fromAstresToRows(astres);
+            this.rowData = fromAstresToRows(astres);
           },
           error: (err) => {
             var offlineAstres: RowModelTransfer[] = [];
             offlineDb.getItems().then((astres) => {
-              offlineAstres = this.fromAstresToRows(astres);
+              offlineAstres = fromAstresToRows(astres);
               if (offlineAstres.length > 0) {
                 this.toastr.info(
                   "Using local offline database's save",
@@ -285,7 +287,7 @@ export class GridComponent implements OnInit {
     offlineDb
       .getItems()
       .then((astreArray) => {
-        console.log(astreArray);
+        this.rowData = fromAstresToRows(astreArray);
       })
       .catch((e) => {
         alert(e);
@@ -502,7 +504,7 @@ export class GridComponent implements OnInit {
       reader.onload = (e: any) => {
         const text = e.target.result;
         let obj: Astre[] = JSON.parse(text);
-        this.importCheck(this.fromAstresToRows(obj));
+        this.importCheck(fromAstresToRows(obj));
       };
     } else {
       // OLDER IMPLEMENTATION, keep for back compatibility
@@ -587,15 +589,6 @@ export class GridComponent implements OnInit {
   }
 
   // UTILITIES
-
-  fromAstresToRows(astres: Astre[]): RowModelTransfer[] {
-    return astres.map((item) => ({
-      ...item,
-      ...item.astreID,
-      was_modified: false,
-    }));
-  }
-
   test() {
     /*this.allAstres$.pipe(take(1)).subscribe((a) => console.log(a));
     var cnt = 0;
@@ -606,7 +599,7 @@ export class GridComponent implements OnInit {
   loadExample() {
     this.astre2Service.getLocalAstres().subscribe({
       next: (text: Astre[]) => {
-        this.rowData = this.fromAstresToRows(text);
+        this.rowData = fromAstresToRows(text);
       },
       error: (err) => console.error("Failed to load file:", err),
     });
