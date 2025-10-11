@@ -8,55 +8,80 @@
       <div class="row">
         <div class="col">
           <!--onclick is the native javascript not angular-->
-          <button (click)="retrieveData()" class="btn btn-outline-primary">
+          <button
+            (click)="retrieveData()"
+            class="btn btn-outline-primary"
+            title="Retrieve the data from server or local database"
+          >
             GET Data
           </button>
           <!-- Event Binding -->
           -
-          <button (click)="sendData()" class="btn btn-outline-success">
+          <button
+            (click)="sendData()"
+            class="btn btn-outline-success"
+            title="Save the selected changes. This is permanent"
+          >
             SAVE Selected Changes
           </button>
           - - -
-          <button (click)="deleteSelected()" class="btn btn-outline-danger">
+          <button
+            (click)="deleteSelected()"
+            class="btn btn-outline-danger"
+            title="Delete the selected data. This is permanent"
+          >
             DELETE Selected Data
           </button>
           - - -
-          <button (click)="loadExample()" class="btn btn-outline-dark">
+          <button
+            (click)="loadExample()"
+            class="btn btn-outline-dark"
+            title="Replace grid's data with the example. Does not save the change"
+          >
             {{ test_function_name }}!
           </button>
           <!-- String binding -->
 
           <br />
           Defaults :
-          <button (click)="clearAll()" class="btn btn-outline-warning">
+          <button
+            (click)="clearAll()"
+            class="btn btn-outline-warning"
+            title="Clear the data in this grid view. Does not remove the data"
+          >
             Clear All
           </button>
           --
           <button
             (click)="addItems(type.value, tags.value, parent.value)"
             class="btn btn-outline-info"
+            title="Add a new row of data, with default values indicated"
           >
-            Add Items
+            Add Row
           </button>
           --
           <button (click)="exportData()" class="btn btn-outline-info">
             Export data
           </button>
           --
-          <input
-            #fileInput
-            type="file"
-            id="file"
-            (click)="fileInput.value = ''"
-            (change)="importData($event)"
-            accept=".csv,.json"
-          />
+          <div>
+            <label for="file" class="btn btn-outline-info">Import Data</label>
+            <input
+              #fileInput
+              type="file"
+              id="file"
+              style="display: none"
+              (click)="fileInput.value = ''"
+              (change)="importData($event)"
+              accept=".csv,.json"
+            />
+          </div>
         </div>
 
         <div class="col-6">
           Default data's value when adding a new row
           <br />
-          Type >
+          Type :-
           <input
             #type
             type="text"
