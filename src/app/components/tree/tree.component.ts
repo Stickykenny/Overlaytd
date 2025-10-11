@@ -4,6 +4,7 @@ import {
   ElementRef,
   ViewChild,
   SimpleChanges,
+  inject,
 } from "@angular/core";
 import { Store } from "@ngrx/store";
 import * as d3 from "d3";
@@ -16,6 +17,7 @@ import { Tags } from "src/app/models/Tags";
 
 import { linkConfig, rainbowLoop, tooltipConfig } from "./tree.config";
 import { offlineDb } from "src/app/db/offlineDb";
+import { ApiService } from "src/app/api.service";
 
 @Component({
   selector: "app-tree",
@@ -30,6 +32,7 @@ export class TreeComponent implements AfterViewInit {
   svgRef!: ElementRef<SVGSVGElement>;
   public allAstres$: Observable<Astre[]> = this.store.select(selectAstres);
   public astres: Astre[];
+  astreService: ApiService = inject(ApiService); // Angular 14+, can only be run before or in constructor phase
 
   childColumn = "";
   parentColumn = "";
@@ -53,13 +56,13 @@ export class TreeComponent implements AfterViewInit {
     offlineDb.getItems().then((astres) => {
       this.astres = astres;
       this.astres = this.astres.filter((a) => a.astreID.type == "topic");
-      this.initTree();
+      this.loadTree();
     });
   }
   ngOnChanges(changes: SimpleChanges) {
-    this.initTree();
+    this.loadTree();
     if (changes["astres"] && this.astres?.length) {
-      this.initTree();
+      this.loadTree();
     }
   }
 
@@ -175,71 +178,86 @@ export class TreeComponent implements AfterViewInit {
     }
   }
 
+  /**
+   * Pre-process the data before initializing the tree
+   */
+  loadTree() {
+    if (this.astres.length === 0) {
+      this.astreService.getLocalAstres().subscribe((astres) => {
+        this.astres = astres;
+        this.toastr.info("Using example data as replacement", "No data found");
+
+        var rootCheck = this.astres.filter((astre) => astre.parent == "");
+        if (rootCheck.length > 1) {
+          this.toastr.error(
+            "Please only keep one root for the tree : " +
+              Array.from(
+                rootCheck.map(
+                  (astre) => astre.astreID.type + "-" + astre.astreID.name
+                )
+              ).join(" | "),
+            "Multiple Roots found",
+            { disableTimeOut: true }
+          );
+        }
+
+        this.childColumn = "astreid.name";
+        this.parentColumn = "parent";
+        const ids = new Set(this.astres.map((d) => d.astreID.name));
+
+        var [validAstres, invalidAstres] = this.astres.reduce(
+          (acc, astre: Astre) => {
+            if (!astre.parent || ids.has(astre.parent)) {
+              acc[0].push(astre); // valid
+            } else {
+              acc[1].push(astre); // invalid
+            }
+            return acc;
+          },
+          [[], []] as [Astre[], Astre[]]
+        );
+
+        if (invalidAstres.length > 0) {
+          console.log("invalids : ");
+          console.log(invalidAstres);
+          this.toastr.info(
+            "Invalid (Parent not found) : (" +
+              invalidAstres.length +
+              ") " +
+              Array.from(
+                invalidAstres.map(
+                  (astre) => astre.astreID.type + "-" + astre.astreID.name
+                )
+              ).join(" | "),
+            "Invalid Nodes",
+            { disableTimeOut: true }
+          );
+        }
+
+        this.initTree(validAstres);
+      });
+    }
+  }
+
   separation(a: Astre, b: Astre) {
     return a.parent == b.parent ? 1 : 2;
   }
 
-  initTree(): void {
-    console.log("init tree");
-    console.log(this.astres.length);
-    if (this.astres.length === 0) return;
-
-    var rootCheck = this.astres.filter((astre) => astre.parent == "");
-    if (rootCheck.length > 1) {
-      this.toastr.error(
-        "Please only keep one root for the tree : " +
-          Array.from(
-            rootCheck.map(
-              (astre) => astre.astreID.type + "-" + astre.astreID.name
-            )
-          ).join(" | "),
-        "Multiple Roots found",
-        { disableTimeOut: true }
-      );
-    }
-
-    this.childColumn = "astreid.name";
-    this.parentColumn = "parent";
-    const ids = new Set(this.astres.map((d) => d.astreID.name));
-
-    var [validAstres, invalidAstres] = this.astres.reduce(
-      (acc, astre: Astre) => {
-        if (!astre.parent || ids.has(astre.parent)) {
-          acc[0].push(astre); // valid
-        } else {
-          acc[1].push(astre); // invalid
-        }
-        return acc;
-      },
-      [[], []] as [Astre[], Astre[]]
-    );
-
-    if (invalidAstres.length > 0) {
-      console.log("invalids : ");
-      console.log(invalidAstres);
-      this.toastr.info(
-        "Invalid (Parent not found) : (" +
-          invalidAstres.length +
-          ") " +
-          Array.from(
-            invalidAstres.map(
-              (astre) => astre.astreID.type + "-" + astre.astreID.name
-            )
-          ).join(" | "),
-        "Invalid Nodes",
-        { disableTimeOut: true }
-      );
-    }
-
+  /**
+   * Init a radial tree given the data
+   *
+   * @param astres List of astre that are correctly pre-processed
+   */
+  initTree(astres: Astre[]): void {
     // === Create Tree ===
     var root: d3.HierarchyNode<Astre>;
 
     root = d3
       .stratify<Astre>()
       .id((d: Astre) => d.astreID.name)
-      .parentId((d: Astre) => d.parent)(validAstres);
+      .parentId((d: Astre) => d.parent)(astres);
 
-    let radius = 10 * validAstres.length + Math.log(50 * validAstres.length);
+    let radius = 10 * astres.length + Math.log(50 * astres.length);
     radius = radius < 200 ? 200 : radius;
     const tree = d3
       .tree<Astre>()
@@ -271,8 +289,6 @@ export class TreeComponent implements AfterViewInit {
       .scale(1);
 
     svg.call(zoom.transform, initialTransform);
-
-    //
 
     this.tooltipWrapper = d3
       .select("app-tree")
