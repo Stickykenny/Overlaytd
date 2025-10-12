@@ -60,10 +60,10 @@ export class TreeComponent implements AfterViewInit {
     });
   }
   ngOnChanges(changes: SimpleChanges) {
-    this.loadTree();
+    /*this.loadTree();
     if (changes["astres"] && this.astres?.length) {
       this.loadTree();
-    }
+    }*/
   }
 
   /**
@@ -183,59 +183,13 @@ export class TreeComponent implements AfterViewInit {
    */
   loadTree() {
     if (this.astres.length === 0) {
-      this.astreService.getLocalAstres().subscribe((astres) => {
+      this.astreService.getLocalAstres().subscribe((astres: Astre[]) => {
         this.astres = astres;
         this.toastr.info("Using example data as replacement", "No data found");
-
-        var rootCheck = this.astres.filter((astre) => astre.parent == "");
-        if (rootCheck.length > 1) {
-          this.toastr.error(
-            "Please only keep one root for the tree : " +
-              Array.from(
-                rootCheck.map(
-                  (astre) => astre.astreID.type + "-" + astre.astreID.name
-                )
-              ).join(" | "),
-            "Multiple Roots found",
-            { disableTimeOut: true }
-          );
-        }
-
-        this.childColumn = "astreid.name";
-        this.parentColumn = "parent";
-        const ids = new Set(this.astres.map((d) => d.astreID.name));
-
-        var [validAstres, invalidAstres] = this.astres.reduce(
-          (acc, astre: Astre) => {
-            if (!astre.parent || ids.has(astre.parent)) {
-              acc[0].push(astre); // valid
-            } else {
-              acc[1].push(astre); // invalid
-            }
-            return acc;
-          },
-          [[], []] as [Astre[], Astre[]]
-        );
-
-        if (invalidAstres.length > 0) {
-          console.log("invalids : ");
-          console.log(invalidAstres);
-          this.toastr.info(
-            "Invalid (Parent not found) : (" +
-              invalidAstres.length +
-              ") " +
-              Array.from(
-                invalidAstres.map(
-                  (astre) => astre.astreID.type + "-" + astre.astreID.name
-                )
-              ).join(" | "),
-            "Invalid Nodes",
-            { disableTimeOut: true }
-          );
-        }
-
-        this.initTree(validAstres);
+        this.initTree(this.astres);
       });
+    } else {
+      this.initTree(this.astres);
     }
   }
 
@@ -249,6 +203,53 @@ export class TreeComponent implements AfterViewInit {
    * @param astres List of astre that are correctly pre-processed
    */
   initTree(astres: Astre[]): void {
+    var rootCheck = this.astres.filter((astre) => astre.parent == "");
+    if (rootCheck.length > 1) {
+      this.toastr.error(
+        "Please only keep one root for the tree : " +
+          Array.from(
+            rootCheck.map(
+              (astre) => astre.astreID.type + "-" + astre.astreID.name
+            )
+          ).join(" | "),
+        "Multiple Roots found",
+        { disableTimeOut: true }
+      );
+    }
+
+    this.childColumn = "astreid.name";
+    this.parentColumn = "parent";
+    const ids = new Set(this.astres.map((d) => d.astreID.name));
+
+    var [validAstres, invalidAstres] = this.astres.reduce(
+      (acc, astre: Astre) => {
+        if (!astre.parent || ids.has(astre.parent)) {
+          acc[0].push(astre); // valid
+        } else {
+          acc[1].push(astre); // invalid
+        }
+        return acc;
+      },
+      [[], []] as [Astre[], Astre[]]
+    );
+
+    if (invalidAstres.length > 0) {
+      console.log("invalids : ");
+      console.log(invalidAstres);
+      this.toastr.info(
+        "Invalid (Parent not found) : (" +
+          invalidAstres.length +
+          ") " +
+          Array.from(
+            invalidAstres.map(
+              (astre) => astre.astreID.type + "-" + astre.astreID.name
+            )
+          ).join(" | "),
+        "Invalid Nodes",
+        { disableTimeOut: true }
+      );
+    }
+    astres = validAstres;
     // === Create Tree ===
     var root: d3.HierarchyNode<Astre>;
 
