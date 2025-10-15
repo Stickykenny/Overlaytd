@@ -14,10 +14,9 @@ import { ApiService } from "src/app/api.service";
 import { RowModel, RowModelTransfer } from "src/app/models/RowModel";
 import { ToastrService } from "ngx-toastr";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { ConfirmDialogComponent } from "src/app/confirm-dialog/confirm-dialog.component";
+import { ConfirmDialogComponent } from "src/app/shared/confirm-dialog.component";
 
 import { Store } from "@ngrx/store";
-//import * as AstreActions from "../../store/astre.actions";
 import {
   selectAddAstreResult,
   selectAstres,
@@ -372,23 +371,10 @@ export class GridComponent implements OnInit {
   }
   clearAll() {
     this.rowData = [];
-    //localStorage.removeItem(astreFeatureKey);
-    //this.store.dispatch(AstreActions.clearAstres());
-    console.log("cleared");
   }
   deleteSelected() {
     const selectedData = this.gridApi.getSelectedNodes();
     var count: number = 0;
-    /*.subscribe({
-        next: (response) => {
-          console.log("Entry deleted!", response);
-          return true;
-        },
-        error: (err) => {
-          console.error("Delete failed", err);
-          return false;
-        },
-      });*/
     selectedData.forEach((node) => {
       var astreID: AstreID = {
         type: node.data.type,
