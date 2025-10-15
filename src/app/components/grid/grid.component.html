@@ -64,18 +64,16 @@
             Export data
           </button>
           --
-          <div>
-            <label for="file" class="btn btn-outline-info">Import Data</label>
-            <input
-              #fileInput
-              type="file"
-              id="file"
-              style="display: none"
-              (click)="fileInput.value = ''"
-              (change)="importData($event)"
-              accept=".csv,.json"
-            />
-          </div>
+          <label for="file" class="btn btn-outline-info">Import Data</label>
+          <input
+            #fileInput
+            type="file"
+            id="file"
+            style="display: none"
+            (click)="fileInput.value = ''"
+            (change)="importData($event)"
+            accept=".csv,.json"
+          />
         </div>
 
         <div class="col-6">

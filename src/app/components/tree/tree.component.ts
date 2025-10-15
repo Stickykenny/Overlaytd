@@ -92,6 +92,7 @@ export class TreeComponent implements AfterViewInit {
     event: MouseEvent,
     anchor: d3.HierarchyPointNode<Astre>
   ) {
+    tooltip.style("pointer-events", "auto");
     var astre: Astre = pointNode.data as Astre;
     var astreTags = "";
     var additionalComments = "";
@@ -258,7 +259,7 @@ export class TreeComponent implements AfterViewInit {
       .id((d: Astre) => d.astreID.name)
       .parentId((d: Astre) => d.parent)(astres);
 
-    let radius = 10 * astres.length + Math.log(50 * astres.length);
+    let radius = 10 * astres.length + Math.log(50 * astres.length) + 500;
     radius = radius < 200 ? 200 : radius;
     const tree = d3
       .tree<Astre>()
@@ -365,7 +366,7 @@ export class TreeComponent implements AfterViewInit {
       .append("text")
       .attr("dy", -10)
       .text((d: any) => d.id)
-      .attr("opacity", "0.2")
+      .attr("opacity", "0.1")
       .attr("font-weight", 300)
       .attr("fill", "#000000ff");
 
