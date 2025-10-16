@@ -5,6 +5,7 @@ import { SharedModule } from "src/app/shared.module";
 import { CdkDrag } from "@angular/cdk/drag-drop";
 import { environment } from "src/environments/environment";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
+import { BooleanDigit } from "src/app/utils/helper";
 
 @Component({
   selector: "app-media-dock",
@@ -38,38 +39,100 @@ import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
             <i class="bi bi-arrows-collapse"></i>
           </button>
         </ng-template>
-        This Web-application is not affiliated with any of the videos on this
-        Youtube embed
-        <div id="media-content">
-          <br />
-          <iframe
-            height="240"
-            width="480"
-            [src]="iframeYtSource"
-            loading="lazy"
-            frameborder="1"
-            allowfullscreen
-            allow="autoplay"
-          ></iframe>
+        <nav>
+          <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <button
+              class="nav-link active"
+              id="nav-playlist-tab"
+              data-bs-toggle="tab"
+              data-bs-target="#nav-playlist"
+              type="button"
+              role="tab"
+              aria-controls="nav-playlist"
+              aria-selected="true"
+            >
+              Youtube Playlist
+            </button>
+            <button
+              class="nav-link"
+              id="nav-rss-tab"
+              data-bs-toggle="tab"
+              data-bs-target="#nav-rss"
+              type="button"
+              role="tab"
+              aria-controls="nav-rss"
+              aria-selected="false"
+            >
+              RSS ?
+            </button>
+            <button
+              class="nav-link"
+              id="nav-tbd-tab"
+              data-bs-toggle="tab"
+              data-bs-target="#nav-tbd"
+              type="button"
+              role="tab"
+              aria-controls="nav-tbd"
+              aria-selected="false"
+            >
+              ??? TBD ???
+            </button>
+          </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent" style="display:none">
+          <div
+            class="tab-pane fade show active"
+            id="nav-playlist"
+            role="tabpanel"
+            aria-labelledby="nav-playlist-tab"
+          >
+            <div id="media-content">
+              This Web-application is not affiliated with any of the videos on
+              this Youtube embed
+              <iframe
+                height="240"
+                width="480"
+                [src]="iframeYtSource"
+                loading="lazy"
+                frameborder="1"
+                allowfullscreen
+                allow="autoplay"
+              ></iframe>
+            </div>
+          </div>
+          <div
+            class="tab-pane fade"
+            id="nav-rss"
+            role="tabpanel"
+            aria-labelledby="nav-rss-tab"
+          >
+            .....
+          </div>
+          <div
+            class="tab-pane fade"
+            id="nav-tbd"
+            role="tabpanel"
+            aria-labelledby="nav-tbd-tab"
+          >
+            ...
+          </div>
         </div>
       </div>
     </div>
   `,
 })
 export class MediaDockComponent implements OnInit {
-  isExpanded: boolean = true;
+  isExpanded: boolean = false;
   YtPlaylistId: string;
   iframeYtSource: SafeResourceUrl;
-  constructor(
-    private toastr: ToastrService,
-    private modalService: NgbModal,
-    private sanitizer: DomSanitizer
-  ) {
+  constructor(private sanitizer: DomSanitizer) {
+    var autoplay: number = BooleanDigit.FALSE;
     let maxVid = 7;
     let rdmVidStart = "&index=" + Math.floor(Math.random() * maxVid);
     this.YtPlaylistId =
       environment.mediaDockerPlaylistDefault +
-      "&autoplay=1&shufflePlaylist=1" +
+      "&autoplay=" +
+      autoplay +
       rdmVidStart;
     this.iframeYtSource = this.sanitizer.bypassSecurityTrustResourceUrl(
       this.YtPlaylistId
@@ -80,7 +143,7 @@ export class MediaDockComponent implements OnInit {
 
   onToggleMedia(state: boolean) {
     this.isExpanded = state;
-    const mediaContent = document.getElementById("media-content")?.style;
+    const mediaContent = document.getElementById("nav-tabContent")?.style;
     if (!mediaContent) {
       return;
     }
