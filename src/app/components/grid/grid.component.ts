@@ -26,6 +26,8 @@ import { ActionStatus } from "src/app/store/action.state";
 import { SharedModule } from "src/app/shared.module";
 import { offlineDb } from "src/app/db/offlineDb";
 import { fromAstresToRows } from "src/app/utils/helper";
+import { PAGE_DESCRIPTIONS } from "src/app/shared/page-descriptions";
+import { PageInfoService } from "src/app/page-info.service";
 
 @Component({
   selector: "app-grid",
@@ -196,10 +198,12 @@ export class GridComponent implements OnInit {
     // API service is injected using inject() (Angular 14+), to be safe use constructor injection for external service
     private toastr: ToastrService,
     private modalService: NgbModal,
-    private store: Store
+    private store: Store,
+    private pageInfoService: PageInfoService
   ) {}
 
   ngOnInit() {
+    this.pageInfoService.updateInformation(PAGE_DESCRIPTIONS.grid);
     this.retrieveData();
   }
 

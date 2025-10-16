@@ -2,6 +2,8 @@ import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { ApiService } from "src/app/api.service";
 import { ToastrService } from "ngx-toastr";
+import { PageInfoService } from "src/app/page-info.service";
+import { PAGE_DESCRIPTIONS } from "src/app/shared/page-descriptions";
 
 @Component({
   selector: "app-home",
@@ -33,9 +35,15 @@ import { ToastrService } from "ngx-toastr";
 export class HomeComponent implements OnInit {
   details: any;
 
-  constructor(private service: ApiService, private toastr: ToastrService) {}
+  constructor(
+    private service: ApiService,
+    private toastr: ToastrService,
+
+    private pageInfoService: PageInfoService
+  ) {}
 
   ngOnInit() {
+    this.pageInfoService.updateInformation(PAGE_DESCRIPTIONS.home);
     console.log("Fetching data");
     this.service.getUserDetails().subscribe({
       next: (res) => {

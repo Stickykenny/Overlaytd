@@ -18,6 +18,8 @@ import { Tags } from "src/app/models/Tags";
 import { linkConfig, rainbowLoop, tooltipConfig } from "./tree.config";
 import { offlineDb } from "src/app/db/offlineDb";
 import { ApiService } from "src/app/api.service";
+import { PageInfoService } from "src/app/page-info.service";
+import { PAGE_DESCRIPTIONS } from "src/app/shared/page-descriptions";
 
 @Component({
   selector: "app-tree",
@@ -46,9 +48,15 @@ export class TreeComponent implements AfterViewInit {
     any
   >;
 
-  constructor(private store: Store, private toastr: ToastrService) {}
+  constructor(
+    private store: Store,
+    private toastr: ToastrService,
+    private pageInfoService: PageInfoService
+  ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.pageInfoService.updateInformation(PAGE_DESCRIPTIONS.tree);
+  }
   ngAfterViewInit(): void {
     const svgElement = this.svgRef.nativeElement as SVGSVGElement;
     // get actual pixel dimensions from browser layout

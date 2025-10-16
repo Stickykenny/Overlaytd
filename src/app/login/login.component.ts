@@ -7,6 +7,8 @@ import { ToastrService } from "ngx-toastr";
 import { LoginHandlerService } from "./login.handler.service";
 import { SharedModule } from "../shared.module";
 import { take } from "rxjs";
+import { PageInfoService } from "../page-info.service";
+import { PAGE_DESCRIPTIONS } from "../shared/page-descriptions";
 
 @Component({
   selector: "app-login",
@@ -20,10 +22,13 @@ export class LoginComponent implements OnInit {
   constructor(
     private service: ApiService,
     private loginHandler: LoginHandlerService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private pageInfoService: PageInfoService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit() {
+    this.pageInfoService.updateInformation(PAGE_DESCRIPTIONS.login);
+  }
 
   loginWithGithub() {
     window.location.href = "http://localhost:8080/oauth2/authorization/github";
