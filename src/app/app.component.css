@@ -1,15 +1,17 @@
 :host {
   --content-padding: 10px;
   --sidebartransition: 0.7s;
-  --sidebar_left_expanded: 13vw;
+  --sidebar_left_expanded: 11vw;
+  --sidebar_minleft_expanded: 200px;
 }
 
 header {
   display: block;
-  height: 60px;
+  height: 10px;
   padding: var(--content-padding);
   box-shadow: 0px 5px 25px var(--shadow-color);
 }
+
 .content {
   padding: var(--content-padding);
 }
@@ -17,7 +19,7 @@ header {
 .sidebar {
   position: fixed;
   width: 3vw;
-  transition: width var(--sidebartransition);
+  transition: all var(--sidebartransition);
   background-color: #5f7af049;
   overflow-x: hidden;
   z-index: 1050;
@@ -26,14 +28,15 @@ header {
 }
 
 .sidebar.uncollapsed {
-  width: var(--sidebar_left_expanded);
+  transition: all var(--sidebartransition);
+  width: max(200px, var(--sidebar_left_expanded));
 }
 
 .sidebarhelper {
   position: fixed;
   transition: all var(--sidebartransition);
   z-index: 1050;
-  margin-left: 65px;
+  margin-left: 4vw; /*65px;*/
 }
 
 .sidebarhelper.uncollapsed {
@@ -45,10 +48,11 @@ header {
 .sidebar p {
   opacity: 0;
   text-align: center;
-  font-size: 30px;
+  font-size: 2em; /* 30px;*/
   transition: all var(--sidebartransition);
 
   text-shadow: 2px 0 #fff, -2px 0 #fff, 0 2px #fff, 0 -2px #fff;
+  pointer-events: none;
 }
 
 .sidebar.uncollapsed p {
@@ -57,10 +61,11 @@ header {
 
   align-content: center;
   text-size-adjust: 10;
+  pointer-events: auto;
 }
 
 .content {
-  padding-left: 45px;
+  padding-left: 2vw; /*45px;*/
 }
 
 .collapsezone {
@@ -80,8 +85,11 @@ header {
   opacity: 1;
   position: fixed;
   height: 100%;
-  width: calc(100vw - var(--sidebar_left_expanded));
-  left: var(--sidebar_left_expanded);
+  width: min(
+    calc(100vw - var(--sidebar_left_expanded)),
+    calc(100vw - var(--sidebar_minleft_expanded))
+  );
+  left: max(var(--sidebar_left_expanded), var(--sidebar_minleft_expanded));
 
   backdrop-filter: blur(3px);
   transition: all var(--sidebartransition);
@@ -106,5 +114,5 @@ header {
   -moz-transform: scale(5, 1);
   -o-transform: scale(5, 1);
   font-weight: 1000;
-  transform: scale(5, 1) translate(30px, 0px);
+  transform: scale(5, 1) translate(5vw, 0px);
 }
