@@ -6,12 +6,9 @@ import {
   SimpleChanges,
   inject,
 } from "@angular/core";
-import { Store } from "@ngrx/store";
 import * as d3 from "d3";
 import { ToastrService } from "ngx-toastr";
-import { Observable, take } from "rxjs";
 import { Astre } from "src/app/models/Astre";
-import { selectAstres } from "src/app/store/astre.selectors";
 
 import { Tags } from "src/app/models/Tags";
 
@@ -25,20 +22,22 @@ import { PAGE_DESCRIPTIONS } from "src/app/shared/page-descriptions";
   selector: "app-tree",
   template: `
     <div class="tree-wrapper">
-      <svg #svgContainer style="width:90vw; height:85vh;"></svg>
+      <svg #svgContainer style="width:90vw; height:88vh;"></svg>
     </div>
   `,
 })
 export class TreeComponent implements AfterViewInit {
   @ViewChild("svgContainer", { static: true })
   svgRef!: ElementRef<SVGSVGElement>;
-  public allAstres$: Observable<Astre[]> = this.store.select(selectAstres);
+
   public astres: Astre[];
   astreService: ApiService = inject(ApiService); // Angular 14+, can only be run before or in constructor phase
 
   childColumn = "";
   parentColumn = "";
-  bounds: any;
+
+  // Tooltip variables
+  svgBounds: any;
   tooltipPinned: boolean = false;
   tooltipWrapper: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>;
   tooltipCloseButton: d3.Selection<
@@ -50,7 +49,6 @@ export class TreeComponent implements AfterViewInit {
   tooltipAnchor: d3.HierarchyPointNode<Astre>;
 
   constructor(
-    private store: Store,
     private toastr: ToastrService,
     private pageInfoService: PageInfoService
   ) {}
@@ -61,19 +59,14 @@ export class TreeComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     const svgElement = this.svgRef.nativeElement as SVGSVGElement;
     // get actual pixel dimensions from browser layout
-    this.bounds = svgElement.getBoundingClientRect();
+    this.svgBounds = svgElement.getBoundingClientRect();
     offlineDb.getItems().then((astres) => {
       this.astres = astres;
       this.astres = this.astres.filter((a) => a.astreID.type == "topic");
       this.loadTree();
     });
   }
-  ngOnChanges(changes: SimpleChanges) {
-    /*this.loadTree();
-    if (changes["astres"] && this.astres?.length) {
-      this.loadTree();
-    }*/
-  }
+  ngOnChanges(changes: SimpleChanges) {}
 
   /**
    * Hide the tooltip
@@ -103,7 +96,7 @@ export class TreeComponent implements AfterViewInit {
     tooltip.style("display", "block");
     tooltip.style("pointer-events", "auto");
     var astre: Astre = pointNode.data as Astre;
-    var astreTags = "";
+    var astreTags = astre.tags;
     var additionalComments = "";
 
     const [x, y] = d3.pointRadial(anchor.x, anchor.y); // Relative coordinate to RootNode
@@ -115,7 +108,7 @@ export class TreeComponent implements AfterViewInit {
     if (astre.tags == null || astre.tags.length == 0) {
       astreTags = "<span style='color:LightGrey;'>No Tags Found</span>";
     } else {
-      astreTags = astre.tags; // === Custom Tooltip comments based on tags ===
+      // === Custom Tooltip comments based on tags ===
       var tagsList = astreTags.split(",");
       for (var tagName of tagsList) {
         switch (tagName.toLowerCase()) {
@@ -175,7 +168,7 @@ export class TreeComponent implements AfterViewInit {
           isLeft
             ? event.pageX -
                 tooltipCloseButtonNode.getBoundingClientRect().width -
-                35 +
+                margin +
                 `px`
             : event.pageX + 5 + `px`
         )
@@ -260,6 +253,7 @@ export class TreeComponent implements AfterViewInit {
       );
     }
     astres = validAstres;
+
     // === Create Tree ===
     var root: d3.HierarchyNode<Astre>;
 
@@ -270,6 +264,7 @@ export class TreeComponent implements AfterViewInit {
 
     let radius = 10 * astres.length + Math.log(50 * astres.length) + 500;
     radius = radius < 200 ? 200 : radius;
+
     const tree = d3
       .tree<Astre>()
       .size([2 * Math.PI, radius])
@@ -278,6 +273,7 @@ export class TreeComponent implements AfterViewInit {
           (a.parent === b.parent ? 1 : 1.5) / Math.min(a.depth, b.depth + 1)
       );
     const rootPoint = tree(root as d3.HierarchyNode<Astre>);
+
     // === Select SVG and zoom  ===
     const svg: d3.Selection<SVGSVGElement, unknown, null, undefined> =
       d3.select(this.svgRef.nativeElement);
@@ -296,7 +292,7 @@ export class TreeComponent implements AfterViewInit {
 
     // Apply initial transform to center the content
     const initialTransform = d3.zoomIdentity
-      .translate(this.bounds.width / 2, this.bounds.height / 2) // move to screen center
+      .translate(this.svgBounds.width / 2, this.svgBounds.height / 2) // move to screen center
       .scale(1);
 
     svg.call(zoom.transform, initialTransform);
@@ -379,11 +375,12 @@ export class TreeComponent implements AfterViewInit {
       .attr("font-weight", 300)
       .attr("fill", "#000000ff");
 
+    // Node Events
     nodeG
       .on(
         "click",
         (event: MouseEvent, pointNode: d3.HierarchyPointNode<Astre>) => {
-          var t = event.currentTarget as SVGElement;
+          //var t = event.currentTarget as SVGElement;
 
           this.tooltipCloseButton.style("display", "block");
           const anchor = nodeG
@@ -393,9 +390,8 @@ export class TreeComponent implements AfterViewInit {
                 node.data.astreID == pointNode.data.astreID
             )
             .data()[0];
-          // Show tooltip
-          tooltip.transition().duration(200).style("opacity", 0.9);
           this.renderTooltip(tooltip, pointNode, event, anchor);
+          tooltip.transition().duration(200).style("opacity", 0.9);
           this.tooltipPinned = true;
         }
       )
@@ -403,11 +399,9 @@ export class TreeComponent implements AfterViewInit {
       .on(
         "mouseover",
         (event: MouseEvent, pointNode: d3.HierarchyPointNode<Astre>) => {
-          var t = event.currentTarget as SVGElement;
+          var target = event.currentTarget as SVGElement;
 
-          this.tooltipWrapper.style("display", "block");
-
-          this.tooltipWrapper.transition().duration(200).style("opacity", 0.9);
+          // Rainbow Path
           linkConfig.stroke.rainbowLoop = true;
           let currentNode = pointNode;
           while (currentNode.parent != null) {
@@ -427,13 +421,15 @@ export class TreeComponent implements AfterViewInit {
             currentNode = currentNode.parent;
           }
 
-          const g = d3.select(t);
+          const g = d3.select(target);
           g.select("text")
             .transition()
             .ease(d3.easeExpOut)
             .attr("opacity", "1")
             .attr("font-weight", 700);
 
+          this.tooltipWrapper.style("display", "block");
+          this.tooltipWrapper.transition().duration(200).style("opacity", 0.9);
           if (!this.tooltipPinned) {
             this.tooltipAnchor = nodeG
               .select("circle")
@@ -447,14 +443,14 @@ export class TreeComponent implements AfterViewInit {
           }
         }
       )
+
       .on("mouseout", (event: any, pointNode: d3.HierarchyPointNode<Astre>) => {
         if (!this.tooltipPinned) {
           this.clearTooltip();
-          /*this.tooltipWrapper.transition().duration(200).style("opacity", 0);
-          tooltip.style("pointer-events", "none");*/
         }
         var target: Element = event.currentTarget;
 
+        // Clear Rainbow path
         linkConfig.stroke.rainbowLoop = false;
         let currentNode = pointNode;
         while (currentNode.parent != null) {
