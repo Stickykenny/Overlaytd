@@ -47,6 +47,7 @@ export class TreeComponent implements AfterViewInit {
     HTMLElement,
     any
   >;
+  tooltipAnchor: d3.HierarchyPointNode<Astre>;
 
   constructor(
     private store: Store,
@@ -75,15 +76,14 @@ export class TreeComponent implements AfterViewInit {
   }
 
   /**
-   * Will Hide tooltip by setting opacity to 0
+   * Hide the tooltip
    * Also set pin flag to false
    */
   clearTooltip() {
     this.tooltipPinned = false;
-    this.tooltipWrapper.style("opacity", "0");
-    this.tooltipCloseButton.style("opacity", "0");
+    this.tooltipWrapper.style("display", "none");
+    this.tooltipCloseButton.style("display", "none");
     this.tooltipWrapper.transition().duration(200).style("opacity", 0);
-    this.tooltipWrapper.style("pointer-events", "none");
   }
   /**
    * Render a tooltip given the data provided by pointNode
@@ -100,6 +100,7 @@ export class TreeComponent implements AfterViewInit {
     event: MouseEvent,
     anchor: d3.HierarchyPointNode<Astre>
   ) {
+    tooltip.style("display", "block");
     tooltip.style("pointer-events", "auto");
     var astre: Astre = pointNode.data as Astre;
     var astreTags = "";
@@ -305,7 +306,7 @@ export class TreeComponent implements AfterViewInit {
       //.append("foreignObject") // SVG doesn't allow div, but 'foreignObject' does
       .append("div")
       .attr("class", "tooltip-wrapper")
-      .style("opacity", 0);
+      .style("opacity", 0.9);
     var tooltip = this.tooltipWrapper
       .append("div")
       .attr("class", "tooltip-content shadow p-3 mb-5 bg-white rounded")
@@ -326,7 +327,7 @@ export class TreeComponent implements AfterViewInit {
     this.tooltipCloseButton = this.tooltipWrapper
       .append("button")
       .attr("class", "tooltip-btn btn btn-danger")
-      .style("display", "block")
+      .style("display", "none")
       .style("position", "absolute")
       .style("opacity", 0)
       .style("left", `0px`)
@@ -384,6 +385,7 @@ export class TreeComponent implements AfterViewInit {
         (event: MouseEvent, pointNode: d3.HierarchyPointNode<Astre>) => {
           var t = event.currentTarget as SVGElement;
 
+          this.tooltipCloseButton.style("display", "block");
           const anchor = nodeG
             .select("circle")
             .filter(
@@ -402,6 +404,9 @@ export class TreeComponent implements AfterViewInit {
         "mouseover",
         (event: MouseEvent, pointNode: d3.HierarchyPointNode<Astre>) => {
           var t = event.currentTarget as SVGElement;
+
+          this.tooltipWrapper.style("display", "block");
+
           this.tooltipWrapper.transition().duration(200).style("opacity", 0.9);
           linkConfig.stroke.rainbowLoop = true;
           let currentNode = pointNode;
@@ -430,7 +435,7 @@ export class TreeComponent implements AfterViewInit {
             .attr("font-weight", 700);
 
           if (!this.tooltipPinned) {
-            const anchor = nodeG
+            this.tooltipAnchor = nodeG
               .select("circle")
               .filter(
                 (node: d3.HierarchyPointNode<Astre>) =>
@@ -438,18 +443,15 @@ export class TreeComponent implements AfterViewInit {
               )
               .data()[0];
             // Show tooltip
-            this.tooltipWrapper
-              .transition()
-              .duration(200)
-              .style("opacity", 0.9);
-            this.renderTooltip(tooltip, pointNode, event, anchor);
+            this.renderTooltip(tooltip, pointNode, event, this.tooltipAnchor);
           }
         }
       )
       .on("mouseout", (event: any, pointNode: d3.HierarchyPointNode<Astre>) => {
         if (!this.tooltipPinned) {
-          this.tooltipWrapper.transition().duration(200).style("opacity", 0);
-          tooltip.style("pointer-events", "none");
+          this.clearTooltip();
+          /*this.tooltipWrapper.transition().duration(200).style("opacity", 0);
+          tooltip.style("pointer-events", "none");*/
         }
         var target: Element = event.currentTarget;
 
