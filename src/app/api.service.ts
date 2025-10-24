@@ -123,6 +123,15 @@ export class ApiService {
 
   postAstres(astres: Astre[]) {
     const headers = new HttpHeaders({});
+
+    astres.forEach((astre) => {
+      (Object.keys(astre.astreID) as (keyof AstreID)[]).forEach((key) => {
+        if (astre["astreID"][key] === null) {
+          astre["astreID"][key] = "";
+        }
+      });
+    });
+
     headers.set("access-control-allow-origin", "http://localhost:4200/");
     return this.http.post<Astre[]>(
       "http://localhost:8080/api/astres/astres",
