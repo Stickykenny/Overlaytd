@@ -1,0 +1,6 @@
+/*Hide Media Docker on Mobile screen*/
+@media (max-width: 500px) {
+  #media-docker {
+    display: none;
+  }
+}
