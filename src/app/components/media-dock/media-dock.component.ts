@@ -12,7 +12,12 @@ import { BooleanDigit } from "src/app/utils/helper";
   standalone: true,
   imports: [SharedModule, CdkDrag],
   template: `
-    <div class="position-relative" style="z-index: 9999;" cdkDrag>
+    <div
+      id="media-docker"
+      class="position-relative"
+      style="z-index: 9999;"
+      cdkDrag
+    >
       <div
         class="position-absolute top-0 end-0 text-center bg-info bg-gradient p-2 rounded-3"
         style="max-width:500px"
@@ -43,6 +48,19 @@ import { BooleanDigit } from "src/app/utils/helper";
           <div class="nav nav-tabs" id="nav-tab" role="tablist">
             <button
               class="nav-link active"
+              id="nav-tbd-tab"
+              data-bs-toggle="tab"
+              data-bs-target="#nav-tbd"
+              type="button"
+              role="tab"
+              aria-controls="nav-tbd"
+              aria-selected="false"
+              (click)="forceOpenMedia()"
+            >
+              About this
+            </button>
+            <button
+              class="nav-link"
               id="nav-playlist-tab"
               data-bs-toggle="tab"
               data-bs-target="#nav-playlist"
@@ -50,6 +68,7 @@ import { BooleanDigit } from "src/app/utils/helper";
               role="tab"
               aria-controls="nav-playlist"
               aria-selected="true"
+              (click)="forceOpenMedia()"
             >
               Youtube Playlist
             </button>
@@ -62,26 +81,15 @@ import { BooleanDigit } from "src/app/utils/helper";
               role="tab"
               aria-controls="nav-rss"
               aria-selected="false"
+              (click)="forceOpenMedia()"
             >
               RSS ?
-            </button>
-            <button
-              class="nav-link"
-              id="nav-tbd-tab"
-              data-bs-toggle="tab"
-              data-bs-target="#nav-tbd"
-              type="button"
-              role="tab"
-              aria-controls="nav-tbd"
-              aria-selected="false"
-            >
-              ??? TBD ???
             </button>
           </div>
         </nav>
         <div class="tab-content" id="nav-tabContent" style="display:none">
           <div
-            class="tab-pane fade show active"
+            class="tab-pane fade show"
             id="nav-playlist"
             role="tabpanel"
             aria-labelledby="nav-playlist-tab"
@@ -109,17 +117,21 @@ import { BooleanDigit } from "src/app/utils/helper";
             .....
           </div>
           <div
-            class="tab-pane fade"
+            class="tab-pane  active"
             id="nav-tbd"
             role="tabpanel"
             aria-labelledby="nav-tbd-tab"
           >
-            ...
+            This Web-application is a project for organizing life, knowledge.
+            This version is a preview, a lot of server feature are not available
+            on this static webpage. Author :
+            <a href="https://github.com/Stickykenny">Github Link</a>
           </div>
         </div>
       </div>
     </div>
   `,
+  styleUrl: "./media-dock.component.css",
 })
 export class MediaDockComponent implements OnInit {
   isExpanded: boolean = false;
@@ -152,6 +164,27 @@ export class MediaDockComponent implements OnInit {
       mediaContent.display = "block";
     } else {
       mediaContent.display = "none";
+
+      const tabContainer = document.getElementById("media-docker");
+      if (!tabContainer) {
+        return;
+      }
+      const buttons = tabContainer.querySelectorAll(".nav-link");
+      console.log(buttons);
+      buttons.forEach((btn) => btn.classList.remove("active"));
+      console.log("All tabs deactivated");
+
+      const tabContent = tabContainer.querySelectorAll(".tab-pane");
+      tabContent.forEach((content) => content.classList.remove("active"));
     }
+  }
+
+  forceOpenMedia() {
+    this.isExpanded = true;
+    const mediaContent = document.getElementById("nav-tabContent")?.style;
+    if (!mediaContent) {
+      return;
+    }
+    mediaContent.display = "block";
   }
 }
