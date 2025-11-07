@@ -20,6 +20,7 @@ import { StoreDevtoolsModule } from "@ngrx/store-devtools";
 //import { csrfInterceptor } from "./csrf.interceptor";
 import { localStorageSync } from "ngrx-store-localstorage";
 import { StaticInterceptor } from "./static.interceptors";
+import { AuthInterceptor } from "./auth.interceptors";
 
 export function localStorageSyncReducer(
   reducer: ActionReducer<any>
@@ -36,7 +37,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routeConfig),
     provideHttpClient(
-      withInterceptors([StaticInterceptor, TokenInterceptor]), // First entry is the first run (left to right)
+      withInterceptors([StaticInterceptor, AuthInterceptor]), // First entry is the first run (left to right)
       withInterceptorsFromDi() // Run Class-based interceptor after // This is older implementation and require the line below
     ),
     //{ provide: HTTP_INTERCEPTORS, useClass: csrfInterceptor, multi: true }, // Older implementation of interceptors

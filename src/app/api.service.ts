@@ -24,17 +24,7 @@ export class ApiService {
     private http: HttpClient,
     private router: Router,
     private toastr: ToastrService
-  ) {
-    /*const token = localStorage.removeItem("jwt");
-    if (token != null) {
-      var decoded = jwtDecode<JwtPayload>(token);
-      if (decoded.exp != null) {
-        if (Date.now() < decoded.exp * 1000) {
-          this.loggedInSubject.next(true);
-        }
-      }
-    }*/
-  }
+  ) {}
 
   getCsrfToken() {
     return this.http
@@ -59,7 +49,7 @@ export class ApiService {
 
   public login(usernameInput: string, passwordInput: string) {
     return this.http.post(
-      "http://localhost:8080/login2",
+      "http://localhost:8080/auth/login2",
       {
         username: usernameInput,
         password: passwordInput,
@@ -76,6 +66,17 @@ export class ApiService {
     );
   }
 
+  public refresh() {
+    return this.http.post(
+      "http://localhost:8080/auth/refresh",
+      {},
+      {
+        withCredentials: true,
+        responseType: "json",
+      }
+    );
+  }
+
   /*this.http.post<string>("http://localhost:8080/login", body, {
       headers,
       //withCredentials: true,// cross-site Access-Control requests should be made using credentials such as cookies, authentication headers or TLS client certificates
@@ -87,7 +88,7 @@ export class ApiService {
 
     console.log("in logout service");
     this.http
-      .post("http://localhost:8080/logout", {}, { withCredentials: true })
+      .post("http://localhost:8080/auth/logout", {}, { withCredentials: true })
       .pipe(take(1))
       .subscribe({
         next: (result) => {
