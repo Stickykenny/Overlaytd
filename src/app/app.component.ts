@@ -39,7 +39,7 @@ import { PageInfoService } from "./page-info.service";
         <br />
         <a routerLink="/tree">Tree</a>
       </p>
-      <p *ngIf="isLoggedIn$">
+      <p *ngIf="isLoggedIn$ | async">
         <a routerLink="/home">Home</a>
         <br />
         <br />
@@ -132,13 +132,6 @@ export class AppComponent {
         const value = localStorage.getItem(key);
         console.log("key =" + key + " | value = " + value);
       }
-    }
-
-    var c = 0;
-    this.http
-      .get<Astre[]>("http://localhost:8080/api/astres/welcome", {})
-      .subscribe()
-      .unsubscribe();
-    console.log(c);*/
+    }*/
   }
 }
