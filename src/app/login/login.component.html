@@ -1,3 +1,14 @@
+@if(staticCheck){
+<div class="preview-warn">
+  <p id="wave">
+    This version is a preview, backend's logics are missing<br />
+    such as login and server related actions<br />
+    But it can still save onto your browser for serverless usage<br />
+    Check left navigation to explore
+  </p>
+</div>
+}
+
 <div class="text-center">
   <form id="loginpanel" #loginForm="ngForm" (ngSubmit)="doLogin(loginForm)">
     <div class="inset">

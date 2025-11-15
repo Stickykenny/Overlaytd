@@ -9,15 +9,19 @@ import { SharedModule } from "../shared.module";
 import { take } from "rxjs";
 import { PageInfoService } from "../page-info.service";
 import { PAGE_DESCRIPTIONS } from "../shared/page-descriptions";
+import { environment } from "src/environments/environment";
 
 @Component({
   selector: "app-login",
   imports: [SharedModule], //CommonModule required for ngFor
   templateUrl: "./login.component.html",
+  styleUrl: "./login.component.css",
 })
 export class LoginComponent implements OnInit {
   username: string = "visitor"; // Linked to [(ngModel)]
   password: string = "password";
+
+  staticCheck: boolean = environment.production;
 
   constructor(
     private service: ApiService,
