@@ -20,7 +20,7 @@ import { BooleanDigit } from "src/app/utils/helper";
     >
       <div
         class="position-absolute top-0 end-0 text-center bg-info bg-gradient p-2 rounded-3"
-        style="max-width:500px"
+        style="max-width:500px;min-width:500px;"
       >
         <div *ngIf="isExpanded; then thenBlock; else elseBlock"></div>
         <ng-template #thenBlock>
@@ -117,7 +117,7 @@ import { BooleanDigit } from "src/app/utils/helper";
             .....
           </div>
           <div
-            class="tab-pane  active"
+            class="tab-pane active"
             id="nav-tbd"
             role="tabpanel"
             aria-labelledby="nav-tbd-tab"
@@ -137,6 +137,7 @@ export class MediaDockComponent implements OnInit {
   isExpanded: boolean = false;
   YtPlaylistId: string;
   iframeYtSource: SafeResourceUrl;
+
   constructor(private sanitizer: DomSanitizer) {
     var autoplay: number = BooleanDigit.FALSE;
     let maxVid = 7;
@@ -152,6 +153,7 @@ export class MediaDockComponent implements OnInit {
   }
 
   ngOnInit() {}
+  ngAfterViewInit() {}
 
   onToggleMedia(state: boolean) {
     this.isExpanded = state;
@@ -164,18 +166,6 @@ export class MediaDockComponent implements OnInit {
       mediaContent.display = "block";
     } else {
       mediaContent.display = "none";
-
-      const tabContainer = document.getElementById("media-docker");
-      if (!tabContainer) {
-        return;
-      }
-      const buttons = tabContainer.querySelectorAll(".nav-link");
-      console.log(buttons);
-      buttons.forEach((btn) => btn.classList.remove("active"));
-      console.log("All tabs deactivated");
-
-      const tabContent = tabContainer.querySelectorAll(".tab-pane");
-      tabContent.forEach((content) => content.classList.remove("active"));
     }
   }
 
