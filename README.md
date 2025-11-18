@@ -1,19 +1,15 @@
-# Overlaytd
+# [Overlaytd](https://stickykenny.github.io/)
 
+CHECK IT OUT HERE : [Overlaytd Preview](https://stickykenny.github.io/Overlaytd/)
 User Interface for [Relaytd](https://github.com/Stickykenny/Relaytd)
 
 ## Preview
 
 ##### Radial Tree View
 
-
-
-
-
-| Radial tree layout                                                                                                                                            | Node on mouse-over                                                                                                                         |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| Radial tree layout                                                                                                                 | Node on mouse-over                                                                                                                                  |
+| ---------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
 | <img src="./.github/preview/radial_tree_preview_1.png" alt="Tree page preview" title="Tree page preview (yes this is censored)" /> | <img src="./.github/preview/radial_tree_hover_preview_1.png" alt="Tree page preview" title="Tree page preview (yes this is censored)" width="900"/> |
-
 
 | Login page                                                                                                                                            | Navbar Animation                                                                                                                          |
 | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
