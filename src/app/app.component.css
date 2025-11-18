@@ -41,7 +41,7 @@ header {
 
 .sidebarhelper.uncollapsed {
   transition: all var(--sidebartransition);
-  margin-left: var(--sidebar_left_expanded);
+  margin-left: max(200px, var(--sidebar_left_expanded));
   transform: rotate(180deg);
 }
 
