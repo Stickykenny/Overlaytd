@@ -1,4 +1,4 @@
-# [Overlaytd](https://stickykenny.github.io/)
+# [Overlaytd](https://stickykenny.github.io/Overlaytd/)
 
 CHECK IT OUT HERE : [Overlaytd Preview](https://stickykenny.github.io/Overlaytd/)
 User Interface for [Relaytd](https://github.com/Stickykenny/Relaytd)
