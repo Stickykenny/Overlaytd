@@ -22,6 +22,10 @@ export class LoginComponent implements OnInit {
   password: string = "password";
 
   staticCheck: boolean = environment.production;
+  randomOffsets: number[][] = [];
+  tex =
+    "This version is a preview, backend's logics are missing\nsuch as login and server-related actions\nBut it can still save onto your browser for serverless usage\nCheck left navigation to explore";
+  lines = this.tex.split("\n");
 
   constructor(
     private service: ApiService,
@@ -32,7 +36,13 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     this.pageInfoService.updateInformation(PAGE_DESCRIPTIONS.login);
+
+    this.randomOffsets = this.tex
+      .split("\n")
+      .map((line, j) => line.split("").map((char, i) => Math.random() * 0.75));
   }
+
+  ngAfterViewInit() {}
 
   loginWithGithub() {
     window.location.href = "http://localhost:8080/oauth2/authorization/github";

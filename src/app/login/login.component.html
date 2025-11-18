@@ -1,13 +1,20 @@
 @if(staticCheck){
 <div class="preview-warn">
   <p id="wave">
-    This version is a preview, backend's logics are missing<br />
-    such as login and server related actions<br />
-    But it can still save onto your browser for serverless usage<br />
-    Check left navigation to explore
+    @for (line of lines; track line; let j = $index) { <div><br/>
+       
+      @for (letter of line.split(""); track letter; let i = $index) { 
+        <span
+          class="wavy"
+          randomOffsets="randomOffsets"
+          [style.animation-delay]="i * 0.1+ j*0.75 +randomOffsets[j][i]+ 's'">
+          {{ letter == " " ? "⠀" : letter }}
+        </span>
+      }</div> 
+    }
   </p>
 </div>
-}
+} 
 
 <div class="text-center">
   <form id="loginpanel" #loginForm="ngForm" (ngSubmit)="doLogin(loginForm)">
