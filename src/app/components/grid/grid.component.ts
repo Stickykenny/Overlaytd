@@ -17,10 +17,7 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ConfirmDialogComponent } from "src/app/shared/confirm-dialog.component";
 
 import { Store } from "@ngrx/store";
-import {
-  selectAddAstreResult,
-  selectAstres,
-} from "src/app/store/astre.selectors";
+import { selectAddAstreResult, selectAstres } from "src/app/store/astre.selectors";
 import { Observable, take } from "rxjs";
 import { ActionStatus } from "src/app/store/action.state";
 import { SharedModule } from "src/app/shared.module";
@@ -38,8 +35,7 @@ import { PageInfoService } from "src/app/page-info.service";
 })
 export class GridComponent implements OnInit {
   public allAstres$: Observable<Astre[]> = this.store.select(selectAstres);
-  public addAstreResult$: Observable<ActionStatus> =
-    this.store.select(selectAddAstreResult);
+  public addAstreResult$: Observable<ActionStatus> = this.store.select(selectAddAstreResult);
 
   // Row Data: The data to be displayed.
   count: number = 1;
@@ -149,10 +145,17 @@ export class GridComponent implements OnInit {
         return params.value;
       },
       cellEditor: "agLargeTextCellEditor",
+      cellEditorPopup: false,
+      cellEditorParams: {
+        maxLength: 2000,
+        rows: 20,
+        cols: 100,
+      },
       cellStyle: {
         "padding-top": "1px",
         "padding-bottom": "1px",
       },
+
       cellRenderer: (params: any) => {
         // Fool AG grid to render cell value as html
         return params.value;
@@ -240,9 +243,7 @@ export class GridComponent implements OnInit {
    */
   onFilterTextBoxChanged(columnSearch: string): void {
     this.columnSearch = columnSearch;
-    this.searchTerm = (
-      document.getElementById("filter-text-box") as HTMLInputElement
-    ).value;
+    this.searchTerm = (document.getElementById("filter-text-box") as HTMLInputElement).value;
 
     this.colDefs.forEach((colDef) => {
       colDef.getQuickFilterText = (params: any) => {
@@ -271,14 +272,11 @@ export class GridComponent implements OnInit {
             this.rowData = fromAstresToRows(astres);
           },
           error: (err) => {
-            var offlineAstres: RowModelTransfer[] = [];
+            let offlineAstres: RowModelTransfer[] = [];
             offlineDb.getItems().then((astres) => {
               offlineAstres = fromAstresToRows(astres);
               if (offlineAstres.length > 0) {
-                this.toastr.info(
-                  "Using local offline database's save",
-                  "Error Fetching from server"
-                );
+                this.toastr.info("Using local offline database's save", "Error Fetching from server");
                 this.rowData = offlineAstres;
               } else {
                 this.toastr.error("Error Fetching from server");
@@ -339,10 +337,7 @@ export class GridComponent implements OnInit {
               node.setSelected(false);
             }
           });
-          this.toastr.success(
-            "A total of " + astres.length + " rows were sent",
-            "Successful Update of data"
-          );
+          this.toastr.success("A total of " + astres.length + " rows were sent", "Successful Update of data");
         },
         error: (err) => {
           this.toastr.error("Error sending data to Server");
@@ -378,9 +373,9 @@ export class GridComponent implements OnInit {
   }
   deleteSelected() {
     const selectedData = this.gridApi.getSelectedNodes();
-    var count: number = 0;
+    let count: number = 0;
     selectedData.forEach((node) => {
-      var astreID: AstreID = {
+      let astreID: AstreID = {
         type: node.data.type,
         subtype: node.data.subtype,
         name: node.data.name,
@@ -403,10 +398,7 @@ export class GridComponent implements OnInit {
       });
       count += 1;
     });
-    this.toastr.success(
-      "A total of " + count + " rows were removed",
-      "Successful deletion of data"
-    );
+    this.toastr.success("A total of " + count + " rows were removed", "Successful deletion of data");
   }
 
   /**
@@ -418,7 +410,7 @@ export class GridComponent implements OnInit {
     const map = new Map<string, boolean>();
 
     this.gridApi.forEachNode(function (node: IRowNode) {
-      var id: string = node.data.type + "-" + node.data.name;
+      let id: string = node.data.type + "-" + node.data.name;
       if (!map.has(id)) {
         map.set(id, true);
       } else {
@@ -430,11 +422,9 @@ export class GridComponent implements OnInit {
       this.toastr.success("", "No duplicates found");
       return true;
     }
-    this.toastr.error(
-      "Found these as duplicates : " + Array.from(duplicates).join("|"),
-      "Duplicate found",
-      { disableTimeOut: true }
-    );
+    this.toastr.error("Found these as duplicates : " + Array.from(duplicates).join("|"), "Duplicate found", {
+      disableTimeOut: true,
+    });
     return false;
   }
 
@@ -458,16 +448,10 @@ export class GridComponent implements OnInit {
         .then((result) => {
           if (result === "yes") {
             this.rowData = newData;
-            this.toastr.success(
-              "Imported a total of " + newData.length + " rows",
-              "Import Successful"
-            );
+            this.toastr.success("Imported a total of " + newData.length + " rows", "Import Successful");
           } else if (result === "no") {
             this.rowData = newData.concat(this.rowData);
-            this.toastr.success(
-              "Appended a total of " + newData.length + " rows",
-              "Import Successful"
-            );
+            this.toastr.success("Appended a total of " + newData.length + " rows", "Import Successful");
           } else {
             // cancel
             this.toastr.info("", "Import Cancelled");
@@ -532,7 +516,7 @@ export class GridComponent implements OnInit {
   }
 
   exportData() {
-    var colDefsFields: string[] = [];
+    let colDefsFields: string[] = [];
     this.colDefs.forEach((col) => colDefsFields.push(col.field));
     const astres: Astre[] = [];
 
@@ -556,11 +540,7 @@ export class GridComponent implements OnInit {
 
     const a = document.createElement("a");
     a.href = url;
-    (a.download =
-      "exportGridData_" +
-      new Date().toISOString().slice(0, 10).replace(/-/g, "") +
-      ".json"),
-      a.click();
+    (a.download = "exportGridData_" + new Date().toISOString().slice(0, 10).replace(/-/g, "") + ".json"), a.click();
 
     window.URL.revokeObjectURL(url);
     return false;
@@ -581,7 +561,7 @@ export class GridComponent implements OnInit {
   // UTILITIES
   test() {
     /*this.allAstres$.pipe(take(1)).subscribe((a) => console.log(a));
-    var cnt = 0;
+    let cnt = 0;
     this.astre2Service.getAstres().forEach((a) => (cnt += 1));
     console.log(cnt);
 */
