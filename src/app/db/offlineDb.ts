@@ -71,9 +71,9 @@ export class AppDB extends Dexie {
    * @returns An array of 2 array : 1st is an array of item to update, 2nd is an array of item to remove
    */
   getDifference(astresRemote: Astre[]): Astre[][] {
-    var toUpdateArr: Astre[];
-    var toDeleteArr: Astre[];
-    var returnArr: Astre[][] = [];
+    let toUpdateArr: Astre[];
+    let toDeleteArr: Astre[];
+    let returnArr: Astre[][] = [];
 
     this.getItems()
       .then((astreArray) => {

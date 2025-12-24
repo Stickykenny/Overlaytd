@@ -21,16 +21,14 @@ export const linkConfig = {
 };
 
 export function rainbowLoop(elem: any, attributeName: string, depth: number) {
-  var saturationVarianceMax = 0.75;
-  var saturationVarianceMin = 0.25;
-  var luminosityVarianceMax = 0.75;
-  var luminosityVarianceMin = 0.25;
+  let saturationVarianceMax = 0.75;
+  let saturationVarianceMin = 0.25;
+  let luminosityVarianceMax = 0.75;
+  let luminosityVarianceMin = 0.25;
 
   let i = 0;
-  var step = 20;
-  const colors = [...Array(Math.floor(361 / step) + 1).keys()].map(
-    (i) => i * step
-  );
+  let step = 20;
+  const colors = [...Array(Math.floor(361 / step) + 1).keys()].map((i) => i * step);
 
   // Reset to default
   linkConfig.stroke.saturation = 1;
@@ -42,35 +40,20 @@ export function rainbowLoop(elem: any, attributeName: string, depth: number) {
         .transition()
         .attr(
           attributeName,
-          d3
-            .hsl(
-              colors[i],
-              linkConfig.stroke.saturation,
-              linkConfig.stroke.luminosity,
-              1
-            )
-            .clamp()
-            .formatHex()
+          d3.hsl(colors[i], linkConfig.stroke.saturation, linkConfig.stroke.luminosity, 1).clamp().formatHex()
         )
         .on("end", () => {
           i = (i + 1) % colors.length;
           if (i == colors.length - 1) {
             linkConfig.stroke.saturation =
-              Math.random() * (saturationVarianceMax - saturationVarianceMin) +
-              saturationVarianceMin;
+              Math.random() * (saturationVarianceMax - saturationVarianceMin) + saturationVarianceMin;
             linkConfig.stroke.luminosity =
-              Math.random() * (luminosityVarianceMax - luminosityVarianceMin) +
-              luminosityVarianceMin;
+              Math.random() * (luminosityVarianceMax - luminosityVarianceMin) + luminosityVarianceMin;
           }
           next(elem, attributeName);
         });
     } else {
-      elem
-        .transition()
-        .attr(
-          attributeName,
-          d3.hsl(colors[i], 1, 0.5, 1).darker(depth).clamp().formatHex()
-        );
+      elem.transition().attr(attributeName, d3.hsl(colors[i], 1, 0.5, 1).darker(depth).clamp().formatHex());
     }
   }
 
