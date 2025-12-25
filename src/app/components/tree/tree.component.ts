@@ -297,8 +297,7 @@ export class TreeComponent implements AfterViewInit {
     const links = g
       .selectAll(".link")
       .data(rootPoint.links()) // gives array of {source, target}
-      .enter() // enter the array
-      .append("path")
+      .join("path")
       .attr("class", "link")
       .attr("fill", "none") // mandatory in this style of links
       .attr("d", (d: d3.HierarchyPointLink<Astre>) => linkGen(d))
