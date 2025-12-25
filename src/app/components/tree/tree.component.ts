@@ -1,11 +1,4 @@
-import {
-  Component,
-  AfterViewInit,
-  ElementRef,
-  ViewChild,
-  SimpleChanges,
-  inject,
-} from "@angular/core";
+import { Component, AfterViewInit, ElementRef, ViewChild, SimpleChanges, inject } from "@angular/core";
 import * as d3 from "d3";
 import { ToastrService } from "ngx-toastr";
 import { Astre } from "src/app/models/Astre";
@@ -40,18 +33,10 @@ export class TreeComponent implements AfterViewInit {
   svgBounds: any;
   tooltipPinned: boolean = false;
   tooltipWrapper: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>;
-  tooltipCloseButton: d3.Selection<
-    HTMLButtonElement,
-    unknown,
-    HTMLElement,
-    any
-  >;
+  tooltipCloseButton: d3.Selection<HTMLButtonElement, unknown, HTMLElement, any>;
   tooltipAnchor: d3.HierarchyPointNode<Astre>;
 
-  constructor(
-    private toastr: ToastrService,
-    private pageInfoService: PageInfoService
-  ) {}
+  constructor(private toastr: ToastrService, private pageInfoService: PageInfoService) {}
 
   ngOnInit() {
     this.pageInfoService.updateInformation(PAGE_DESCRIPTIONS.tree);
@@ -144,14 +129,8 @@ export class TreeComponent implements AfterViewInit {
     var widthOffset = tooltipBox.width + 20;
     var heightOffset = tooltipBox.height;
     tooltip
-      .style(
-        "left",
-        isLeft ? event.pageX - widthOffset + `px` : event.pageX + `px`
-      )
-      .style(
-        "top",
-        isUp ? event.pageY - heightOffset + "px" : event.pageY + "px"
-      )
+      .style("left", isLeft ? event.pageX - widthOffset + `px` : event.pageX + `px`)
+      .style("top", isUp ? event.pageY - heightOffset + "px" : event.pageY + "px")
       .style("text-align", isLeft ? "end" : "start");
     if (event instanceof PointerEvent) {
       // Clicked instance
@@ -166,18 +145,10 @@ export class TreeComponent implements AfterViewInit {
         .style(
           "left",
           isLeft
-            ? event.pageX -
-                tooltipCloseButtonNode.getBoundingClientRect().width -
-                margin +
-                `px`
+            ? event.pageX - tooltipCloseButtonNode.getBoundingClientRect().width - margin + `px`
             : event.pageX + 5 + `px`
         )
-        .style(
-          "top",
-          isUp
-            ? event.pageY - heightOffset - margin + "px"
-            : event.pageY - margin + "px"
-        );
+        .style("top", isUp ? event.pageY - heightOffset - margin + "px" : event.pageY - margin + "px");
     }
   }
 
@@ -210,11 +181,7 @@ export class TreeComponent implements AfterViewInit {
     if (rootCheck.length > 1) {
       this.toastr.error(
         "Please only keep one root for the tree : " +
-          Array.from(
-            rootCheck.map(
-              (astre) => astre.astreID.type + "-" + astre.astreID.name
-            )
-          ).join(" | "),
+          Array.from(rootCheck.map((astre) => astre.astreID.type + "-" + astre.astreID.name)).join(" | "),
         "Multiple Roots found",
         { disableTimeOut: true }
       );
@@ -243,11 +210,7 @@ export class TreeComponent implements AfterViewInit {
         "Invalid (Parent not found) : (" +
           invalidAstres.length +
           ") " +
-          Array.from(
-            invalidAstres.map(
-              (astre) => astre.astreID.type + "-" + astre.astreID.name
-            )
-          ).join(" | "),
+          Array.from(invalidAstres.map((astre) => astre.astreID.type + "-" + astre.astreID.name)).join(" | "),
         "Invalid Nodes",
         { disableTimeOut: true }
       );
@@ -268,17 +231,12 @@ export class TreeComponent implements AfterViewInit {
     const tree = d3
       .tree<Astre>()
       .size([2 * Math.PI, radius])
-      .separation(
-        (a, b) =>
-          (a.parent === b.parent ? 1 : 1.5) / Math.min(a.depth, b.depth + 1)
-      );
+      .separation((a, b) => (a.parent === b.parent ? 1 : 1.5) / Math.min(a.depth, b.depth + 1));
     const rootPoint = tree(root as d3.HierarchyNode<Astre>);
 
     // === Select SVG and zoom  ===
-    const svg: d3.Selection<SVGSVGElement, unknown, null, undefined> =
-      d3.select(this.svgRef.nativeElement);
-    const g: d3.Selection<SVGGElement, unknown, null, undefined> =
-      svg.append("g");
+    const svg: d3.Selection<SVGSVGElement, unknown, null, undefined> = d3.select(this.svgRef.nativeElement);
+    const g: d3.Selection<SVGGElement, unknown, null, undefined> = svg.append("g");
 
     const zoom = d3
       .zoom<SVGSVGElement, unknown>()
@@ -377,72 +335,52 @@ export class TreeComponent implements AfterViewInit {
 
     // Node Events
     nodeG
-      .on(
-        "click",
-        (event: MouseEvent, pointNode: d3.HierarchyPointNode<Astre>) => {
-          //var t = event.currentTarget as SVGElement;
+      .on("click", (event: MouseEvent, pointNode: d3.HierarchyPointNode<Astre>) => {
+        //var t = event.currentTarget as SVGElement;
 
-          this.tooltipCloseButton.style("display", "block");
-          const anchor = nodeG
-            .select("circle")
-            .filter(
-              (node: d3.HierarchyPointNode<Astre>) =>
-                node.data.astreID == pointNode.data.astreID
-            )
-            .data()[0];
-          this.renderTooltip(tooltip, pointNode, event, anchor);
-          tooltip.transition().duration(200).style("opacity", 0.9);
-          this.tooltipPinned = true;
-        }
-      )
+        this.tooltipCloseButton.style("display", "block");
+        const anchor = nodeG
+          .select("circle")
+          .filter((node: d3.HierarchyPointNode<Astre>) => node.data.astreID == pointNode.data.astreID)
+          .data()[0];
+        this.renderTooltip(tooltip, pointNode, event, anchor);
+        tooltip.transition().duration(200).style("opacity", 0.9);
+        this.tooltipPinned = true;
+      })
 
-      .on(
-        "mouseover",
-        (event: MouseEvent, pointNode: d3.HierarchyPointNode<Astre>) => {
-          var target = event.currentTarget as SVGElement;
+      .on("mouseover", (event: MouseEvent, pointNode: d3.HierarchyPointNode<Astre>) => {
+        var target = event.currentTarget as SVGElement;
 
-          // Rainbow Path
-          linkConfig.stroke.rainbowLoop = true;
-          let currentNode = pointNode;
-          while (currentNode.parent != null) {
-            links
-              .filter(
-                (s: d3.HierarchyPointLink<Astre>) => s.target == currentNode
-              )
-              .transition()
-              .attr("stroke-width", linkConfig.stroke.widthHover)
-              .transition()
-              .on("end", function (d: d3.HierarchyPointLink<Astre>) {
-                const sel = d3.select<SVGPathElement, d3.HierarchyLink<Astre>>(
-                  this as SVGPathElement
-                );
-                rainbowLoop(sel, "stroke", d.target.depth);
-              });
-            currentNode = currentNode.parent;
-          }
-
-          const g = d3.select(target);
-          g.select("text")
+        // Rainbow Path
+        linkConfig.stroke.rainbowLoop = true;
+        let currentNode = pointNode;
+        while (currentNode.parent != null) {
+          links
+            .filter((s: d3.HierarchyPointLink<Astre>) => s.target == currentNode)
             .transition()
-            .ease(d3.easeExpOut)
-            .attr("opacity", "1")
-            .attr("font-weight", 700);
-
-          this.tooltipWrapper.style("display", "block");
-          this.tooltipWrapper.transition().duration(200).style("opacity", 0.9);
-          if (!this.tooltipPinned) {
-            this.tooltipAnchor = nodeG
-              .select("circle")
-              .filter(
-                (node: d3.HierarchyPointNode<Astre>) =>
-                  node.data.astreID == pointNode.data.astreID
-              )
-              .data()[0];
-            // Show tooltip
-            this.renderTooltip(tooltip, pointNode, event, this.tooltipAnchor);
-          }
+            .attr("stroke-width", linkConfig.stroke.widthHover)
+            .transition()
+            .on("end", function (d: d3.HierarchyPointLink<Astre>) {
+              const sel = d3.select<SVGPathElement, d3.HierarchyLink<Astre>>(this as SVGPathElement);
+              rainbowLoop(sel, "stroke", d.target.depth);
+            });
+          currentNode = currentNode.parent;
         }
-      )
+
+        const g = d3.select(target);
+        g.select("text").transition().ease(d3.easeExpOut).attr("opacity", "1").attr("font-weight", 700);
+
+        this.tooltipWrapper.style("display", "block");
+        this.tooltipWrapper.transition().duration(200).style("opacity", 0.9);
+        if (!this.tooltipPinned) {
+          this.tooltipAnchor = nodeG
+            .select("circle")
+            .filter((node: d3.HierarchyPointNode<Astre>) => node.data.astreID == pointNode.data.astreID)
+            .data()[0];
+          // Show tooltip
+          this.renderTooltip(tooltip, pointNode, event, this.tooltipAnchor);
+        }
+      })
 
       .on("mouseout", (event: any, pointNode: d3.HierarchyPointNode<Astre>) => {
         if (!this.tooltipPinned) {
