@@ -31,8 +31,8 @@ export function astreIDKey(id: AstreID): string {
   let fields = Object.keys(instanceAstreID) as (keyof Astre)[];
 
   let key = "";
-  for (let field of fields) {
-    key += field + SEP;
+  for (let fieldName of fields) {
+    key += id[fieldName as keyof AstreID] + SEP;
   }
   return key;
 }
