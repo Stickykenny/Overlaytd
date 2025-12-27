@@ -9,7 +9,7 @@ import {
 } from "ag-grid-community";
 import { Component, inject, OnInit } from "@angular/core";
 import { AgGridAngular } from "ag-grid-angular";
-import { Astre, AstreID } from "../../models/Astre";
+import { Astre, AstreID, astreKey } from "../../models/Astre";
 import { ApiService } from "src/app/api.service";
 import { RowModel, RowModelTransfer } from "src/app/models/RowModel";
 import { ToastrService } from "ngx-toastr";
@@ -371,6 +371,7 @@ export class GridComponent implements OnInit {
   clearAll() {
     this.rowData = [];
   }
+
   deleteSelected() {
     const selectedData = this.gridApi.getSelectedNodes();
     let count: number = 0;
@@ -406,13 +407,13 @@ export class GridComponent implements OnInit {
    * @returns If the rowNodes respect the data integrity
    */
   verifyIntegrity(): boolean {
-    const duplicates: Set<String> = new Set();
-    const map = new Map<string, boolean>();
+    const duplicates: Set<string> = new Set();
+    const ids: Set<string> = new Set();
 
-    this.gridApi.forEachNode(function (node: IRowNode) {
-      let id: string = node.data.type + "-" + node.data.name;
-      if (!map.has(id)) {
-        map.set(id, true);
+    this.gridApi.forEachNode(function (node: IRowNode<Astre>) {
+      let id: string = astreKey(node.data!);
+      if (!ids.has(id)) {
+        ids.add(id);
       } else {
         duplicates.add(id);
       }
