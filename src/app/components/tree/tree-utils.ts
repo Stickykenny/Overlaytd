@@ -36,12 +36,17 @@ export default class TreeUtils {
   }
 }
 
+/**
+ * Each branch will have a slight hue shift compare to its siblings
+ * @param link
+ * @returns The new Hexcode color of the link
+ */
 export function computeBranchColor(link: d3.HierarchyPointLink<Astre>): string {
   let hue = 0; // Default
-  const hueDeviationRange = 25;
+  const hueDeviationRange = 100;
   let targetPoint = link.target;
 
-  if (link.target.depth <= 1) {
+  if (targetPoint.depth <= 1) {
     return d3.hsl(hue, 1, 0.9, 1).darker(targetPoint.depth).clamp().formatHex();
   }
 
@@ -53,6 +58,10 @@ export function computeBranchColor(link: d3.HierarchyPointLink<Astre>): string {
     .selectAll<SVGPathElement, d3.HierarchyPointLink<Astre>>(".link")
     .filter((link) => link.target == parentLink?.target)
     .attr("stroke");
-  console.log(d3.hsl(parentLinkColor).clamp().formatHex());
-  return ""; // d3.hsl(parentLinkColor, 1, 0.9, 1).darker(targetPoint.depth).clamp().formatHsl();
+  let hueShift: number = (d3.hsl(parentLinkColor).h - hueDeviationRange + hueSteps * siblingIdx + 360) % 360;
+  return d3
+    .hsl(hueShift, 1, 0.9, 1)
+    .darker(targetPoint.depth / 5)
+    .clamp()
+    .formatHsl();
 }

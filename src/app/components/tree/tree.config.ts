@@ -1,4 +1,5 @@
 import * as d3 from "d3";
+import { Astre } from "src/app/models/Astre";
 export const tooltipConfig = {
   font: {
     size: 24,
@@ -12,7 +13,7 @@ export const tooltipConfig = {
 
 export const linkConfig = {
   stroke: {
-    width: 1,
+    width: 3,
     widthHover: 8,
     rainbowLoop: true,
     saturation: 1,
@@ -20,7 +21,7 @@ export const linkConfig = {
   },
 };
 
-export function rainbowLoop(elem: any, attributeName: string, depth: number) {
+export function rainbowLoop(elem: any, attributeName: string, link: d3.HierarchyPointLink<Astre>) {
   let saturationVarianceMax = 0.75;
   let saturationVarianceMin = 0.25;
   let luminosityVarianceMax = 0.75;
@@ -33,14 +34,15 @@ export function rainbowLoop(elem: any, attributeName: string, depth: number) {
   // Reset to default
   linkConfig.stroke.saturation = 1;
   linkConfig.stroke.luminosity = 0.5;
+  let linkOriginalColor = elem.attr(attributeName);
 
   function next(elem: any, attributeName: string) {
-    if (linkConfig.stroke.rainbowLoop) {
+    if (!linkConfig.stroke.rainbowLoop)
       elem
         .transition()
         .attr(
           attributeName,
-          d3.hsl(colors[i], linkConfig.stroke.saturation, linkConfig.stroke.luminosity, 1).clamp().formatHex()
+          d3.hsl(colors[i], linkConfig.stroke.saturation, linkConfig.stroke.luminosity, 1).clamp().formatHsl()
         )
         .on("end", () => {
           i = (i + 1) % colors.length;
@@ -50,12 +52,14 @@ export function rainbowLoop(elem: any, attributeName: string, depth: number) {
             linkConfig.stroke.luminosity =
               Math.random() * (luminosityVarianceMax - luminosityVarianceMin) + luminosityVarianceMin;
           }
-          next(elem, attributeName);
+          elem.interrupt();
+          if (!linkConfig.stroke.rainbowLoop) {
+            // Because of event loop, I still need to reset here
+            elem.transition().attr(attributeName, linkOriginalColor).attr("stroke-width", linkConfig.stroke.width);
+          } else {
+            next(elem, attributeName);
+          }
         });
-    } else {
-      elem.transition().attr(attributeName, d3.hsl(colors[i], 1, 0.5, 1).darker(depth).clamp().formatHex());
-    }
   }
-
   next(elem, attributeName);
 }

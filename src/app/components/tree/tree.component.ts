@@ -10,7 +10,7 @@ import { offlineDb } from "src/app/db/offlineDb";
 import { ApiService } from "src/app/api.service";
 import { PageInfoService } from "src/app/page-info.service";
 import { PAGE_DESCRIPTIONS } from "src/app/shared/page-descriptions";
-
+import { computeBranchColor } from "./tree-utils";
 @Component({
   selector: "app-tree",
   template: `
@@ -80,22 +80,22 @@ export class TreeComponent implements AfterViewInit {
   ) {
     tooltip.style("display", "block");
     tooltip.style("pointer-events", "auto");
-    var astre: Astre = pointNode.data as Astre;
-    var astreTags = astre.tags;
-    var additionalComments = "";
+    let astre: Astre = pointNode.data as Astre;
+    let astreTags = astre.tags;
+    let additionalComments = "";
 
     const [x, y] = d3.pointRadial(anchor.x, anchor.y); // Relative coordinate to RootNode
 
     const node = tooltip.node() as HTMLElement; // cast
-    var isLeft = x < 0;
-    var isUp = y < 0;
+    let isLeft = x < 0;
+    let isUp = y < 0;
 
     if (astre.tags == null || astre.tags.length == 0) {
       astreTags = "<span style='color:LightGrey;'>No Tags Found</span>";
     } else {
       // === Custom Tooltip comments based on tags ===
-      var tagsList = astreTags.split(",");
-      for (var tagName of tagsList) {
+      let tagsList = astreTags.split(",");
+      for (let tagName of tagsList) {
         switch (tagName.toLowerCase()) {
           case Tags.HighlightedList.toLowerCase(): {
             additionalComments +=
@@ -126,8 +126,8 @@ export class TreeComponent implements AfterViewInit {
       .node();
     if (!node) return; // nothing to do if tooltip not rendered
     const tooltipBox = tooltipNode!.getBoundingClientRect();
-    var widthOffset = tooltipBox.width + 20;
-    var heightOffset = tooltipBox.height;
+    let widthOffset = tooltipBox.width + 20;
+    let heightOffset = tooltipBox.height;
     tooltip
       .style("left", isLeft ? event.pageX - widthOffset + `px` : event.pageX + `px`)
       .style("top", isUp ? event.pageY - heightOffset + "px" : event.pageY + "px")
@@ -137,9 +137,9 @@ export class TreeComponent implements AfterViewInit {
       // !! Creating additional DOM on each 'hover' event causes performance issue, so the close button DOM element only appear on clicked
 
       this.tooltipWrapper.style("pointer-events", "auto");
-      var tooltipCloseButtonNode = this.tooltipCloseButton.node();
+      let tooltipCloseButtonNode = this.tooltipCloseButton.node();
       if (!tooltipCloseButtonNode) return; // nothing to do if tooltip not rendered
-      var margin = 35;
+      let margin = 35;
       this.tooltipCloseButton
         .style("opacity", 1)
         .style(
@@ -177,7 +177,7 @@ export class TreeComponent implements AfterViewInit {
    * @param astres List of astre that are correctly pre-processed
    */
   initTree(astres: Astre[]): void {
-    var rootCheck = this.astres.filter((astre) => astre.parent == "");
+    let rootCheck = this.astres.filter((astre) => astre.parent == "");
     if (rootCheck.length > 1) {
       this.toastr.error(
         "Please only keep one root for the tree : " +
@@ -191,7 +191,7 @@ export class TreeComponent implements AfterViewInit {
     this.parentColumn = "parent";
     const ids = new Set(this.astres.map((d) => d.astreID.name));
 
-    var [validAstres, invalidAstres] = this.astres.reduce(
+    let [validAstres, invalidAstres] = this.astres.reduce(
       (acc, astre: Astre) => {
         if (!astre.parent || ids.has(astre.parent)) {
           acc[0].push(astre); // valid
@@ -218,7 +218,7 @@ export class TreeComponent implements AfterViewInit {
     astres = validAstres;
 
     // === Create Tree ===
-    var root: d3.HierarchyNode<Astre>;
+    let root: d3.HierarchyNode<Astre>;
 
     root = d3
       .stratify<Astre>()
@@ -261,7 +261,7 @@ export class TreeComponent implements AfterViewInit {
       .append("div")
       .attr("class", "tooltip-wrapper")
       .style("opacity", 0.9);
-    var tooltip = this.tooltipWrapper
+    let tooltip = this.tooltipWrapper
       .append("div")
       .attr("class", "tooltip-content shadow p-3 mb-5 bg-white rounded")
       .style("position", "absolute")
@@ -300,12 +300,11 @@ export class TreeComponent implements AfterViewInit {
       .join("path")
       .attr("class", "link")
       .attr("fill", "none") // mandatory in this style of links
-      .attr("d", (d: d3.HierarchyPointLink<Astre>) => linkGen(d))
-      .attr("stroke", (d: d3.HierarchyPointLink<Astre>) =>
-        d3.hsl(0, 1, 0.9, 1).darker(d.target.depth).clamp().formatHex()
-      )
+      .attr("d", (link: d3.HierarchyPointLink<Astre>) => linkGen(link))
+      .attr("stroke", (link: d3.HierarchyPointLink<Astre>) => {
+        return computeBranchColor(link); //d3.hsl(0, 1, 0.9, 1).darker(d.target.depth).clamp().formatHsl();
+      })
       .attr("stroke-width", linkConfig.stroke.width);
-
     // Draw nodes
     const nodeG = g
       .append("g")
@@ -335,7 +334,7 @@ export class TreeComponent implements AfterViewInit {
     // Node Events
     nodeG
       .on("click", (event: MouseEvent, pointNode: d3.HierarchyPointNode<Astre>) => {
-        //var t = event.currentTarget as SVGElement;
+        //let t = event.currentTarget as SVGElement;
 
         this.tooltipCloseButton.style("display", "block");
         const anchor = nodeG
@@ -345,10 +344,19 @@ export class TreeComponent implements AfterViewInit {
         this.renderTooltip(tooltip, pointNode, event, anchor);
         tooltip.transition().duration(200).style("opacity", 0.9);
         this.tooltipPinned = true;
+
+        let currentNode = pointNode;
+        while (currentNode.parent != null) {
+          links
+            .filter((s) => s.target == currentNode) // Bad for optimisation to not filter, but helps against race-condition/double-trigger
+            .transition()
+            .attr("stroke-width", linkConfig.stroke.width);
+          currentNode = currentNode.parent;
+        }
       })
 
       .on("mouseover", (event: MouseEvent, pointNode: d3.HierarchyPointNode<Astre>) => {
-        var target = event.currentTarget as SVGElement;
+        let target = event.currentTarget as SVGElement;
 
         // Rainbow Path
         linkConfig.stroke.rainbowLoop = true;
@@ -359,9 +367,9 @@ export class TreeComponent implements AfterViewInit {
             .transition()
             .attr("stroke-width", linkConfig.stroke.widthHover)
             .transition()
-            .on("end", function (d: d3.HierarchyPointLink<Astre>) {
+            .on("end", function (link: d3.HierarchyPointLink<Astre>) {
               const sel = d3.select<SVGPathElement, d3.HierarchyLink<Astre>>(this as SVGPathElement);
-              rainbowLoop(sel, "stroke", d.target.depth);
+              rainbowLoop(sel, "stroke", link);
             });
           currentNode = currentNode.parent;
         }
@@ -385,19 +393,19 @@ export class TreeComponent implements AfterViewInit {
         if (!this.tooltipPinned) {
           this.clearTooltip();
         }
-        var target: Element = event.currentTarget;
+        let target: Element = event.currentTarget;
 
         // Clear Rainbow path
         linkConfig.stroke.rainbowLoop = false;
         let currentNode = pointNode;
         while (currentNode.parent != null) {
           links
-            //.filter((s) => s.target == currentNode)// Bad for optimisation to not filter, but helps against race-condition/double-trigger
+            .filter((s) => s.target == currentNode) // Bad for optimisation to not filter, but helps against race-condition/double-trigger
             .transition()
             .attr("stroke-width", linkConfig.stroke.width)
-            .attr("stroke", (d: d3.HierarchyPointLink<Astre>) =>
-              d3.hsl(0, 1, 0.9, 1).darker(d.target.depth).clamp().formatHex()
-            );
+            .attr("stroke", (link: d3.HierarchyPointLink<Astre>) => {
+              return computeBranchColor(link);
+            });
           currentNode = currentNode.parent;
         }
 
