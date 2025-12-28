@@ -37,7 +37,7 @@ export function rainbowLoop(elem: any, attributeName: string, link: d3.Hierarchy
   let linkOriginalColor = elem.attr(attributeName);
 
   function next(elem: any, attributeName: string) {
-    if (!linkConfig.stroke.rainbowLoop)
+    if (linkConfig.stroke.rainbowLoop)
       elem
         .transition()
         .attr(
