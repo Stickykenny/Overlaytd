@@ -18,12 +18,11 @@ export class ApiService {
   private loggedWithOauth = new BehaviorSubject<boolean>(false);
 
   // Observable for other components to subscribe to
-  readonly isLoggedIn$: Observable<boolean> =
-    this.loggedInSubject.asObservable();
+  readonly isLoggedIn$: Observable<boolean> = this.loggedInSubject.asObservable();
   constructor(
     private http: HttpClient,
     private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
   ) {}
 
   getCsrfToken() {
@@ -61,8 +60,8 @@ export class ApiService {
           "Content-Type": "application/json",
           accept: "application/hal+json",
         },
-        responseType: "text" as "json",
-      }
+        responseType: "json",
+      },
     );
   }
 
@@ -73,14 +72,14 @@ export class ApiService {
       {
         withCredentials: true,
         responseType: "json",
-      }
+      },
     );
   }
 
   /*this.http.post<string>("http://localhost:8080/login", body, {
       headers,
       //withCredentials: true,// cross-site Access-Control requests should be made using credentials such as cookies, authentication headers or TLS client certificates
-      responseType: "text" as "json",
+      responseType: "json",
     });*/
 
   public logout() {
@@ -94,12 +93,7 @@ export class ApiService {
         next: (result) => {
           this.router
             .navigate(["/login"])
-            .then(() =>
-              this.toastr.success(
-                "Please Login to access the app",
-                "Logout Successful"
-              )
-            );
+            .then(() => this.toastr.success("Please Login to access the app", "Logout Successful"));
         },
         error: (err) => {
           console.log(err);
@@ -110,12 +104,9 @@ export class ApiService {
   }
 
   getAstres(): Observable<Astre[]> {
-    console.log("Getting Astres");
     const headers = new HttpHeaders({});
-    return this.http.get<Astre[]>(
-      "http://localhost:8080/api/astres/getall",
-      {}
-    );
+    let a = this.http.get<Astre[]>("http://localhost:8080/api/astres/getall", {});
+    return a;
   }
 
   getLocalAstres() {
@@ -134,16 +125,9 @@ export class ApiService {
     });
 
     headers.set("access-control-allow-origin", "http://localhost:4200/");
-    return this.http.post<Astre[]>(
-      "http://localhost:8080/api/astres/astres",
-      astres
-    );
+    return this.http.post<Astre[]>("http://localhost:8080/api/astres/astres", astres);
   }
-  deleteAstre(
-    type: string,
-    subtype: string,
-    name: string
-  ): Observable<Astre[]> {
+  deleteAstre(type: string, subtype: string, name: string): Observable<Astre[]> {
     const headers = new HttpHeaders({});
     const astreID: AstreID = { type, subtype, name };
     headers.set("access-control-allow-origin", "http://localhost:4200/");

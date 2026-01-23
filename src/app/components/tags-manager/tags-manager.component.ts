@@ -93,14 +93,20 @@ export class TagsManagerComponent implements OnInit {
       // Update tag
       let astre = event.container.data[event.currentIndex];
       let updatedTags = astre.tags.split(",").filter((tag) => tag != event.previousContainer.id);
-      updatedTags.push(event.container.id);
+      let newTag = event.container.id;
+      updatedTags.push(newTag);
 
       astre.tags = updatedTags.join(",");
       this.astreService
         .postAstres([astre])
         .pipe(take(1))
         .subscribe({
-          next: (response) => {},
+          next: (response) => {
+            let successMsg = `Updated "${newTag}" tag to "${astre.astreID.name}"`;
+            this.toastr.success(successMsg, "Success", {
+              timeOut: 1000,
+            });
+          },
           error: (err) => {
             this.toastr.error("Error Updating tag");
             transferArrayItem(

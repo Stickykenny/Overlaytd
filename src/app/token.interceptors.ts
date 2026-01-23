@@ -2,6 +2,7 @@ import { HttpInterceptorFn } from "@angular/common/http";
 import { jwtDecode, JwtPayload } from "jwt-decode";
 
 // Functionnal Interceptor (Angular 15+)
+// This isn't used anymore (Jwt token are now in cookie http-only)
 export const TokenInterceptor: HttpInterceptorFn = (req, next) => {
   const token = localStorage.getItem("jwt");
   if (token != null) {

@@ -20,18 +20,20 @@ export const AuthInterceptor: HttpInterceptorFn = (req, next) => {
   const toastrService = inject(ToastrService);
   return next(authReq).pipe(
     catchError((error) => {
+      //toastrService.info("ATTEMPT refresh Token");
       return apiService.refresh().pipe(
         take(1),
         switchMap(() => {
-          toastrService.info("refresh Token");
+          //toastrService.info("refresh Token");
           return next(authReq);
         }),
         catchError((error) => {
           toastrService.error("Failed to refresh Token");
           console.log("Failed to refresh Token");
+          console.log(error);
           return throwError(() => error);
-        })
+        }),
       );
-    })
+    }),
   );
 };

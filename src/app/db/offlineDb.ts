@@ -35,9 +35,7 @@ export class AppDB extends Dexie {
 
     this.astres
       .toArray()
-      .then((astreArray) => {
-        console.log(astreArray);
-      })
+      .then((astreArray) => {})
       .catch((e) => {
         alert(e);
         throw e;

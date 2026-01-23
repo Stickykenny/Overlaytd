@@ -14,19 +14,9 @@ import { PageInfoService } from "./page-info.service";
   selector: "app-root",
   imports: [RouterModule, CommonModule, MediaDockComponent],
   template: `
-    <button
-      id="sidebarhelper"
-      class="sidebarhelper toggle-btn btn btn-light"
-      (click)="toggleSidebar()"
-    >
-      >
-    </button>
+    <button id="sidebarhelper" class="sidebarhelper toggle-btn btn btn-light" (click)="toggleSidebar()">></button>
 
-    <button
-      id="collapsezone"
-      class="collapsezone"
-      (click)="toggleSidebar()"
-    ></button>
+    <button id="collapsezone" class="collapsezone" (click)="toggleSidebar()"></button>
 
     <div id="sidebar" class="sidebar">
       <p>
@@ -35,6 +25,9 @@ import { PageInfoService } from "./page-info.service";
         <br />
         <br />
         <a routerLink="/grid">Grid</a>
+        <br />
+        <br />
+        <a routerLink="/tags-manager">Tags</a>
         <br />
         <br />
         <a routerLink="/tree">Tree</a>
@@ -51,22 +44,13 @@ import { PageInfoService } from "./page-info.service";
       <header class="brand-name" style="height: 8vh;">
         <div class="d-flex bd-highlight">
           <div class="p-2 w-100 bd-highlight">
-            <i
-              class="bi bi-house-door-fill cns-gradient"
-              style="font-size: 2rem;"
-              aria-hidden="true"
-              (click)="rdm()"
-            >
-              <span class="cns-gradient cns-gradient-text-strech"> CNS</span>
+            <i class="bi bi-house-door-fill cns-gradient" style="font-size: 2rem;" aria-hidden="true" (click)="rdm()">
+              <span class="cns-gradient cns-gradient-text-strech"> RELAYTD</span>
             </i>
           </div>
 
           <div class="p-2 flex-shrink-1 bd-highlight">
-            <i
-              class="bi bi-info-circle"
-              (click)="getPageInfo()"
-              style="font-size: 2rem;"
-            ></i>
+            <i class="bi bi-info-circle" (click)="getPageInfo()" style="font-size: 2rem;"></i>
           </div>
         </div>
       </header>
@@ -89,7 +73,7 @@ export class AppComponent {
     private auth: ApiService,
     private modalService: NgbModal,
     private toastr: ToastrService,
-    private pageInfoService: PageInfoService
+    private pageInfoService: PageInfoService,
   ) {
     this.isLoggedIn$ = this.auth.isLoggedIn$;
   }
