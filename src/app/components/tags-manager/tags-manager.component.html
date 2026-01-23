@@ -1,0 +1,48 @@
+<html lang="en">
+  <head> </head>
+  <body>
+    <span class="d-flex justify-content-around">
+      <div class="example-container">
+        <h2>: Default :</h2>
+        <div
+          cdkDropList
+          [id]="tagsKeys[0]"
+          [cdkDropListData]="tagsDistribution.get('')"
+          [cdkDropListConnectedTo]="getConnectedLists('')"
+          class="example-list"
+          (cdkDropListDropped)="drop($event)"
+        >
+          @for (item of tagsDistribution.get(""); track item.astreID) {
+            <div class="example-box" cdkDrag>
+              {{ item.astreID.type + " || " + item.astreID.subtype + " || " + item.astreID.name }}
+            </div>
+          }
+        </div>
+      </div>
+    </span>
+    <p></p>
+    <div class="board d-flex justify-content-around">
+      <span *ngFor="let tag of tagsKeys" class="centered">
+        @if (tag != "") {
+          <div class="example-container">
+            <h2>: {{ tag }} :</h2>
+            <div
+              cdkDropList
+              [id]="tag"
+              [cdkDropListData]="tagsDistribution.get(tag)"
+              [cdkDropListConnectedTo]="getConnectedLists(tag)"
+              class="example-list"
+              (cdkDropListDropped)="drop($event)"
+            >
+              @for (item of tagsDistribution.get(tag); track item.astreID) {
+                <div class="example-box" cdkDrag>
+                  {{ item.astreID.type + " || " + item.astreID.subtype + " || " + item.astreID.name }}
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </span>
+    </div>
+  </body>
+</html>
