@@ -3,6 +3,7 @@ import { LoginComponent } from "./login/login.component";
 import { GridComponent } from "./components/grid/grid.component";
 import { OauthCallbackComponent } from "./login/oauth-callback.component";
 import { HomeComponent } from "./components/home/home.component";
+import { TagsManagerComponent } from "./components/tags-manager/tags-manager.component";
 
 const routeConfig: Routes = [
   {
@@ -31,6 +32,11 @@ const routeConfig: Routes = [
     title: "Grid Page",
   },
   {
+    path: "tags-manager",
+    component: TagsManagerComponent,
+    title: "Tags Manager Page",
+  },
+  {
     path: "oauth-callback",
     component: OauthCallbackComponent,
     title: "Redirecting",
@@ -39,8 +45,7 @@ const routeConfig: Routes = [
     path: "tree",
     title: "Tree",
     // Lazy-load
-    loadComponent: () =>
-      import("./components/tree/tree.component").then((m) => m.TreeComponent),
+    loadComponent: () => import("./components/tree/tree.component").then((m) => m.TreeComponent),
   },
 ];
 export default routeConfig;
