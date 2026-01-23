@@ -6,6 +6,8 @@ import {
   themeAlpine,
   RowSelectionOptions,
   IRowNode,
+  ValueFormatterParams,
+  CellStyle,
 } from "ag-grid-community";
 import { Component, inject, OnInit } from "@angular/core";
 import { AgGridAngular } from "ag-grid-angular";
@@ -25,6 +27,8 @@ import { offlineDb } from "src/app/db/offlineDb";
 import { fromAstresToRows } from "src/app/utils/helper";
 import { PAGE_DESCRIPTIONS } from "src/app/shared/page-descriptions";
 import { PageInfoService } from "src/app/page-info.service";
+import { toAstre } from "src/app/models/model-utils";
+import { GridUserConfig } from "./grid.userconfig";
 
 @Component({
   selector: "app-grid",
@@ -40,13 +44,6 @@ export class GridComponent implements OnInit {
   // Row Data: The data to be displayed.
   count: number = 1;
   separator: string = "¤";
-  themes = [
-    {
-      label: "themeQuartz",
-      theme: themeAlpine,
-    },
-  ];
-  theme = themeAlpine;
 
   test_function_name: string = "Reset to example";
   rowData: RowModel[] = [];
@@ -83,17 +80,19 @@ export class GridComponent implements OnInit {
       "align-items": "center",
       display: "flex",
       "justify-content": "center",
+      "white-space": "pre-wrap",
     },
   };
-  rowSelection: RowSelectionOptions | "single" | "multiple" = {
-    mode: "multiRow",
-    selectAll: "filtered",
-  };
+
+  theme = themeAlpine;
   colDefs = [
     {
       headerName: "Type",
       field: "type",
       maxWidth: 100,
+      cellStyle: (): CellStyle => {
+        return GridUserConfig.idCellStyle;
+      },
       getQuickFilterText: (params: any) => {
         return params.value;
       }, // Why not in the default settings if applied to all ? I need rewrite this option each one separately
@@ -102,6 +101,9 @@ export class GridComponent implements OnInit {
       headerName: "Subtype",
       field: "subtype",
       maxWidth: 100,
+      cellStyle: (): CellStyle => {
+        return GridUserConfig.idCellStyle;
+      },
       getQuickFilterText: (params: any) => {
         return params.value;
       },
@@ -109,6 +111,9 @@ export class GridComponent implements OnInit {
     {
       headerName: "Name",
       field: "name",
+      cellStyle: (): CellStyle => {
+        return GridUserConfig.idCellStyle;
+      },
       getQuickFilterText: (params: any) => {
         return params.value;
       },
@@ -196,13 +201,17 @@ export class GridComponent implements OnInit {
       hide: false,
     },
   ];
+  rowSelection: RowSelectionOptions | "single" | "multiple" = {
+    mode: "multiRow",
+    selectAll: "filtered",
+  };
 
   constructor(
     // API service is injected using inject() (Angular 14+), to be safe use constructor injection for external service
     private toastr: ToastrService,
     private modalService: NgbModal,
     private store: Store,
-    private pageInfoService: PageInfoService
+    private pageInfoService: PageInfoService,
   ) {}
 
   ngOnInit() {
@@ -308,17 +317,7 @@ export class GridComponent implements OnInit {
     this.gridApi.forEachNode(function (node: IRowNode) {
       if (node.data.was_modified == true || node.isSelected()) {
         let item: RowModelTransfer = node.data;
-        astres.push({
-          astreID: { type: item.type, subtype: item.subtype, name: item.name },
-          subname: item.subname,
-          tags: item.tags,
-          link: item.link,
-          description: item.description,
-          parent: item.parent,
-          id: item.id,
-          date_added: item.date_added,
-          last_modified: item.last_modified,
-        });
+        astres.push(toAstre(item));
       }
     });
 
@@ -382,7 +381,7 @@ export class GridComponent implements OnInit {
         name: node.data.name,
       };
       offlineDb.deleteItem(astreID);
-      this.astre2Service
+      (this.astre2Service
         .deleteAstre(node.data.type, node.data.subtype, node.data.name)
         .pipe(take(1))
         .subscribe({
@@ -393,7 +392,7 @@ export class GridComponent implements OnInit {
           },
         })
         .unsubscribe(),
-        console.log("Entry deleted!", node.data.type, " - ", node.data.name);
+        console.log("Entry deleted!", node.data.type, " - ", node.data.name));
       this.gridApi.applyTransaction({
         remove: [selectedData[count].data],
       });
@@ -410,12 +409,16 @@ export class GridComponent implements OnInit {
     const duplicates: Set<string> = new Set();
     const ids: Set<string> = new Set();
 
-    this.gridApi.forEachNode(function (node: IRowNode<Astre>) {
-      let id: string = astreKey(node.data!);
-      if (!ids.has(id)) {
-        ids.add(id);
-      } else {
-        duplicates.add(id);
+    this.gridApi.forEachNode(function (node: IRowNode<RowModel>) {
+      let astre = node.data;
+      if (astre != undefined) {
+        console.log(astre);
+        let id: string = astreKey(astre);
+        if (!ids.has(id)) {
+          ids.add(id);
+        } else {
+          duplicates.add(id);
+        }
       }
     });
 
@@ -541,7 +544,7 @@ export class GridComponent implements OnInit {
 
     const a = document.createElement("a");
     a.href = url;
-    (a.download = "exportGridData_" + new Date().toISOString().slice(0, 10).replace(/-/g, "") + ".json"), a.click();
+    ((a.download = "exportGridData_" + new Date().toISOString().slice(0, 10).replace(/-/g, "") + ".json"), a.click());
 
     window.URL.revokeObjectURL(url);
     return false;
