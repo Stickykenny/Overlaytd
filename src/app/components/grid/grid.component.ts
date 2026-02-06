@@ -273,7 +273,7 @@ export class GridComponent implements OnInit {
   async retrieveData() {
     if (this.rowData.length == 0) {
       this.astre2Service
-        .getAstres()
+        .getAstresAndLinks()
         .pipe(take(1))
         .subscribe({
           next: (astres) => {
@@ -281,6 +281,7 @@ export class GridComponent implements OnInit {
             this.rowData = fromAstresToRows(astres);
           },
           error: (err) => {
+            console.log(err);
             let offlineAstres: RowModelTransfer[] = [];
             offlineDb.getItems().then((astres) => {
               offlineAstres = fromAstresToRows(astres);

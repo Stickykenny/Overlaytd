@@ -1,8 +1,9 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 
-import { Astre, AstreID } from "./models/Astre";
-import { BehaviorSubject, Observable, take } from "rxjs";
+import { Astre, AstreID, astreIDKey } from "./models/Astre";
+import { AstreChildren, AstreLinksResponse } from "./models/AstreResponse";
+import { BehaviorSubject, map, Observable, take } from "rxjs";
 import { Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
 import { environment } from "src/environments/environment";
@@ -19,6 +20,9 @@ export class ApiService {
 
   // Observable for other components to subscribe to
   readonly isLoggedIn$: Observable<boolean> = this.loggedInSubject.asObservable();
+
+  childrenMap: Map<any, any[]> = new Map();
+
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -105,12 +109,39 @@ export class ApiService {
 
   getAstres(): Observable<Astre[]> {
     const headers = new HttpHeaders({});
-    let a = this.http.get<Astre[]>("http://localhost:8080/api/astres/getall", {});
-    return a;
+    let request = this.http.get<Astre[]>("http://localhost:8080/api/astres/getall", {});
+    return request;
+  }
+
+  getAstresAndLinks(): Observable<Astre[]> {
+    const headers = new HttpHeaders({});
+    let request = this.http.get<AstreLinksResponse>("http://localhost:8080/api/astres/astreslinks", {});
+    return request.pipe(
+      map((response: AstreLinksResponse) => {
+        console.log(response);
+        //let map: Map<any, any[]> = new Map();
+        response.childrenList.forEach((link: AstreChildren) => {
+          //console.log(astreIDKey(link.astreID));
+          console.log(link);
+          console.log(link.children);
+          console.log(link.id);
+          if (link.id) {
+            this.childrenMap.set(astreIDKey(link.id), link.children);
+          }
+        });
+        console.log(this.childrenMap);
+        console.log("api pipe alled");
+        return response.astres;
+      }),
+    );
   }
 
   getLocalAstres() {
     return this.http.get<Astre[]>(environment.exampleDataPath);
+  }
+
+  getChildren() {
+    return this.childrenMap;
   }
 
   postAstres(astres: Astre[]) {

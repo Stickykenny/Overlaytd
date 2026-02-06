@@ -30,13 +30,17 @@ export function astreKey(rowModel: RowModel): string {
 }
 
 export function astreIDKey(id: AstreID): string {
-  const SEP: string = "\u001F" + "\u001E"; // Unit Separator + Record Separator
+  const SEP: string = "\u2800" + "\u2800"; // "\u001F" + "\u001E" + "\u2800"; // Unit Separator + Record Separator + Braille Empty
 
   let fields = Object.keys(instanceAstreID) as (keyof AstreID)[];
 
   let key = "";
   for (let fieldName of fields) {
-    key += id[fieldName as keyof AstreID] + SEP;
+    const value = id[fieldName as keyof AstreID];
+    if (value != null) {
+      key += value;
+    }
+    key += SEP;
   }
   return key;
 }
