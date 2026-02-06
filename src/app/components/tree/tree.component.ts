@@ -36,7 +36,10 @@ export class TreeComponent implements AfterViewInit {
   tooltipCloseButton: d3.Selection<HTMLButtonElement, unknown, HTMLElement, any>;
   tooltipAnchor: d3.HierarchyPointNode<Astre>;
 
-  constructor(private toastr: ToastrService, private pageInfoService: PageInfoService) {}
+  constructor(
+    private toastr: ToastrService,
+    private pageInfoService: PageInfoService,
+  ) {}
 
   ngOnInit() {
     this.pageInfoService.updateInformation(PAGE_DESCRIPTIONS.tree);
@@ -76,13 +79,18 @@ export class TreeComponent implements AfterViewInit {
     tooltip: d3.Selection<HTMLDivElement, unknown, HTMLElement, undefined>,
     pointNode: d3.HierarchyPointNode<Astre>,
     event: MouseEvent,
-    anchor: d3.HierarchyPointNode<Astre>
+    anchor: d3.HierarchyPointNode<Astre>,
+    target: SVGElement,
   ) {
     tooltip.style("display", "block");
-    tooltip.style("pointer-events", "auto");
+    tooltip.style("pointer-events", "none");
     let astre: Astre = pointNode.data as Astre;
     let astreTags = astre.tags;
     let additionalComments = "";
+
+    let targetDOM: DOMRect = d3.select(target).node()!.getBoundingClientRect();
+    let px = targetDOM.x;
+    let py = targetDOM.y;
 
     const [x, y] = d3.pointRadial(anchor.x, anchor.y); // Relative coordinate to RootNode
 
@@ -121,7 +129,7 @@ export class TreeComponent implements AfterViewInit {
         `<b>${astre.astreID.name}</b></br>
             <span style='font-size:${tooltipConfig.comment.font.size}px'>[${astreTags}] in ${astre.parent} </span> </br>
             ${astre.description} </br>
-            <span style='font-size:${tooltipConfig.comment.font.size}px'>${additionalComments} </span>`
+            <span style='font-size:${tooltipConfig.comment.font.size}px'>${additionalComments} </span>`,
       )
       .node();
     if (!node) return; // nothing to do if tooltip not rendered
@@ -129,8 +137,8 @@ export class TreeComponent implements AfterViewInit {
     let widthOffset = tooltipBox.width + 20;
     let heightOffset = tooltipBox.height;
     tooltip
-      .style("left", isLeft ? event.pageX - widthOffset + `px` : event.pageX + `px`)
-      .style("top", isUp ? event.pageY - heightOffset + "px" : event.pageY + "px")
+      .style("left", isLeft ? px - widthOffset + `px` : px + `px`)
+      .style("top", isUp ? py - heightOffset + "px" : py + "px")
       .style("text-align", isLeft ? "end" : "start");
     if (event instanceof PointerEvent) {
       // Clicked instance
@@ -144,11 +152,9 @@ export class TreeComponent implements AfterViewInit {
         .style("opacity", 1)
         .style(
           "left",
-          isLeft
-            ? event.pageX - tooltipCloseButtonNode.getBoundingClientRect().width - margin + `px`
-            : event.pageX + 5 + `px`
+          isLeft ? px - tooltipCloseButtonNode.getBoundingClientRect().width - margin + `px` : px + 5 + `px`,
         )
-        .style("top", isUp ? event.pageY - heightOffset - margin + "px" : event.pageY - margin + "px");
+        .style("top", isUp ? py - heightOffset - margin + "px" : py - margin + "px");
     }
   }
 
@@ -183,7 +189,7 @@ export class TreeComponent implements AfterViewInit {
         "Please only keep one root for the tree : " +
           Array.from(rootCheck.map((astre) => astre.astreID.type + "-" + astre.astreID.name)).join(" | "),
         "Multiple Roots found",
-        { disableTimeOut: true }
+        { disableTimeOut: true },
       );
     }
 
@@ -200,7 +206,7 @@ export class TreeComponent implements AfterViewInit {
         }
         return acc;
       },
-      [[], []] as [Astre[], Astre[]]
+      [[], []] as [Astre[], Astre[]],
     );
 
     if (invalidAstres.length > 0) {
@@ -212,7 +218,7 @@ export class TreeComponent implements AfterViewInit {
           ") " +
           Array.from(invalidAstres.map((astre) => astre.astreID.type + "-" + astre.astreID.name)).join(" | "),
         "Invalid Nodes",
-        { disableTimeOut: true }
+        { disableTimeOut: true },
       );
     }
     astres = validAstres;
@@ -280,7 +286,7 @@ export class TreeComponent implements AfterViewInit {
 
     this.tooltipCloseButton = this.tooltipWrapper
       .append("button")
-      .attr("class", "tooltip-btn btn btn-danger")
+      .attr("class", "tooltip-btn btn btn-danger btn-sm")
       .style("display", "none")
       .style("position", "absolute")
       .style("opacity", 0)
@@ -334,14 +340,14 @@ export class TreeComponent implements AfterViewInit {
     // Node Events
     nodeG
       .on("click", (event: MouseEvent, pointNode: d3.HierarchyPointNode<Astre>) => {
-        //let t = event.currentTarget as SVGElement;
+        let target = event.currentTarget as SVGElement;
 
         this.tooltipCloseButton.style("display", "block");
         const anchor = nodeG
           .select("circle")
           .filter((node: d3.HierarchyPointNode<Astre>) => node.data.astreID == pointNode.data.astreID)
           .data()[0];
-        this.renderTooltip(tooltip, pointNode, event, anchor);
+        this.renderTooltip(tooltip, pointNode, event, anchor, target);
         tooltip.transition().duration(200).style("opacity", 0.9);
         this.tooltipPinned = true;
 
@@ -385,7 +391,7 @@ export class TreeComponent implements AfterViewInit {
             .filter((node: d3.HierarchyPointNode<Astre>) => node.data.astreID == pointNode.data.astreID)
             .data()[0];
           // Show tooltip
-          this.renderTooltip(tooltip, pointNode, event, this.tooltipAnchor);
+          this.renderTooltip(tooltip, pointNode, event, this.tooltipAnchor, target);
         }
       })
 
