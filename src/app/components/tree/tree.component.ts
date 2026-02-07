@@ -11,6 +11,7 @@ import { ApiService } from "src/app/api.service";
 import { PageInfoService } from "src/app/page-info.service";
 import { PAGE_DESCRIPTIONS } from "src/app/shared/page-descriptions";
 import { computeBranchColor } from "./tree-utils";
+import TreeTemplates from "./tree-buttons";
 @Component({
   selector: "app-tree",
   template: `
@@ -35,6 +36,7 @@ export class TreeComponent implements AfterViewInit {
   tooltipWrapper: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>;
   tooltipCloseButton: d3.Selection<HTMLButtonElement, unknown, HTMLElement, any>;
   tooltipAnchor: d3.HierarchyPointNode<Astre>;
+  tooltip: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>;
 
   constructor(
     private toastr: ToastrService,
@@ -44,6 +46,13 @@ export class TreeComponent implements AfterViewInit {
   ngOnInit() {
     this.pageInfoService.updateInformation(PAGE_DESCRIPTIONS.tree);
   }
+
+  initDOM() {
+    let treeTemplater = new TreeTemplates();
+    this.tooltipWrapper = treeTemplater.tooltipWrapper;
+    this.tooltip = treeTemplater.tooltip;
+    this.tooltipCloseButton = treeTemplater.tooltipCloseButton.on("click", () => this.clearTooltip());
+  }
   ngAfterViewInit(): void {
     const svgElement = this.svgRef.nativeElement as SVGSVGElement;
     // get actual pixel dimensions from browser layout
@@ -51,6 +60,7 @@ export class TreeComponent implements AfterViewInit {
     offlineDb.getItems().then((astres) => {
       this.astres = astres;
       this.astres = this.astres.filter((a) => a.astreID.type == "topic");
+      this.initDOM();
       this.loadTree();
     });
   }
@@ -261,40 +271,6 @@ export class TreeComponent implements AfterViewInit {
 
     svg.call(zoom.transform, initialTransform);
 
-    this.tooltipWrapper = d3
-      .select("app-tree")
-      //.append("foreignObject") // SVG doesn't allow div, but 'foreignObject' does
-      .append("div")
-      .attr("class", "tooltip-wrapper")
-      .style("opacity", 0.9);
-    let tooltip = this.tooltipWrapper
-      .append("div")
-      .attr("class", "tooltip-content shadow p-3 mb-5 bg-white rounded")
-      .style("position", "absolute")
-      .style("background", "rgba(255, 255, 255, 0.9)")
-      .style("backdrop-filter", "blur(5px)")
-      .style("padding", "6px 10px")
-      .style("border-radius", "4px")
-      .style("opacity", 1)
-      .style("font-family", "sans-serif")
-      .style("font-size", tooltipConfig.font.size + "px")
-      .style("backdrop-filter", "blur(3px)")
-      .style("color", "#000000")
-      .style("max-width", "40vw")
-      .style("max-height", "30vh")
-      .style("overflow-y", "auto"); // Enable vertical scroll
-
-    this.tooltipCloseButton = this.tooltipWrapper
-      .append("button")
-      .attr("class", "tooltip-btn btn btn-danger btn-sm")
-      .style("display", "none")
-      .style("position", "absolute")
-      .style("opacity", 0)
-      .style("left", `0px`)
-      .style("top", "0px")
-      .text("✖")
-      .on("click", () => this.clearTooltip());
-
     // === Links  ===
     const linkGen = d3
       .linkRadial<unknown, d3.HierarchyPointNode<Astre>>()
@@ -347,8 +323,8 @@ export class TreeComponent implements AfterViewInit {
           .select("circle")
           .filter((node: d3.HierarchyPointNode<Astre>) => node.data.astreID == pointNode.data.astreID)
           .data()[0];
-        this.renderTooltip(tooltip, pointNode, event, anchor, target);
-        tooltip.transition().duration(200).style("opacity", 0.9);
+        this.renderTooltip(this.tooltip, pointNode, event, anchor, target);
+        this.tooltip.transition().duration(200).style("opacity", 0.9);
         this.tooltipPinned = true;
 
         let currentNode = pointNode;
@@ -391,7 +367,7 @@ export class TreeComponent implements AfterViewInit {
             .filter((node: d3.HierarchyPointNode<Astre>) => node.data.astreID == pointNode.data.astreID)
             .data()[0];
           // Show tooltip
-          this.renderTooltip(tooltip, pointNode, event, this.tooltipAnchor, target);
+          this.renderTooltip(this.tooltip, pointNode, event, this.tooltipAnchor, target);
         }
       })
 
