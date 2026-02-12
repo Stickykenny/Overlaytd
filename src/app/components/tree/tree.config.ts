@@ -20,7 +20,14 @@ export const linkConfig = {
     luminosity: 0.5,
   },
 };
-
+export const treeConfig = {
+  label: {
+    defaultOpacity: 0.5,
+    hoverOpacity: 1,
+    defaultWeight: 300,
+    hoverWeight: 700,
+  },
+};
 export function rainbowLoop(elem: any, attributeName: string, link: d3.HierarchyPointLink<Astre>) {
   let saturationVarianceMax = 0.75;
   let saturationVarianceMin = 0.25;
@@ -42,7 +49,7 @@ export function rainbowLoop(elem: any, attributeName: string, link: d3.Hierarchy
         .transition()
         .attr(
           attributeName,
-          d3.hsl(colors[i], linkConfig.stroke.saturation, linkConfig.stroke.luminosity, 1).clamp().formatHsl()
+          d3.hsl(colors[i], linkConfig.stroke.saturation, linkConfig.stroke.luminosity, 1).clamp().formatHsl(),
         )
         .on("end", () => {
           i = (i + 1) % colors.length;

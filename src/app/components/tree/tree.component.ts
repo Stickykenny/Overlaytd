@@ -5,7 +5,7 @@ import { Astre } from "src/app/models/Astre";
 
 import { Tags } from "src/app/models/Tags";
 
-import { linkConfig, rainbowLoop, tooltipConfig } from "./tree.config";
+import { linkConfig, rainbowLoop, tooltipConfig, treeConfig } from "./tree.config";
 import { offlineDb } from "src/app/db/offlineDb";
 import { ApiService } from "src/app/api.service";
 import { PageInfoService } from "src/app/page-info.service";
@@ -33,10 +33,11 @@ export class TreeComponent implements AfterViewInit {
   // Tooltip variables
   svgBounds: any;
   tooltipPinned: boolean = false;
+  tooltip: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>;
+  tooltipAnchor: d3.HierarchyPointNode<Astre>;
   tooltipWrapper: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>;
   tooltipCloseButton: d3.Selection<HTMLButtonElement, unknown, HTMLElement, any>;
-  tooltipAnchor: d3.HierarchyPointNode<Astre>;
-  tooltip: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>;
+  tooltipPropagateTag: d3.Selection<HTMLButtonElement, unknown, HTMLElement, any>;
 
   constructor(
     private toastr: ToastrService,
@@ -52,6 +53,8 @@ export class TreeComponent implements AfterViewInit {
     this.tooltipWrapper = treeTemplater.tooltipWrapper;
     this.tooltip = treeTemplater.tooltip;
     this.tooltipCloseButton = treeTemplater.tooltipCloseButton.on("click", () => this.clearTooltip());
+
+    //this.tooltipCloseButton = treeTemplater.tooltipPropagateButton.on("click", () => this.clearTooltip());
   }
   ngAfterViewInit(): void {
     const svgElement = this.svgRef.nativeElement as SVGSVGElement;
@@ -144,11 +147,12 @@ export class TreeComponent implements AfterViewInit {
       .node();
     if (!node) return; // nothing to do if tooltip not rendered
     const tooltipBox = tooltipNode!.getBoundingClientRect();
-    let widthOffset = tooltipBox.width + 20;
-    let heightOffset = tooltipBox.height;
+    let widthOffset = tooltipBox.width + 10;
+    let buttonToTooltipVerticalOffset = 35;
+    let tooltipHorizontalOffset = 10;
     tooltip
-      .style("left", isLeft ? px - widthOffset + `px` : px + `px`)
-      .style("top", isUp ? py - heightOffset + "px" : py + "px")
+      .style("left", isLeft ? px - widthOffset + `px` : px + targetDOM.width + tooltipHorizontalOffset + `px`)
+      .style("top", isUp ? py + "px" : py + targetDOM.height - buttonToTooltipVerticalOffset + "px")
       .style("text-align", isLeft ? "end" : "start");
     if (event instanceof PointerEvent) {
       // Clicked instance
@@ -157,14 +161,20 @@ export class TreeComponent implements AfterViewInit {
       this.tooltipWrapper.style("pointer-events", "auto");
       let tooltipCloseButtonNode = this.tooltipCloseButton.node();
       if (!tooltipCloseButtonNode) return; // nothing to do if tooltip not rendered
-      let margin = 35;
       this.tooltipCloseButton
         .style("opacity", 1)
         .style(
           "left",
-          isLeft ? px - tooltipCloseButtonNode.getBoundingClientRect().width - margin + `px` : px + 5 + `px`,
+          isLeft
+            ? px - tooltipCloseButtonNode.getBoundingClientRect().width - tooltipHorizontalOffset + `px`
+            : px + targetDOM.width + tooltipHorizontalOffset + `px`,
         )
-        .style("top", isUp ? py - heightOffset - margin + "px" : py - margin + "px");
+        .style(
+          "top",
+          isUp
+            ? py - buttonToTooltipVerticalOffset + "px"
+            : py - 35 + targetDOM.height - buttonToTooltipVerticalOffset + "px",
+        );
     }
   }
 
@@ -299,18 +309,19 @@ export class TreeComponent implements AfterViewInit {
         return `translate(${x},${y})`;
       });
 
-    nodeG
-      .append("circle")
-      .attr("r", 15)
-      .text((d: any) => d.id)
-      .attr("opacity", 0); // Fake increased hitbox
+    nodeG.append("circle").attr("r", 15).attr("opacity", 0); // Fake increased hitbox
     nodeG.append("circle").attr("r", 3).attr("opacity", 0.5);
     nodeG
       .append("text")
       .attr("dy", -10)
-      .text((d: any) => d.id)
-      .attr("opacity", "0.1")
-      .attr("font-weight", 300)
+      .text((d: d3.HierarchyPointNode<Astre>) => {
+        console.log(d);
+        return d.id ?? null;
+      })
+      .attr("opacity", treeConfig.label.defaultOpacity)
+      .attr("font-weight", treeConfig.label.defaultWeight)
+      .attr("transform", (d) => `rotate(${(d.x * 180) / Math.PI - 90})  rotate(${d.x >= Math.PI ? 180 : 0})`) // Taken from https://observablehq.com/@d3/radial-tree/2
+      .attr("text-anchor", (d) => (d.x < Math.PI ? "start" : "end")) // Same, but I removed a condition check, no idea why it was here
       .attr("fill", "#000000ff");
 
     // Node Events
@@ -357,7 +368,11 @@ export class TreeComponent implements AfterViewInit {
         }
 
         const g = d3.select(target);
-        g.select("text").transition().ease(d3.easeExpOut).attr("opacity", "1").attr("font-weight", 700);
+        g.select("text")
+          .transition()
+          .ease(d3.easeExpOut)
+          .attr("opacity", treeConfig.label.hoverOpacity)
+          .attr("font-weight", treeConfig.label.hoverWeight);
 
         this.tooltipWrapper.style("display", "block");
         this.tooltipWrapper.transition().duration(200).style("opacity", 0.9);
@@ -395,9 +410,9 @@ export class TreeComponent implements AfterViewInit {
         g.select("text")
           .transition()
           .ease(d3.easeExpOut)
-          .attr("opacity", "0.2")
+          .attr("opacity", treeConfig.label.defaultOpacity)
           .attr("fill", "#000000ff")
-          .attr("font-weight", 300);
+          .attr("font-weight", treeConfig.label.defaultWeight);
       });
   }
 }
