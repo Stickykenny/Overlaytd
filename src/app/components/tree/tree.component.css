@@ -1,0 +1,11 @@
+input[type="range"] {
+  writing-mode: vertical-lr;
+  transform: rotate(90);
+  position: absolute;
+  left: 95vw;
+  top: 10vh;
+  height: 60vh;
+  vertical-align: middle;
+
+  top: 25%;
+}

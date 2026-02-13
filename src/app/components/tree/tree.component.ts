@@ -18,7 +18,17 @@ import TreeTemplates from "./tree-buttons";
     <div class="tree-wrapper">
       <svg #svgContainer style="width:90vw; height:88vh;"></svg>
     </div>
+    <input
+      type="range"
+      style='transform", event.transform +  rotate(90)'
+      id="slider"
+      min="-100"
+      max="100"
+      step="2"
+      value="0"
+    />
   `,
+  styleUrl: "./tree.component.css",
 })
 export class TreeComponent implements AfterViewInit {
   @ViewChild("svgContainer", { static: true })
@@ -65,6 +75,12 @@ export class TreeComponent implements AfterViewInit {
       this.astres = this.astres.filter((a) => a.astreID.type == "topic");
       this.initDOM();
       this.loadTree();
+    });
+    const slider = document.getElementById("slider");
+
+    slider!.addEventListener("input", (e: Event) => {
+      let sliderElement: HTMLInputElement = e.target as HTMLInputElement;
+      //this.rotationValue = Number(sliderElement.value);
     });
   }
   ngOnChanges(changes: SimpleChanges) {}
@@ -264,13 +280,20 @@ export class TreeComponent implements AfterViewInit {
     const svg: d3.Selection<SVGSVGElement, unknown, null, undefined> = d3.select(this.svgRef.nativeElement);
     const g: d3.Selection<SVGGElement, unknown, null, undefined> = svg.append("g");
 
+    let rotationValue = 0;
+    let currentTransform = "";
+
+    function updateViewTransform() {
+      g.attr("transform", currentTransform + " rotate(" + rotationValue + " )");
+    }
+
     const zoom = d3
       .zoom<SVGSVGElement, unknown>()
       .scaleExtent([0.02, 10])
       .on("zoom", (event) => {
-        g.attr("transform", event.transform);
+        currentTransform = event.transform;
+        updateViewTransform();
       });
-
     // Attach zoom
     svg.call(zoom);
 
@@ -280,6 +303,12 @@ export class TreeComponent implements AfterViewInit {
       .scale(1);
 
     svg.call(zoom.transform, initialTransform);
+
+    d3.select("#slider").on("input", function (e: Event) {
+      let sliderElement: HTMLInputElement = e.target as HTMLInputElement;
+      rotationValue = Number(sliderElement.value);
+      updateViewTransform();
+    });
 
     // === Links  ===
     const linkGen = d3
