@@ -12,6 +12,7 @@ import { PageInfoService } from "src/app/page-info.service";
 import { PAGE_DESCRIPTIONS } from "src/app/shared/page-descriptions";
 import { computeBranchColor } from "./tree-utils";
 import TreeTemplates from "./tree-buttons";
+import * as Tone from "tone";
 @Component({
   selector: "app-tree",
   template: `
@@ -22,9 +23,9 @@ import TreeTemplates from "./tree-buttons";
       type="range"
       style='transform", event.transform +  rotate(90)'
       id="slider"
-      min="-100"
-      max="100"
-      step="2"
+      min="-190"
+      max="190"
+      step="1"
       value="0"
     />
   `,
@@ -48,6 +49,14 @@ export class TreeComponent implements AfterViewInit {
   tooltipWrapper: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>;
   tooltipCloseButton: d3.Selection<HTMLButtonElement, unknown, HTMLElement, any>;
   tooltipPropagateTag: d3.Selection<HTMLButtonElement, unknown, HTMLElement, any>;
+
+  startingPitch: number = -10;
+  maxPitch: number = 20;
+  incrementPitch: number = 2;
+  tickStep: number = 5;
+  pitchShift: Tone.PitchShift = new Tone.PitchShift(this.startingPitch).toDestination();
+  player: Tone.Player = new Tone.Player("../../assets/click.mp3").toDestination().connect(this.pitchShift);
+  lastRotationTick: number = 0;
 
   constructor(
     private toastr: ToastrService,
@@ -77,12 +86,24 @@ export class TreeComponent implements AfterViewInit {
       this.loadTree();
     });
     const slider = document.getElementById("slider");
-
     slider!.addEventListener("input", (e: Event) => {
-      let sliderElement: HTMLInputElement = e.target as HTMLInputElement;
-      //this.rotationValue = Number(sliderElement.value);
+      //let sliderElement: HTMLInputElement = e.target as HTMLInputElement;
+      this.lastRotationTick += this.incrementPitch;
+      this.lastRotationTick %= this.tickStep;
+      if (this.lastRotationTick == 0) {
+        Tone.loaded().then(() => {
+          this.player.start();
+          if (this.pitchShift.pitch < this.maxPitch) {
+            this.pitchShift.pitch += this.incrementPitch;
+          }
+        });
+      }
+    });
+    slider!.addEventListener("mouseup", (e: Event) => {
+      this.pitchShift.pitch = this.startingPitch;
     });
   }
+
   ngOnChanges(changes: SimpleChanges) {}
 
   /**
@@ -124,7 +145,7 @@ export class TreeComponent implements AfterViewInit {
     const [x, y] = d3.pointRadial(anchor.x, anchor.y); // Relative coordinate to RootNode
 
     const node = tooltip.node() as HTMLElement; // cast
-    let isLeft = x < 0;
+    let isLeft = false; //x < 0;
     let isUp = y < 0;
 
     if (astre.tags == null || astre.tags.length == 0) {
@@ -344,13 +365,11 @@ export class TreeComponent implements AfterViewInit {
       .append("text")
       .attr("dy", -10)
       .text((d: d3.HierarchyPointNode<Astre>) => {
-        console.log(d);
         return d.id ?? null;
       })
       .attr("opacity", treeConfig.label.defaultOpacity)
       .attr("font-weight", treeConfig.label.defaultWeight)
-      .attr("transform", (d) => `rotate(${(d.x * 180) / Math.PI - 90})  rotate(${d.x >= Math.PI ? 180 : 0})`) // Taken from https://observablehq.com/@d3/radial-tree/2
-      .attr("text-anchor", (d) => (d.x < Math.PI ? "start" : "end")) // Same, but I removed a condition check, no idea why it was here
+      .attr("transform", (d) => `rotate(${(d.x * 180) / Math.PI - 90})`) // Taken from https://observablehq.com/@d3/radial-tree/2.attr
       .attr("fill", "#000000ff");
 
     // Node Events
