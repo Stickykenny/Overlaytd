@@ -21,7 +21,8 @@ export class ApiService {
   // Observable for other components to subscribe to
   readonly isLoggedIn$: Observable<boolean> = this.loggedInSubject.asObservable();
 
-  childrenMap: Map<any, any[]> = new Map();
+  astres: Map<string, Astre> = new Map();
+  childrenMap: Map<string, AstreID[]> = new Map(); // key as string because key works as reference when using object
 
   constructor(
     private http: HttpClient,
@@ -113,24 +114,23 @@ export class ApiService {
     return request;
   }
 
+  loadAstres(): Map<string, Astre> {
+    return this.astres;
+  }
+
   getAstresAndLinks(): Observable<Astre[]> {
     const headers = new HttpHeaders({});
     let request = this.http.get<AstreLinksResponse>("http://localhost:8080/api/astres/astreslinks", {});
     return request.pipe(
       map((response: AstreLinksResponse) => {
-        console.log(response);
-        //let map: Map<any, any[]> = new Map();
+        response.astres.forEach((astre: Astre) => {
+          this.astres.set(astreIDKey(astre.astreID), astre);
+        });
         response.childrenList.forEach((link: AstreChildren) => {
-          //console.log(astreIDKey(link.astreID));
-          console.log(link);
-          console.log(link.children);
-          console.log(link.id);
           if (link.id) {
             this.childrenMap.set(astreIDKey(link.id), link.children);
           }
         });
-        console.log(this.childrenMap);
-        console.log("api pipe alled");
         return response.astres;
       }),
     );
@@ -141,6 +141,9 @@ export class ApiService {
   }
 
   getChildren() {
+    if (this.childrenMap.size < 1) {
+      this.getAstresAndLinks().pipe(take(1)).subscribe();
+    }
     return this.childrenMap;
   }
 
@@ -156,6 +159,7 @@ export class ApiService {
     });
 
     headers.set("access-control-allow-origin", "http://localhost:4200/");
+
     return this.http.post<Astre[]>("http://localhost:8080/api/astres/astres", astres);
   }
   deleteAstre(type: string, subtype: string, name: string): Observable<Astre[]> {
@@ -175,4 +179,6 @@ export class ApiService {
       headers,
     });
   }
+
+  addTagToAstre(astresIDs: Set<AstreID>) {}
 }

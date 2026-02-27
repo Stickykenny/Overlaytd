@@ -1,6 +1,8 @@
 import { toAstre } from "./model-utils";
 import { RowModel } from "./RowModel";
 
+const SEP: string = "\u2800" + "\u2800"; // "\u001F" + "\u001E" + "\u2800"; // Unit Separator + Record Separator + Braille Empty
+
 export type Astre = {
   astreID: AstreID;
   subname: string;
@@ -30,9 +32,7 @@ export function astreKey(rowModel: RowModel): string {
 }
 
 export function astreIDKey(id: AstreID): string {
-  const SEP: string = "\u2800" + "\u2800"; // "\u001F" + "\u001E" + "\u2800"; // Unit Separator + Record Separator + Braille Empty
-
-  let fields = Object.keys(instanceAstreID) as (keyof AstreID)[];
+  /*let fields = Object.keys(instanceAstreID) as (keyof AstreID)[];
 
   let key = "";
   for (let fieldName of fields) {
@@ -41,6 +41,27 @@ export function astreIDKey(id: AstreID): string {
       key += value;
     }
     key += SEP;
-  }
-  return key;
+  }*/
+  return JSON.stringify(id); //key;
+}
+
+/**
+ * Update tags and return the string of Tags
+ *
+ * @param astre
+ * @param tagsToAdd
+ * @param tagsToRemove
+ * @returns
+ */
+export function updateTags(astre: Astre, tagsToAdd: string[], tagsToRemove: string[]): string {
+  let updatedTagsList: string[] = astre.tags.split(",").filter((tag: string) => tagsToRemove.find((t) => t == tag));
+  tagsToAdd.forEach((newTag) => {
+    if (!updatedTagsList.includes(newTag)) {
+      updatedTagsList.push(newTag);
+    }
+  });
+
+  let updatedTags: string = updatedTagsList.join(",");
+  astre.tags = updatedTags;
+  return updatedTags;
 }

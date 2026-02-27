@@ -36,7 +36,7 @@ export default class TreeTemplates {
     .text("✖");
   //.on("click", () => this.clearTooltip());
 
-  tooltipButton2 = this.tooltipWrapper
+  tooltipSpreadTagButton = this.tooltipWrapper
     .append("button")
     .attr("class", "tooltip-btn btn btn-info btn-sm")
     .style("display", "none")
@@ -44,5 +44,5 @@ export default class TreeTemplates {
     .style("opacity", 0)
     .style("left", `0px`)
     .style("top", "0px")
-    .text(".");
+    .text("↳");
 }
