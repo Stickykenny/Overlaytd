@@ -3,1201 +3,53 @@
     "astreID": {
       "type": "topic",
       "subtype": "",
-      "name": "Apex Legends"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Hero Shooters",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Arknights"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "Favorite Gacha, incredible strategy tower defence, love to think/try/solve the different stage puzzle ",
-    "parent": "Gacha",
-    "id": null,
-    "date_added": "2025-05-25",
-    "last_modified": "2025-08-05"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Atomic Habits"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "I read that",
-    "parent": "Reading",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Batman"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "I (almost) only read Batman from DC Comics",
-    "parent": "Comics",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Bleach Brave Souls"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Gacha",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Cartoons"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Root",
-    "id": null,
-    "date_added": "2025-08-21",
-    "last_modified": "2025-09-06"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Clicker Heroes"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Incremental Games",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Clickpocalypse 2"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Incremental Games",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Comics"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "I really just read Spider-man or Batman related or indie comics",
-    "parent": "Reading",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Cookie Clicker"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Incremental Games",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Counter Strike"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "FPS",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Courage the Cowardly Dog"
-    },
-    "subname": null,
-    "tags": "childhood",
-    "link": null,
-    "description": "",
-    "parent": "Cartoons",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Degen Idle"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Incremental Games",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Dirty Bomb"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "FPS",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Dofus"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Games",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "ENA : Dream BBQ"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Games",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Entertainment"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "Things I might know",
-    "parent": "Root",
-    "id": null,
-    "date_added": "2025-08-31",
-    "last_modified": "2025-09-06"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "FPS"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Games",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Futurama"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Cartoons",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Gacha"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Games",
-    "id": null,
-    "date_added": "2025-08-21",
-    "last_modified": "2025-08-21"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Games"
-    },
-    "subname": null,
-    "tags": null,
-    "link": null,
-    "description": "Something that define me",
-    "parent": "Hobby",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Genshin Impact"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Gacha",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Giant days"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "By John Allison, one of the first comics I've read when exploring piracy :x",
-    "parent": "Comics",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Grant Museum of Zoology"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Museum",
-    "id": null,
-    "date_added": "2025-08-18",
-    "last_modified": "2025-08-18"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Hero Shooters"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "Sub-genre of FPS",
-    "parent": "FPS",
-    "id": null,
-    "date_added": "2025-08-20",
-    "last_modified": "2025-08-20"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Hinges"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "By Meredith McClaren, one of the first comics I've read when exploring piracy :x",
-    "parent": "Comics",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Hobby"
-    },
-    "subname": null,
-    "tags": null,
-    "link": null,
-    "description": "Group of what my hobbies / interests are (non-exhaustive list)",
-    "parent": "Root",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-09-06"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Honkai Star Rail"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "Gameplay really got boring",
-    "parent": "Gacha",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-05"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Incremental Games"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Games",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Kid Paddle"
-    },
-    "subname": null,
-    "tags": "childhood",
-    "link": null,
-    "description": "Big fan of this franchise",
-    "parent": "Cartoons",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Le Petit Palais"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Museum",
-    "id": null,
-    "date_added": "2025-08-18",
-    "last_modified": "2025-08-18"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "League Of Legends"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Games",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Marvel Rivals"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Hero Shooters",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Marvel's Spider-Man 1"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Games",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Marvel's Spider-Man: Miles Morales"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Games",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Minecraft"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "I like the multiplayer Skyblock experience :^)",
-    "parent": "Games",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-30"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Mobile Games"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Games",
-    "id": null,
-    "date_added": "2025-08-21",
-    "last_modified": "2025-08-21"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Mortal Kombat Mobile"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Gacha",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Movies"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Entertainment",
-    "id": null,
-    "date_added": "2025-08-21",
-    "last_modified": "2025-09-09"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "MuMa Musée d'art moderne André Malraux"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Museum",
-    "id": null,
-    "date_added": "2025-08-21",
-    "last_modified": "2025-08-21"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Museum"
-    },
-    "subname": null,
-    "tags": "List",
-    "link": null,
-    "description": "I like visiting museum and discovering different things",
-    "parent": "Root",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-09-06"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Music"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "I listen to a lot of different genres",
-    "parent": "Entertainment",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-31"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Musée Bourdelle"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Museum",
-    "id": null,
-    "date_added": "2025-08-18",
-    "last_modified": "2025-08-18"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Musée Carnavalet"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Museum",
-    "id": null,
-    "date_added": "2025-08-18",
-    "last_modified": "2025-08-18"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Musée Cernuschi"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Museum",
-    "id": null,
-    "date_added": "2025-08-30",
-    "last_modified": "2025-08-30"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Musée Français de la Carte à Jouer"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "Also went to see the temporary exposition : Art de la Magie et son histoire.",
-    "parent": "Museum",
-    "id": null,
-    "date_added": "2025-08-21",
-    "last_modified": "2025-08-31"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Musée National Picasso-Paris"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Museum",
-    "id": null,
-    "date_added": "2025-08-18",
-    "last_modified": "2025-08-18"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Musée Rodin"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Museum",
-    "id": null,
-    "date_added": "2025-08-18",
-    "last_modified": "2025-08-18"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Musée d'Art Moderne de Paris"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Museum",
-    "id": null,
-    "date_added": "2025-08-18",
-    "last_modified": "2025-08-18"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Musée d'Orsay"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Museum",
-    "id": null,
-    "date_added": "2025-08-18",
-    "last_modified": "2025-08-18"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Musée de l'Orangerie"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Museum",
-    "id": null,
-    "date_added": "2025-08-18",
-    "last_modified": "2025-08-18"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Musée de la Chasse et de la Nature"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Museum",
-    "id": null,
-    "date_added": "2025-08-30",
-    "last_modified": "2025-08-30"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Musée du quai Branly - Jacques Chirac"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Museum",
-    "id": null,
-    "date_added": "2025-08-18",
-    "last_modified": "2025-08-18"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Natural History Museum"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Museum",
-    "id": null,
-    "date_added": "2025-08-18",
-    "last_modified": "2025-08-18"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Neotokyo"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "FPS",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Novelty Automation"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Museum",
-    "id": null,
-    "date_added": "2025-08-18",
-    "last_modified": "2025-08-18"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Oggy and the Cockroaches"
-    },
-    "subname": null,
-    "tags": "childhood",
-    "link": null,
-    "description": "",
-    "parent": "Cartoons",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "One Piece Treasure Cruise"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Gacha",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Osu"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Games",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Overwatch"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Hero Shooters",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Paladins"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Hero Shooters",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Path Of Exile 1"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Games",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Puzzles"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Entertainment",
-    "id": null,
-    "date_added": "2025-09-09",
-    "last_modified": "2025-09-09"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Reading"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Hobby",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Realm Grinder"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Incremental Games",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Risk Of Rains 1"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Games",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Risk Of Rains 2"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Games",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Root"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "<p style=\"color:MediumSeaGreen;\">The root is me of course</p> Do not delete/rename this node, every topic should link back to this root",
-    "parent": "",
-    "id": null,
-    "date_added": "2025-09-06",
-    "last_modified": "2025-09-06"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Rubik's cube"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "I know how to solve it with the basic algorithm",
-    "parent": "Puzzles",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-09-09"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Science Museum"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Museum",
-    "id": null,
-    "date_added": "2025-08-18",
-    "last_modified": "2025-08-18"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Solo Leveling : Arise"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Gacha",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Spider-man"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "I only read Spider-man (and related like symbiotes) from Marvels Comics",
-    "parent": "Comics",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "StickPage flash games"
+      "name": "Musée des Années 30"
     },
     "subname": "",
-    "tags": "childhood",
+    "tags": "public",
     "link": "",
-    "description": "Yea, I don't really know how I got there when I was a child not understanding english. Some games I like was \"Stick War\" and \"the Tetris game\"",
-    "parent": "Games",
-    "id": "",
-    "date_added": "2025-09-25",
-    "last_modified": "2025-09-25"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Teamfight Tactics"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Games",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "The British Museum"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
     "description": "",
     "parent": "Museum",
-    "id": null,
-    "date_added": "2025-08-18",
-    "last_modified": "2025-08-18"
+    "id": ""
   },
   {
     "astreID": {
       "type": "topic",
       "subtype": "",
-      "name": "The Finals"
+      "name": "Musée départemental Albert-Kahn"
     },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "My kind of fps that I like, fast-paced, objective, strategy, chaotic",
-    "parent": "FPS",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-05"
+    "subname": "",
+    "tags": "public",
+    "link": "",
+    "description": "RIP Jardin japonnais en construction\nEt météo pluvieuse\n\nExpo temporaire : \nBénin aller-retour. Regards sur le Dahomey de 1930",
+    "parent": "Museum",
+    "id": ""
   },
   {
     "astreID": {
       "type": "topic",
       "subtype": "",
-      "name": "The Simpsons Tapped Out"
+      "name": "Galaxy Life"
     },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "",
-    "parent": "Mobile Games",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Titan Quests"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
+    "subname": "",
+    "tags": "public",
+    "link": "",
     "description": "",
     "parent": "Games",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
+    "id": ""
   },
   {
     "astreID": {
       "type": "topic",
       "subtype": "",
-      "name": "Valorant"
+      "name": "MMORPG"
     },
-    "subname": null,
-    "tags": "",
-    "link": null,
+    "subname": "",
+    "tags": "public",
+    "link": "",
     "description": "",
-    "parent": "FPS",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
-  },
-  {
-    "astreID": {
-      "type": "topic",
-      "subtype": "",
-      "name": "Warcraft 3"
-    },
-    "subname": null,
-    "tags": "",
-    "link": null,
-    "description": "Also played modded Warcraft III and custom campaigns",
     "parent": "Games",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
+    "id": ""
   },
   {
     "astreID": {
@@ -1206,13 +58,960 @@
       "name": "Warframe"
     },
     "subname": null,
-    "tags": "",
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "MMORPG",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Hinges"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "By Meredith McClaren, one of the first comics I've read when exploring piracy :x",
+    "parent": "Comics",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Revo Uninstaller"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "To uninstall completely (Check Registry and cache files)",
+    "parent": "Desktop Software",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Elsword"
+    },
+    "subname": "",
+    "tags": "public",
+    "link": "",
+    "description": "",
+    "parent": "MMORPG",
+    "id": ""
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "NosTale"
+    },
+    "subname": "",
+    "tags": "public",
+    "link": "",
+    "description": "",
+    "parent": "MMORPG",
+    "id": ""
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Apex Legends"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Hero Shooters",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "StickPage flash games"
+    },
+    "subname": "",
+    "tags": "public",
+    "link": "",
+    "description": "Yea, I don't really know how I got there when I was a child not understanding english. Some games I like was \"Stick War\" and \"the Tetris game\"",
+    "parent": "Games",
+    "id": ""
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Hero Shooters"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "Sub-genre of FPS",
+    "parent": "FPS",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Flyff"
+    },
+    "subname": "",
+    "tags": "public",
+    "link": "",
+    "description": "",
+    "parent": "MMORPG",
+    "id": ""
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Dragonica"
+    },
+    "subname": "",
+    "tags": "public",
+    "link": "",
+    "description": "",
+    "parent": "MMORPG",
+    "id": ""
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Hobby"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "Group of what my hobbies / interests are (non-exhaustive list)",
+    "parent": "Root",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Musée Jean-Jacques Henner"
+    },
+    "subname": "",
+    "tags": "public",
+    "link": "",
+    "description": "",
+    "parent": "Museum",
+    "id": ""
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Musée Gustave Moreau"
+    },
+    "subname": "",
+    "tags": "public",
+    "link": "",
+    "description": "",
+    "parent": "Museum",
+    "id": ""
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Musée national des arts asiatiques - Guimet"
+    },
+    "subname": "",
+    "tags": "public",
+    "link": "",
+    "description": "",
+    "parent": "Museum",
+    "id": ""
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "FolderSize"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "Quickly check size of folder.\nA more complete option is Wiztree",
+    "parent": "Desktop Software",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Valorant"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "FPS",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Comics"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "I really just read Spider-man or Batman related or indie comics",
+    "parent": "Reading",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Root"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "<p style=\"color:MediumSeaGreen;\">The root is me of course</p>",
+    "parent": null,
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Nonogram"
+    },
+    "subname": "",
+    "tags": "public",
+    "link": "",
+    "description": "",
+    "parent": "Puzzles",
+    "id": ""
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "FPS"
+    },
+    "subname": null,
+    "tags": "public",
     "link": null,
     "description": "",
     "parent": "Games",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Degen Idle"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Incremental Games",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Games"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "Something that define me",
+    "parent": "Hobby",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Science Museum"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Museum",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Natural History Museum"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Museum",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "MuMa Musée d'art moderne André Malraux"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Museum",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "The Simpsons Tapped Out"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Mobile Games",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Series"
+    },
+    "subname": null,
+    "tags": "ExternalList,List,public",
+    "link": null,
+    "description": "",
+    "parent": "Entertainment",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Musée Carnavalet"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Museum",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Musée de l'Orangerie"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Museum",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Musée Rodin"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Museum",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Grant Museum of Zoology"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Museum",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Musée de la Chasse et de la Nature"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Museum",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Musée Bourdelle"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Museum",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Musée National Picasso-Paris"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Museum",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Le Petit Palais"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Museum",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Musée d'Orsay"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Museum",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "The British Museum"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Museum",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Helluva Boss"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Series",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Software"
+    },
+    "subname": null,
+    "tags": "HighlightedList,List,public",
+    "link": null,
+    "description": "A non exhaustive list of utility softwares that I use",
+    "parent": "Root",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Musée Cernuschi"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Museum",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Musée des Arts et Métiers"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Museum",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Novelty Automation"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Museum",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "HideVolumeOSD"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "Hide the disgusting Windows 10 Audio Volume on top-left",
+    "parent": "Desktop Software",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Minecraft"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "I like the multiplayer Skyblock experience :^)",
+    "parent": "Games",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Incremental Games"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Games",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "WinAero Tweaker"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "Allow to disable Windows updates",
+    "parent": "Desktop Software",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "GenP"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "Or Monkrus for Adobe cracks",
+    "parent": "Desktop Software",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Wiztree"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "Great for preview disk usage",
+    "parent": "Desktop Software",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Swivel"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": ".swf to .mp4  \nFor Flash Animations",
+    "parent": "Desktop Software",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "BlueStacks"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "Nougat version 64-bit was the only one that worked with hyper-v (required as a dev to setup docker and emulation)",
+    "parent": "Desktop Software",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "PDF-XChange Editor"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "Better than the Adobe one",
+    "parent": "Desktop Software",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Gacha"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Games",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Microsoft Activation Scripts (MAS)"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Desktop Software",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Libre Office"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "Alternative to Open Office",
+    "parent": "Desktop Software",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "MiniTool Partition Wizard"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "Useful for partitionning Disk",
+    "parent": "Desktop Software",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Rclone"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "Sync local files with Google Drive (or others)",
+    "parent": "Desktop Software",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "7-Zip"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "My go-to archiving software",
+    "parent": "Desktop Software",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Notepad++"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Desktop Software",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Mobile Games"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Games",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Shark Tank"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "(US), I find it interresting to understand what makes a product/idea works",
+    "parent": "Series",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Doctor Who"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "Really a fan of the Tenth Doctor (David Tennant)",
+    "parent": "Series",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Batman"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "I (almost) only read Batman from DC Comics",
+    "parent": "Comics",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Museum"
+    },
+    "subname": null,
+    "tags": "List,public",
+    "link": null,
+    "description": "I like visiting museum and discovering different things",
+    "parent": "Visit",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Spider-man"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "I only read Spider-man (and related like symbiotes) from Marvels Comics",
+    "parent": "Comics",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Giant days"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "By John Allison, one of the first comics I've read when exploring piracy :x",
+    "parent": "Comics",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "League Of Legends"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Games",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Marvel's Spider-Man: Miles Morales"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Games",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Marvel's Spider-Man 1"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Games",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Risk Of Rains 2"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Games",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "ENA : Dream BBQ"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Games",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Risk Of Rains 1"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Games",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Osu"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Games",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Dofus"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Games",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Neotokyo"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "FPS",
+    "id": null
   },
   {
     "astreID": {
@@ -1221,12 +1020,686 @@
       "name": "Wuthering Waves"
     },
     "subname": null,
-    "tags": "",
+    "tags": "public",
     "link": null,
     "description": "",
     "parent": "Gacha",
-    "id": null,
-    "date_added": "2025-08-04",
-    "last_modified": "2025-08-04"
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Teamfight Tactics"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Games",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Clickpocalypse 2"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Incremental Games",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Mortal Kombat Mobile"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Gacha",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Genshin Impact"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Gacha",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Bleach Brave Souls"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Gacha",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Paladins"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Hero Shooters",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Atomic Habits"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "I read that",
+    "parent": "Reading",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Titan Quests"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Games",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Reading"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Hobby",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Pokemon TCG Pocket"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Mobile Games",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Desktop Software"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Software",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Warcraft 3"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "Also played modded Warcraft III and custom campaigns",
+    "parent": "Games",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Solo Leveling : Arise"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Gacha",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Marvel Rivals"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Hero Shooters",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Counter Strike"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "FPS",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Overwatch"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Hero Shooters",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Cookie Clicker"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Incremental Games",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "One Piece Treasure Cruise"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Gacha",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "The Finals"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "My kind of fps that I like, fast-paced, objective, strategy, chaotic",
+    "parent": "FPS",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Arknights"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "Favorite Gacha, incredible strategy tower defence, love to think/try/solve the different stage puzzle ",
+    "parent": "Gacha",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Honkai Star Rail"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "Gameplay really got boring",
+    "parent": "Gacha",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Path Of Exile 1"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Games",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Realm Grinder"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Incremental Games",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Rubik's cube"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "I know how to solve it with the basic algorithm",
+    "parent": "Puzzles",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Wallpaper Engine"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "Useful to adapt wallpaper depending on time of day",
+    "parent": "Desktop Software",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Audacity"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "Default audio editor",
+    "parent": "Desktop Software",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Anki"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "Great Card learning, I'm using web and android version",
+    "parent": "Desktop Software",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Dirty Bomb"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "FPS",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "The Amazing Digital Circus"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Series",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Rick And Morty"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Series",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "F.lux"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Desktop Software",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Entertainment"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "Things I might know",
+    "parent": "Root",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Puzzles"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Entertainment",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Audio Equalizer"
+    },
+    "subname": "",
+    "tags": "public",
+    "link": "",
+    "description": "I like my own equalizer preset so I did changed on my mobile (Root access) and on Windows (Equalizer APO) \nNowadays I stopped using my own preset and removed these addons",
+    "parent": "Tinkering",
+    "id": ""
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Tinkering"
+    },
+    "subname": "",
+    "tags": "public",
+    "link": "",
+    "description": "",
+    "parent": "Root",
+    "id": ""
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Clicker Heroes"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Incremental Games",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "The Tower Idle"
+    },
+    "subname": "",
+    "tags": "public",
+    "link": "",
+    "description": "",
+    "parent": "Incremental Games",
+    "id": ""
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Grande Galerie de l’Évolution"
+    },
+    "subname": "",
+    "tags": "public",
+    "link": "",
+    "description": "",
+    "parent": "Museum",
+    "id": ""
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Musée Jacquemart-André"
+    },
+    "subname": "",
+    "tags": "public",
+    "link": "",
+    "description": "",
+    "parent": "Museum",
+    "id": ""
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Taskmaster"
+    },
+    "subname": "",
+    "tags": "public",
+    "link": "",
+    "description": "Hilarious ! I particularly like the AU Version\n\nWatched AU Series : 1,2,3,4\nWatched UK Series : 7,20\n\nFavorite AU Series 2",
+    "parent": "Series",
+    "id": ""
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Sunny Side Down"
+    },
+    "subname": "",
+    "tags": "public",
+    "link": "",
+    "description": "",
+    "parent": "Series",
+    "id": ""
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "ENA"
+    },
+    "subname": "",
+    "tags": "public",
+    "link": "",
+    "description": "",
+    "parent": "Series",
+    "id": ""
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Musée Français de la Carte à Jouer"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "Also went to see the temporary exposition : Art de la Magie et son histoire.",
+    "parent": "Museum",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Musée de la Bibliothèque nationale de France"
+    },
+    "subname": "",
+    "tags": "public",
+    "link": "",
+    "description": "Musée de la Bibliothèque nationale de France ou (BnF)",
+    "parent": "Museum",
+    "id": ""
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Musée des Arts Décoratifs"
+    },
+    "subname": "",
+    "tags": "public",
+    "link": "",
+    "description": "Musée des Arts décoratifs (Permanent)\n\nGuénaëlle de Carbonnières. Dans le creux des images (Temporary) \nPaul Poiret, la mode est une fête (Temporary) \n1925-2025. Cent ans d’Art déco : Orient Express (Temporary) ",
+    "parent": "Museum",
+    "id": ""
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Galerie de Paléontologie et d’Anatomie comparée"
+    },
+    "subname": "",
+    "tags": "public",
+    "link": "",
+    "description": "",
+    "parent": "Museum",
+    "id": ""
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Musée d'Art Moderne de Paris"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": null,
+    "description": "",
+    "parent": "Museum",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Sudoku"
+    },
+    "subname": "",
+    "tags": "public",
+    "link": "",
+    "description": "I like to work on hypotheticals\nI'm currently on the level of XY-wings. I don't want to apply it blindly. I want to understand it at its core and be able to reproduce it on my own.",
+    "parent": "Puzzles",
+    "id": ""
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Cité de l'Architecture"
+    },
+    "subname": "",
+    "tags": "public",
+    "link": "",
+    "description": "Also saw \nChromoscope (Temporary)\nMute - Fabienne Verdier (Temporary)\nParis 1925 : l'Art déco et ses architectes (Temporary)\n",
+    "parent": "Museum",
+    "id": ""
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Musée du quai Branly - Jacques Chirac"
+    },
+    "subname": null,
+    "tags": "public",
+    "link": "https://www.quaibranly.fr/fr/expositions-evenements/au-musee/expositions",
+    "description": "Visited Twice\n\nFirst : Au fil D'or (Temporary)\n\nSecond : Dragons (Temporary)\nHoda Afshar (Temporary)\nAmazônia (Temporary)\nPermanent Collection",
+    "parent": "Museum",
+    "id": null
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Musée de la Poste"
+    },
+    "subname": "",
+    "tags": "public",
+    "link": "",
+    "description": "",
+    "parent": "Museum",
+    "id": ""
+  },
+  {
+    "astreID": {
+      "type": "topic",
+      "subtype": "",
+      "name": "Visit"
+    },
+    "subname": "",
+    "tags": "public",
+    "link": "",
+    "description": "Places I went to visit",
+    "parent": "Root",
+    "id": ""
   }
 ]
