@@ -50,8 +50,11 @@ export class TreeComponent implements AfterViewInit {
   tooltip: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>;
   tooltipAnchor: d3.HierarchyPointNode<Astre>;
   tooltipWrapper: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>;
+
+  // TODO Put those in an array
   tooltipCloseButton: d3.Selection<HTMLButtonElement, unknown, HTMLElement, any>;
   tooltipTagSpreadButton: d3.Selection<HTMLButtonElement, unknown, HTMLElement, any>;
+  tooltipTagRemovalSpreadButton: d3.Selection<HTMLButtonElement, unknown, HTMLElement, any>;
   tooltipPropagateTag: d3.Selection<HTMLButtonElement, unknown, HTMLElement, any>;
 
   startingPitch: number = -10;
@@ -81,6 +84,9 @@ export class TreeComponent implements AfterViewInit {
       this.spreadTagToDescendants(event),
     );
 
+    this.tooltipTagRemovalSpreadButton = treeTemplater.tooltipSpreadTagRemovalButton.on("click", (event) =>
+      this.blankButton(event),
+    );
     //this.tooltipCloseButton = treeTemplater.tooltipPropagateButton.on("click", () => this.clearTooltip());
   }
   ngAfterViewInit(): void {
@@ -90,11 +96,23 @@ export class TreeComponent implements AfterViewInit {
     this.astreService
       .getAstresAndLinks()
       .pipe(take(1))
-      .subscribe((astres) => {
-        this.astres = astres;
-        this.astres = this.astres.filter((a) => a.astreID.type == "topic");
-        this.initDOM();
-        this.loadTree();
+      .subscribe({
+        next: (astres) => {
+          this.astres = astres.filter((a) => a.astreID.type == "topic");
+          console.log(this.astres);
+          this.initDOM();
+          this.loadTree();
+        },
+        error: (err) => {
+          this.astreService.getLocalAstres().subscribe({
+            next: (text: Astre[]) => {
+              this.astres = text;
+              this.initDOM();
+              this.loadTree();
+            },
+            error: (err) => console.error("Failed to load file:", err),
+          });
+        },
       });
     const slider = document.getElementById("slider");
     slider!.addEventListener("input", (e: Event) => {
@@ -126,6 +144,7 @@ export class TreeComponent implements AfterViewInit {
     this.tooltipWrapper.style("display", "none");
     this.tooltipCloseButton.style("display", "none");
     this.tooltipTagSpreadButton.style("display", "none");
+    this.tooltipTagRemovalSpreadButton.style("display", "none");
     this.tooltipWrapper.transition().duration(200).style("opacity", 0);
   }
 
@@ -138,10 +157,10 @@ export class TreeComponent implements AfterViewInit {
     const modalRef = this.modalService.open(StringInputDialogComponent, {
       centered: true,
     });
+
+    let rootAstreID = this.tooltipAnchor.data.astreID;
     modalRef.componentInstance.message =
-      "What tag do you want to propagate to the descendants of : \n'" +
-      JSON.stringify(this.tooltipAnchor.data.astreID, null, 2) +
-      "'";
+      "What tag do you want to propagate to the descendants of : \n'" + JSON.stringify(rootAstreID, null, 2) + "'";
 
     modalRef.result
       .then((tagToAdd) => {
@@ -150,28 +169,32 @@ export class TreeComponent implements AfterViewInit {
         } else {
           let astres = this.astreService.loadAstres();
           let propagationQueue: AstreID[] = [];
-          propagationQueue.push(this.tooltipAnchor.data.astreID);
+          propagationQueue.push(rootAstreID);
           let childrenMap = this.astreService.getChildren();
 
-          let currentAstreID: AstreID | undefined = propagationQueue.pop();
           let astresToUpdate: Astre[] = [];
 
-          while (currentAstreID != undefined) {
+          while (propagationQueue.length > 0) {
+            let currentAstreID: AstreID | undefined = propagationQueue.pop();
+            if (currentAstreID == undefined) {
+              continue;
+            }
             childrenMap.get(astreIDKey(currentAstreID))?.forEach((astreID) => {
               propagationQueue.push(astreID);
+
               let astreToUpdate = astres.get(astreIDKey(astreID!));
               if (astreToUpdate) {
                 updateTags(astreToUpdate, [tagToAdd], []);
                 astresToUpdate.push(astreToUpdate);
               }
             });
-            currentAstreID = propagationQueue.shift();
+            currentAstreID = propagationQueue.pop();
           }
           this.astreService
             .postAstres(astresToUpdate)
-            .pipe()
+            .pipe(take(1))
             .subscribe({
-              next: (res) => this.toastr.success("Correctly added the tag to all its descendants (" + res.length + ")"),
+              next: (res) => console.log(res), //this.toastr.success("Correctly added the tag to all its descendants (" + res.length + ")"),
               error: (err) => this.toastr.error("error", err),
             });
         }
@@ -183,6 +206,23 @@ export class TreeComponent implements AfterViewInit {
     this.clearTooltip();
   }
 
+  //  TODO add feature for this button
+  blankButton(event: PointerEvent) {
+    //
+    const modalRef = this.modalService.open(StringInputDialogComponent, {
+      centered: true,
+    });
+
+    modalRef.componentInstance.message = "This currently has no defined feature";
+
+    modalRef.result
+      .then((tagToAdd) => {})
+      .catch(() => {
+        console.log("Modal dismissed");
+        this.toastr.info("", "Propagation Cancelled");
+      });
+    this.clearTooltip();
+  }
   /**
    * Render a tooltip given the data provided by pointNode
    *
@@ -284,6 +324,26 @@ export class TreeComponent implements AfterViewInit {
       let tooltipTagSpreadButtonNode = this.tooltipCloseButton.node();
       if (!tooltipTagSpreadButtonNode) return; // nothing to do if tooltip not rendered
       this.tooltipTagSpreadButton
+        .style("opacity", 1)
+        .style(
+          "left",
+          isLeft
+            ? px -
+                tooltipTagSpreadButtonNode.getBoundingClientRect().width -
+                tooltipHorizontalOffset +
+                buttonsOffset +
+                `px`
+            : px + targetDOM.width + tooltipHorizontalOffset + buttonsOffset + `px`,
+        )
+        .style(
+          "top",
+          isUp
+            ? py - buttonToTooltipVerticalOffset + "px"
+            : py - 35 + targetDOM.height - buttonToTooltipVerticalOffset + "px",
+        );
+
+      buttonsOffset += tooltipCloseButtonNode.getBoundingClientRect().width + 10; // TODO MAKE IT A LOOP
+      this.tooltipTagRemovalSpreadButton
         .style("opacity", 1)
         .style(
           "left",
@@ -448,7 +508,12 @@ export class TreeComponent implements AfterViewInit {
         return `translate(${x},${y})`;
       });
 
-    nodeG.append("circle").attr("r", 15).attr("opacity", 0); // Fake increased hitbox
+    nodeG
+      //.filter((a) => a.data.tags != null)
+      //.filter((a) => a.data.tags.includes("public") == true) // For Quick preview
+      .append("circle")
+      .attr("r", 15)
+      .attr("opacity", 0); // Fake increased hitbox
     nodeG.append("circle").attr("r", 3).attr("opacity", 0.5);
     nodeG
       .append("text")
@@ -468,6 +533,7 @@ export class TreeComponent implements AfterViewInit {
 
         this.tooltipCloseButton.style("display", "block");
         this.tooltipTagSpreadButton.style("display", "block");
+        this.tooltipTagRemovalSpreadButton.style("display", "block");
         const anchor = nodeG
           .select("circle")
           .filter((node: d3.HierarchyPointNode<Astre>) => node.data.astreID == pointNode.data.astreID)

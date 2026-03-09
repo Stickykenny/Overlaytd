@@ -42,7 +42,14 @@ export default class TreeTemplates {
     .style("display", "none")
     .style("position", "absolute")
     .style("opacity", 0)
-    .style("left", `0px`)
-    .style("top", "0px")
     .text("↳");
+
+  tooltipSpreadTagRemovalButton = this.tooltipWrapper
+    .append("button")
+    .attr("class", "tooltip-btn btn btn-info btn-sm")
+    .style("display", "none")
+    .style("position", "absolute")
+    .style("opacity", 0)
+    //.style("text-decoration-line", "line-through")
+    .text("?");
 }
