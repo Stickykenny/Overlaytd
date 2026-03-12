@@ -99,7 +99,6 @@ export class TreeComponent implements AfterViewInit {
       .subscribe({
         next: (astres) => {
           this.astres = astres.filter((a) => a.astreID.type == "topic");
-          console.log(this.astres);
           this.initDOM();
           this.loadTree();
         },
@@ -384,6 +383,56 @@ export class TreeComponent implements AfterViewInit {
   }
 
   /**
+   * Check if the data is valid for making a tree hierarchy
+   * It checks for multiple roots and cycle in graph
+   *
+   * @returns True if the Data is valid, false otherwise
+   */
+  isValidData(): boolean {
+    let roots = this.astres.filter((a) => a.parent == null || a.parent == "");
+    if (roots.length > 1) {
+      this.toastr.info(
+        Array.from(roots)
+          .map((a) => a.astreID.name)
+          .join(" | "),
+        "Invalid (Multiple roots found)",
+        { disableTimeOut: true },
+      );
+      return false;
+    }
+
+    let visited: Set<Astre> = new Set(); // For cehcking cycle
+    this.astres.forEach((a) => {
+      let currentNode = a;
+      let currentParent = a.parent;
+      let visitedLocal: Set<Astre> = new Set(); // For cehcking cycle
+      while (currentNode != null && currentParent != null && currentParent != "") {
+        if (visited.has(currentNode)) {
+          // No need to re-travel checked nodes
+          break;
+        }
+        if (visitedLocal.has(currentNode)) {
+          // Cycle found
+          this.toastr.info(
+            Array.from(visitedLocal.keys())
+              .map((a) => a.astreID.name)
+              .join(" | "),
+            "Invalid (Cycle found)",
+            { disableTimeOut: true },
+          );
+          return false;
+        }
+        visitedLocal.add(currentNode);
+
+        currentParent = currentNode.parent;
+        currentNode = this.astres.filter((a) => a.astreID.name == currentParent)[0];
+      }
+      visited = new Set<Astre>([...visited, ...visitedLocal]);
+    });
+    return true;
+  }
+
+  /**
    * Init a radial tree given the data
    *
    * @param astres List of astre that are correctly pre-processed
@@ -401,33 +450,10 @@ export class TreeComponent implements AfterViewInit {
 
     this.childColumn = "astreid.name";
     this.parentColumn = "parent";
-    const ids = new Set(this.astres.map((d) => d.astreID.name));
 
-    let [validAstres, invalidAstres] = this.astres.reduce(
-      (acc, astre: Astre) => {
-        if (!astre.parent || ids.has(astre.parent)) {
-          acc[0].push(astre); // valid
-        } else {
-          acc[1].push(astre); // invalid
-        }
-        return acc;
-      },
-      [[], []] as [Astre[], Astre[]],
-    );
-
-    if (invalidAstres.length > 0) {
-      console.log("invalids : ");
-      console.log(invalidAstres);
-      this.toastr.info(
-        "Invalid (Parent not found) : (" +
-          invalidAstres.length +
-          ") " +
-          Array.from(invalidAstres.map((astre) => astre.astreID.type + "-" + astre.astreID.name)).join(" | "),
-        "Invalid Nodes",
-        { disableTimeOut: true },
-      );
+    if (!this.isValidData()) {
+      return;
     }
-    astres = validAstres;
 
     // === Create Tree ===
     let root: d3.HierarchyNode<Astre>;
