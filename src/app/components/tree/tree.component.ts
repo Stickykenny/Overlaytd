@@ -61,8 +61,8 @@ export class TreeComponent implements AfterViewInit {
   maxPitch: number = 20;
   incrementPitch: number = 2;
   tickStep: number = 5;
-  pitchShift: Tone.PitchShift = new Tone.PitchShift(this.startingPitch).toDestination();
-  player: Tone.Player = new Tone.Player("../../assets/click.mp3").toDestination().connect(this.pitchShift);
+  pitchShift: Tone.PitchShift;
+  player: Tone.Player;
   lastRotationTick: number = 0;
 
   constructor(
@@ -114,19 +114,29 @@ export class TreeComponent implements AfterViewInit {
         },
       });
     const slider = document.getElementById("slider");
-    slider!.addEventListener("input", (e: Event) => {
+    slider!.addEventListener(
+      "input",
       //let sliderElement: HTMLInputElement = e.target as HTMLInputElement;
-      this.lastRotationTick += this.incrementPitch;
-      this.lastRotationTick %= this.tickStep;
-      if (this.lastRotationTick == 0) {
-        Tone.loaded().then(() => {
-          this.player.start();
-          if (this.pitchShift.pitch < this.maxPitch) {
-            this.pitchShift.pitch += this.incrementPitch;
-          }
-        });
-      }
-    });
+      async () => {
+        await Tone.start();
+        if (!this.pitchShift) {
+          this.pitchShift = new Tone.PitchShift(this.startingPitch).toDestination();
+        }
+        if (!this.player) {
+          this.player = new Tone.Player("../../assets/click.mp3").toDestination().connect(this.pitchShift);
+        }
+        this.lastRotationTick += this.incrementPitch;
+        this.lastRotationTick %= this.tickStep;
+        if (this.lastRotationTick == 0) {
+          Tone.loaded().then(() => {
+            this.player.start();
+            if (this.pitchShift.pitch < this.maxPitch) {
+              this.pitchShift.pitch += this.incrementPitch;
+            }
+          });
+        }
+      },
+    );
     slider!.addEventListener("mouseup", (e: Event) => {
       this.pitchShift.pitch = this.startingPitch;
     });
