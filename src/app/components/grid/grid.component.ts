@@ -413,7 +413,6 @@ export class GridComponent implements OnInit {
     this.gridApi.forEachNode(function (node: IRowNode<RowModel>) {
       let astre = node.data;
       if (astre != undefined) {
-        console.log(astre);
         let id: string = astreKey(astre);
         if (!ids.has(id)) {
           ids.add(id);

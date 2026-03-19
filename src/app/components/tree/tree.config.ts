@@ -10,6 +10,10 @@ export const tooltipConfig = {
     },
   },
 };
+export const buttonConfig = {
+  width: "2em",
+  height: "2em",
+};
 
 export const linkConfig = {
   stroke: {

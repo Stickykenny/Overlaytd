@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { tooltipConfig } from "./tree.config";
+import { tooltipConfig, buttonConfig } from "./tree.config";
 export default class TreeTemplates {
   tooltipWrapper = d3
     .select("app-tree")
@@ -31,8 +31,8 @@ export default class TreeTemplates {
     .style("display", "none")
     .style("position", "absolute")
     .style("opacity", 0)
-    .style("left", `0px`)
-    .style("top", "0px")
+    .style("width", buttonConfig.width)
+    .style("height", buttonConfig.height)
     .text("✖");
   //.on("click", () => this.clearTooltip());
 
@@ -42,6 +42,8 @@ export default class TreeTemplates {
     .style("display", "none")
     .style("position", "absolute")
     .style("opacity", 0)
+    .style("width", buttonConfig.width)
+    .style("height", buttonConfig.height)
     .text("↳");
 
   tooltipSpreadTagRemovalButton = this.tooltipWrapper
@@ -50,6 +52,7 @@ export default class TreeTemplates {
     .style("display", "none")
     .style("position", "absolute")
     .style("opacity", 0)
-    //.style("text-decoration-line", "line-through")
+    .style("width", buttonConfig.width)
+    .style("height", buttonConfig.height)
     .text("?");
 }

@@ -249,7 +249,7 @@ export class TreeComponent implements AfterViewInit {
     target: SVGElement,
   ) {
     tooltip.style("display", "block");
-    tooltip.style("pointer-events", "none");
+    tooltip.style("pointer-events", "block");
     let astre: Astre = pointNode.data as Astre;
     let astreTags = astre.tags;
     let additionalComments = "";
@@ -290,7 +290,9 @@ export class TreeComponent implements AfterViewInit {
 
     // ==================
     const tooltipNode = tooltip
-      .style("line-height", "0.9")
+      .style("white-space", "pre-line")
+      .style("line-height", "0.75")
+      .style("overflow-wrap", "break-word")
       .html(
         `<b>${astre.astreID.name}</b></br>
             <span style='font-size:${tooltipConfig.comment.font.size}px'>[${astreTags}] in ${astre.parent} </span> </br>

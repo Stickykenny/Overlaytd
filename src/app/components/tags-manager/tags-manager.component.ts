@@ -18,7 +18,7 @@ import { DragDropModule } from "@angular/cdk/drag-drop";
 })
 export class TagsManagerComponent implements OnInit {
   astres: Astre[] = [];
-  default = [];
+  defaultEmptyId: string = "";
 
   tagsDistribution = new Map<string, Astre[]>();
   tagsKeys: string[] = [];
@@ -35,7 +35,7 @@ export class TagsManagerComponent implements OnInit {
 
   ngOnInit(): void {
     this.astreService
-      .getAstres()
+      .getAstresAndLinks()
       .pipe(take(1))
       .subscribe({
         next: (astres) => {
@@ -60,14 +60,14 @@ export class TagsManagerComponent implements OnInit {
     tags.forEach((tag) => {
       this.tagsDistribution.set(tag, []);
     });
-    this.tagsDistribution.set("", []);
+    this.tagsDistribution.set(this.defaultEmptyId, []);
     this.astres.forEach((astre) => {
       this.categorizeAstre(astre, tags);
     });
   }
 
   categorizeAstre(astre: Astre, tagsCategory: string[]) {
-    let astreTags = (astre.tags || "").split(",");
+    let astreTags = (astre.tags || this.defaultEmptyId).split(",");
     for (let tagRef of tagsCategory) {
       if (astreTags.includes(tagRef)) {
         this.tagsDistribution.get(tagRef)!.push(astre);
@@ -94,7 +94,9 @@ export class TagsManagerComponent implements OnInit {
       let astre = event.container.data[event.currentIndex];
       let updatedTags = astre.tags.split(",").filter((tag) => tag != event.previousContainer.id);
       let newTag = event.container.id;
-      updatedTags.push(newTag);
+      if (newTag != this.defaultEmptyId) {
+        updatedTags.push(newTag);
+      }
 
       astre.tags = updatedTags.join(",");
       this.astreService
