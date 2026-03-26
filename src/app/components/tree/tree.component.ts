@@ -20,7 +20,11 @@ import { take } from "rxjs";
   selector: "app-tree",
   template: `
     <div class="tree-wrapper">
-      <svg #svgContainer style="width:90vw; height:88vh;"></svg>
+      <svg #svgContainer style="width:90vw; height:87vh;"></svg>
+    </div>
+    <div class="form-check form-switch">
+      <input class="form-check-input" type="checkbox" role="switch" id="SwitchTextMirror" checked />
+      <label class="form-check-label" for="SwitchTextMirror">Mirror text</label>
     </div>
     <input
       type="range"
@@ -57,6 +61,7 @@ export class TreeComponent implements AfterViewInit {
   tooltipTagRemovalSpreadButton: d3.Selection<HTMLButtonElement, unknown, HTMLElement, any>;
   tooltipPropagateTag: d3.Selection<HTMLButtonElement, unknown, HTMLElement, any>;
 
+  // Slider
   startingPitch: number = -10;
   maxPitch: number = 20;
   incrementPitch: number = 2;
@@ -64,6 +69,8 @@ export class TreeComponent implements AfterViewInit {
   pitchShift: Tone.PitchShift;
   player: Tone.Player;
   lastRotationTick: number = 0;
+
+  treeNodeText: any;
 
   constructor(
     private toastr: ToastrService,
@@ -139,6 +146,23 @@ export class TreeComponent implements AfterViewInit {
     );
     slider!.addEventListener("mouseup", (e: Event) => {
       this.pitchShift.pitch = this.startingPitch;
+    });
+
+    const SwitchTextMirror = document.getElementById("SwitchTextMirror") as HTMLInputElement;
+    SwitchTextMirror!.addEventListener("input", (e: Event) => {
+      if (SwitchTextMirror!.checked == true) {
+        this.treeNodeText.attr(
+          "transform",
+          (d: d3.HierarchyPointNode<Astre>) => `rotate(${(d.x * 180) / Math.PI - 90})`,
+        );
+        this.treeNodeText.attr("text-anchor", "start");
+      } else {
+        this.treeNodeText.attr(
+          "transform",
+          (d: d3.HierarchyPointNode<Astre>) => `rotate(${(d.x * 180) / Math.PI - 90}) rotate( 180 )`,
+        );
+        this.treeNodeText.attr("text-anchor", "end");
+      }
     });
   }
 
@@ -553,7 +577,7 @@ export class TreeComponent implements AfterViewInit {
       .attr("r", 15)
       .attr("opacity", 0); // Fake increased hitbox
     nodeG.append("circle").attr("r", 3).attr("opacity", 0.5);
-    nodeG
+    this.treeNodeText = nodeG
       .append("text")
       .attr("dy", -10)
       .text((d: d3.HierarchyPointNode<Astre>) => {
