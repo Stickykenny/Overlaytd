@@ -91,7 +91,7 @@ import { BooleanDigit } from "src/app/utils/helper";
             <div class="tab-pane " id="nav-tbd" role="tabpanel" aria-labelledby="nav-tbd-tab">
               This Web-application is a project for organizing life, knowledge. This version is a preview, a lot of
               server feature are not available on this static webpage. Author :
-              <a href="https://github.com/Stickykenny">Github Link</a>
+              <a href="https://github.com/Stkykenny">Github Link</a>
             </div>
           </div>
         </div>
